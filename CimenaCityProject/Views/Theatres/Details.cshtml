@@ -1,0 +1,50 @@
+﻿@model CimenaCityProject.Models.MovieTheaters
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>MovieTheaters</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.HomeCinema.CinemaName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HomeCinema.CinemaName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TheatersName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TheatersName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumberHall)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumberHall)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RowAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RowAmount)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MovieTheatersID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

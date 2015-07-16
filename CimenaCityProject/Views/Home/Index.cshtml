@@ -1,0 +1,80 @@
+﻿@*@model IEnumerable<CimenaCityProject.Models.Movie>*@
+
+@using CimenaCityProject.Models
+@model CimenaCityProject.ViewModels.MovieData
+
+@{
+    ViewBag.Title = "Home Page";
+
+}
+
+<style type="text/css">
+    .html-marquee {
+        height:300px;
+        width:300px;
+    }
+</style>
+
+
+<div class=" center-block" >
+    <h4 style="float:none">The Last New Movie's</h4>
+
+    <div class="center-block" style="width:200px;">
+        <marquee id="marqueePlace" class="html-marquee" direction="up" behavior="scroll" scrollamount="2"
+                 onmouseover="stop()" onmouseout="start()">
+
+            <table>
+
+                @foreach (var item in Model.Movie)
+                {
+                    <tr>
+                        <th>
+                            @if (item.PictureSmall != null)
+                            {
+                                var base64 = Convert.ToBase64String(item.PictureMedium);
+                                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                <a href="@Url.Action("Details", "Movie", new { id = item.MovieID })">
+                                    <img id="inputImage" src="@imgSrc" alt="@item.MovieID"  />
+                                </a>
+                            }
+                            <br />
+                        </th>
+                    </tr>
+                    <tr class="display-field">
+                        <td style="font-size:x-large">
+                            @Html.DisplayFor(model => item.MovieName)
+                        </td>
+                    </tr>
+
+                    <tr class="display-label">
+                        <th>
+                            Director
+                        </th>
+                    </tr>
+                    <tr class="display-field">
+                        <td>
+                            @Html.DisplayFor(model => item.Director)
+                        </td>
+                    </tr>
+
+                    <tr class="display-label">
+                        <th>
+                            Release Date
+                        </th>
+                    </tr>
+                    <tr class="display-field">
+                        <td>
+                            @Html.DisplayFor(model => item.ReleaseDate)
+                            <br /><br />
+                        </td>
+                    </tr>
+
+                }
+
+            </table>
+
+        </marquee>
+
+    </div>
+
+</div>

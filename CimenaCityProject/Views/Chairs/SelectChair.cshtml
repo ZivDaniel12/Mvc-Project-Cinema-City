@@ -1,0 +1,87 @@
+﻿@model CimenaCityProject.ViewModels.TheatersChairs
+
+@{
+    ViewBag.Title = "SelectChair";
+}
+
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+
+<h2>Select The Chair</h2>
+
+
+@using (Html.BeginForm("SelectChair", "Chairs", FormMethod.Post, new { encType = "multipart/form-data", name = "SelectChairs" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.HiddenFor(mstID => mstID.TimeScreening.MovieShowTimeID)
+        @Html.HiddenFor(theatres => theatres.TimeScreening.TheatresID)
+        @Html.HiddenFor(TimescreeningID => TimescreeningID.TimeScreening.TimeScreeningID)
+
+        <hr />
+        @Html.ValidationSummary(true)
+
+            <table>
+                @foreach (var row in Model.Rows)
+                {
+                    <tr id="@row.RowsID" class="RowID">
+
+                        @if (row.TheatersID == Model.Theaters.MovieTheatersID)
+                        {
+                            <td>
+                                @row.RowNumber
+                            </td>
+                            foreach (var chair in Model.HallChairs)
+                            {
+                                if (chair.RowID == row.RowsID)
+                                {
+                                    if (chair.ChairNumber <= row.ChairCapacity)
+                                    {
+                                        if (chair.IsSelected)
+                                        {
+                                            <td>
+                                                <div style="background-color:grey; " >
+                                                    <div id="chairselected"> <img src="~/Image/SelectChair/booked_seat_img.gif" alt="Alternate Text" /></div>
+                                                    <input type="checkbox" disabled readonly name="SelectedChair" value="@chair.HallChairsID" />
+                                                    <span>@chair.ChairNumber</span>
+                                                </div>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <div style="background-color:lime; ">
+
+                                                    <div> <img src="~/Image/SelectChair/available_seat_img.gif" alt="Alternate Text" /></div>
+                                                    <input type="checkbox" name="SelectedChair" value="@chair.HallChairsID" />
+                                                    <span>@chair.ChairNumber</span>
+                                                </div>
+                                            </td>
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+
+                    </tr>
+                }
+            </table>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+
+}
+
+<div>
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

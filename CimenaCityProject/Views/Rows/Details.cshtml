@@ -1,0 +1,42 @@
+﻿@model CimenaCityProject.Models.Rows
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Rows</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MovieTheaters.TheatersName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MovieTheaters.TheatersName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RowNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RowNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ChairCapacity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ChairCapacity)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.RowsID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

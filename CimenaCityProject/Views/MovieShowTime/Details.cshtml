@@ -1,0 +1,63 @@
+﻿@model CimenaCityProject.ViewModels.MovieData
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>MovieShowTime</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Movie &nbsp; - @ViewBag.MovieName
+        </dt>
+
+        <dd>
+          
+            <br />
+            @{
+                if (Model.Movie.Where(me => me.PictureLarge == me.PictureLarge).SingleOrDefault().PictureLarge != null)
+                {
+                    var base64 = Convert.ToBase64String(Model.Movie.Where(me => me.PictureLarge == me.PictureLarge).SingleOrDefault().PictureLarge);
+                    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+                    <img src="@imgSrc" alt="Unable to display" />
+                    <br />
+                }
+            }
+            <br />
+            <br />
+        </dd>
+
+        <dt>
+            Show Time
+        </dt>
+
+        <dd>
+
+
+            <table class=" table-striped" style="font-size:larger">
+                @foreach (var item in Model.MovieShowTime)
+                {
+
+                    <tr>
+                        <td>@item.ShowTime.TimeOfDay</td><td>&nbsp;&nbsp;&nbsp;</td>
+                        <td>@Html.ActionLink("Edit", "Edit", "MovieShowTime", new { id = item.MovieShowTimeID }, null)
+                            <br /></td>
+
+                    </tr>
+                   
+                }
+            </table>
+
+        </dd>
+
+    </dl>
+</div>
+<p>
+
+
+    |  @Html.ActionLink("Back to List", "Index")
+</p>

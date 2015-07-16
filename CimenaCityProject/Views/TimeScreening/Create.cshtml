@@ -1,0 +1,234 @@
+﻿@model List<CimenaCityProject.Models.TimeScreening>
+
+@{
+    ViewBag.Title = "Create";
+    int? numberOfNewTimeScreening = ViewBag.number;
+    if (!numberOfNewTimeScreening.HasValue)
+    {
+        numberOfNewTimeScreening = 1;
+    }
+
+    for (int i = 0; i < numberOfNewTimeScreening; i++)
+    {
+        
+    }
+    
+    var SelectMovieID = (SelectList)ViewBag.MovieID;
+    var SelectHomeCinemaID = (SelectList)ViewBag.HomeCinemaID;
+}
+
+<h2>Create</h2>
+
+
+@using (Html.BeginForm("Create", "TimeScreening", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>TimeScreening</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        <table>
+            <tr>
+                <th>
+                    @Html.Label("ShowTime", new { @class = "control-label col-md-2" })
+                </th>
+                <th>
+                    @Html.Label("Theatres", new { @class = "control-label col-md-2" })
+                </th>
+                <th>
+                    @Html.Label("Date", new { @class = "control-label col-md-2" })
+                </th>
+                <th>
+                    @Html.Label("Price", new { @class = "control-label col-md-2" })
+                </th>
+                <th>
+                    @Html.Label("Is Displayed", new { @class = "control-label col-md-2" })
+                </th>
+                <th>
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-default" />
+                    </div>
+                </th>
+            </tr>
+
+            @for (int i = 0; i < numberOfNewTimeScreening.Value; i++)
+            {
+                string HomeCinemaID = "["+i + "].HomeCinemaID".ToString();
+                string TheatresID = "["+ i + "].TheatresID".ToString();   
+                 
+                <tr>
+                    <td>
+                        <div class="col-sm-8">
+                            <br />
+                            @Html.DropDownListFor(model => model[i].MovieShowTime.Single().MovieID, SelectMovieID, "Select Movie")
+                            <br /><br />
+                            @Html.DropDownListFor(model => model[i].MovieShowTimeID, Enumerable.Empty<SelectListItem>(), "--Loading Value--")
+                            @Html.ValidationMessageFor(model => model[i].MovieShowTimeID)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="col-sm-8">
+                            <br />
+                            @Html.DropDownListFor(model => int.Parse(model[i].MovieTheaters.HomeCinemaID.ToString()), SelectHomeCinemaID, "Select Home Cinema", new { @class = HomeCinemaID })
+                            <br /><br />
+                            @Html.DropDownListFor(model => int.Parse(model[i].TheatresID.ToString()), Enumerable.Empty<SelectListItem>(), "--Loading Value--", new { @class = TheatresID})
+                            @Html.ValidationMessageFor(model => model[i].TheatresID)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="col-sm-8">
+                            <br />
+                            @Html.EditorFor(model => model[i].Date)
+                            @Html.ValidationMessageFor(model => model[i].Date)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="col-sm-8">
+                            <br />
+                            @Html.EditorFor(model => model[i].Price)
+                            @Html.ValidationMessageFor(model => model[i].Price)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="col-sm-8">
+                            <br />
+                            @Html.EditorFor(model => model[i].IsDisplayed)
+                            @Html.ValidationMessageFor(model => model[i].IsDisplayed)
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+            }
+        </table>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+@{
+    for (var j = 0; j < numberOfNewTimeScreening; j++)
+    {
+        string HomeCinemaID = "#[" + j + "].HomeCinemaID";
+        string TheatresID = "[" + j + "].TheatresID";  
+           
+<script type="text/javascript">
+    $(function () {
+        $('@HomeCinemaID').change(function () {
+            alert("ok")
+        });
+       });
+
+
+
+        $(function () {
+            $('@HomeCinemaID').change(function () {
+                alert("ok1")
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetTheatres","TimeScreening")',
+                    data: { CinemaID: $('@HomeCinemaID').val() },
+                    success: function (data) {
+                        $(@TheatresID).html('');
+                        $.each(data, function (id, option) {
+                            $(@TheatresID).append($('<option></option>').val(option.id).html(option.name));
+                        });
+                    },
+                    error: function (xhr, ajaxOptions, thrownEror) {
+                        alert("Error by loading the Theatres");
+                    }
+                });
+            });
+       });
+
+
+        $(function () {
+            $('#'+j + '.MovieID').change(function () {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetShowTime", "TimeScreening")',
+                    data: { MovieID: $('#' + j + '.MovieID').val() },
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#' + j + '.MovieShowTimeID').html('');
+                        $.each(data, function (id, option) {
+                            var name = DatetimeConverter(option.name)
+                            $('#' + j + '.MovieShowTimeID').append($('<option></option>').val(option.id).html(name));
+                        });
+
+                    },
+                    error: function (xhr, ajaxOptions, thrownEror) {
+                        alert("False" + xhr + "..." + ajaxOptions + "... " + thrownEror);
+                    }
+                });
+            });
+        });
+
+    
+    // START Datetime Converters
+    function DateConverter(date) {
+        var aux = null;
+        if (date != null) {
+            aux = date.substring(6);
+            aux = aux.substring(0, aux.indexOf(')'));
+        }
+
+        return aux != null ? getISODate(new Date(parseInt(aux))) : "";
+    }
+
+    function DatetimeConverter(date) {
+        var aux = null;
+        if (date != null) {
+            aux = date.substring(6);
+            aux = aux.substring(0, aux.indexOf(')'));
+        }
+        return aux != null ? getISODateTime(new Date(parseInt(aux))) : "";
+    }
+
+    function getISODate(d) {
+        // padding function
+        var s = function (a, b) { return (1e15 + a + "").slice(-b) };
+
+        // default date parameter
+        if (typeof d === 'undefined') {
+            d = new Date();
+        };
+
+        // return ISO datetime
+        return zeroPad(d.getDate(), 2) + '/' +
+        zeroPad(s(d.getMonth() + 1, 2), 2) + '/' +
+        zeroPad(d.getFullYear(), 4);
+    }
+
+    function getISODateTime(d) {
+        // padding function
+        var s = function (a, b) { return (1e15 + a + "").slice(-b) };
+
+        // default date parameter
+        if (typeof d === 'undefined') {
+            d = new Date();
+        };
+
+        // return ISO datetime
+        return zeroPad(d.getHours(), 2) + ":" +
+        zeroPad(d.getMinutes(), 2) + ":" +
+        zeroPad(d.getSeconds(), 2);
+    }
+
+    function zeroPad(num, places) {
+        var zero = places - num.toString().length + 1;
+        return Array(+(zero > 0 && zero)).join("0") + num;
+    }
+    // END Datetime Converters
+
+
+</script>
+    }
+    }

@@ -1,0 +1,95 @@
+﻿
+@using CimenaCityProject.Models
+@model CimenaCityProject.ViewModels.MovieData
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+
+    <tr>
+        <th>
+          Movie Name
+        </th>
+        <th>
+          Movie 
+        </th>
+        <th>
+          Release Date
+        </th>
+        <th>
+          Rate
+        </th>
+        <th>
+           Director
+        </th>
+        <th>
+           Movie Descrption
+        </th>
+
+        <th>
+            Movie Show Time
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Movie)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MovieName)
+            </td>
+            <td>
+                @if (item.PictureSmall != null)
+                {
+                    var base64 = Convert.ToBase64String(item.PictureSmall);
+                    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+                    <img src="@imgSrc" alt="Unable to display" />
+                    <br />
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReleaseDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Director)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MovieDescrption)
+            </td>
+
+            <td>
+                @{
+                    foreach (var showTime in Model.MovieShowTime)
+                    {
+                        if (showTime.MovieID == item.MovieID)
+                        {
+                            @showTime.ShowTime.TimeOfDay
+                                <br />
+                        }
+                    }
+                }
+            </td>
+            <td></td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.MovieID })|
+                @Html.ActionLink("Details", "Details", new { id = item.MovieID })|
+                @Html.ActionLink("Delete", "Delete", new { id = item.MovieID })
+
+            </td>
+        </tr>
+    }
+
+</table>

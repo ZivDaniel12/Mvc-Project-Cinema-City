@@ -1,0 +1,104 @@
+﻿@model CimenaCityProject.Models.MovieTheaters
+
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>MovieTheaters</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(m=>m.HomeCinemaID)
+        <div class="form-group">
+            @Html.Label("Cinema Name")
+            <br />
+            <div class="col-md-10">
+                @Html.ViewBag.HomeCinemaID
+                @Html.ValidationMessageFor(model => model.HomeCinemaID)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TheatersName, new { @class = "control-label col-md-2" })
+            <br />
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TheatersName)
+                @Html.ValidationMessageFor(model => model.TheatersName)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NumberHall, new { @class = "control-label col-md-2" })
+            <br />
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NumberHall)
+                @Html.ValidationMessageFor(model => model.NumberHall)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RowAmount, new { @class = "control-label col-md-2" })
+            <br />
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RowAmount)
+                @Html.ValidationMessageFor(model => model.RowAmount)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default"  onclick="NewTheatres()"/>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+  
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+<script type="text/javascript">
+
+    function NewTheatres() {
+
+        $.ajax({
+            url: '@Url.Action("Create","Theatres")',
+            type: 'POST',
+
+            data: JSON.stringify({
+                movietheaters: {
+                    HomeCinemaID: $('#HomeCinemaID').val(),
+                    TheatersName: $('#TheatersName').val(),
+                    NumberHall: $('#NumberHall').val(),
+                    RowAmount: $('#RowAmount').val(),
+                }
+            }),
+
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                success(result);
+
+            },
+            error: function (result) {
+                alert(result.responseText + "no now ziv")
+
+            }
+        });
+
+        function success(result) {
+
+            $('#DivResult').html(result)
+            alert("ok")
+        }
+    }
+
+</script>
+

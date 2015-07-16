@@ -1,0 +1,48 @@
+﻿@model CimenaCityProject.Models.Rows
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Rows</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MovieTheaters.TheatersName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MovieTheaters.TheatersName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RowNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RowNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ChairCapacity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ChairCapacity)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

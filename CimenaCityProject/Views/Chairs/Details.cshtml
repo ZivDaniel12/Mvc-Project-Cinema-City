@@ -1,0 +1,42 @@
+﻿@model CimenaCityProject.Models.ChairsOrderd
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ChairsOrderd</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.HallChairID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HallChairID)
+        </dd>
+
+        @*<dt>
+            @Html.DisplayNameFor(model => model.EventID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EventID)
+        </dd>*@
+
+        @*<dt>
+            @Html.DisplayNameFor(model => model.CartId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CartId)
+        </dd>*@
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ChairsOrderdiD }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,114 @@
+﻿@using CimenaCityProject.Models
+@model CimenaCityProject.Models.HomeCinema
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm("Create", "HomeCinema", FormMethod.Post, new { id = "HomeCinema", name = "HomeCinema" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>HomeCinema</h4>
+        <hr />
+
+        <span>@ViewBag.ErrorMassage</span>
+
+        @Html.ValidationSummary(true)
+        @{  HomeCinemaContext db = new HomeCinemaContext();}
+        <div class="form-group">
+            @Html.LabelFor(model => db.CityList.Where(x => x.CityID == model.CityID).SingleOrDefault().EnglishName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("CityID")
+                @Html.ValidationMessageFor(model => db.CityList.Where(x => x.CityID == model.CityID).SingleOrDefault().EnglishName)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CinemaName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.CinemaName)
+                @Html.ValidationMessageFor(model => model.CinemaName)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Address, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Address)
+                @Html.ValidationMessageFor(model => model.Address)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PhoneNumber, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.PhoneNumber)
+                @Html.ValidationMessageFor(model => model.PhoneNumber)
+            </div>
+        </div>
+
+        <span>Number Theatres to build?</span>
+        <input type="number" name="number" id="number" />
+
+       
+        <div class=" form-group">
+            <div class="col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+    @*<script src="~/Scripts/jquery-1.10.2.js"></script>
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+        <script type="text/javascript">
+            function getTheatresView() {
+                $('#divLoading').show();
+                $.ajax({
+                    url: '@Url.Action()',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        homeCinema: {
+                            Address: $('#Address').val(),
+                            CinemaName: $('#CinemaName').val(),
+                            PhoneNumber: $('#PhoneNumber').val()
+                        },
+                        number: $('#number').val(),
+                        CityID: $('#CityID').val()
+
+                    }),
+
+                    contentType: 'application/json; charset=utf-8',
+
+                    success: function (result) {
+                        success(result);
+
+                    },
+                    error: function (result) {
+                        alert(result.responseText + "no now ziv")
+                        $('#divLoading').hide();
+
+                    }
+                });
+            };
+            function success(result) {
+                $('#DivResult').html(result)
+                $('#divLoading').hide();
+                $('#Create').hide();
+            }
+
+        </script>*@

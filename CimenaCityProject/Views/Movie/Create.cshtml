@@ -1,0 +1,96 @@
+﻿@using CimenaCityProject.CustomHtmlHelper;
+
+@model CimenaCityProject.Models.Movie
+
+@{
+    ViewBag.Title = "Create";
+}
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+
+<h2>Create</h2>
+
+
+@using (Html.BeginForm("Create", "Movie", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Movie</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ReleaseDate, new { @class = "control-label col-md-2" })
+            <div class ="col-md-10">
+               
+                @Html.TextBoxFor(model => model.ReleaseDate, new { @class = "datepicker" })
+                @Html.ValidationMessageFor(model => model.ReleaseDate)
+            </div class>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MovieName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MovieName)
+                @Html.ValidationMessageFor(model => model.MovieName)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Rate, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Rate)
+                @Html.ValidationMessageFor(model => model.Rate)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Director, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Director)
+                @Html.ValidationMessageFor(model => model.Director)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MovieDescrption, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MovieDescrption)
+                @Html.ValidationMessageFor(model => model.MovieDescrption)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2">
+                <label for="file">Upload Image:</label>
+                <input type="file" name="file" id="file" class="btn btn-default" />
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+    $(function () {
+        $('#ReleaseDate').datepicker();
+    });
+</script>

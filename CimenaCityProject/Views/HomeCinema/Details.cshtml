@@ -1,0 +1,51 @@
+﻿@using CimenaCityProject.Models
+@model CimenaCityProject.Models.HomeCinema
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+@{HomeCinemaContext db = new HomeCinemaContext();}
+<div>
+    <h4>HomeCinema</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CinemaName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CinemaName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => db.CityList.Where(x => x.CityID == model.CityID).SingleOrDefault().EnglishName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => db.CityList.Where(x => x.CityID == model.CityID).SingleOrDefault().EnglishName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.HomeCinemaID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

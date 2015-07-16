@@ -1,0 +1,51 @@
+﻿@model IEnumerable<CimenaCityProject.Models.MovieTheaters>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.HomeCinema.CinemaName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TheatersName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumberHall)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RowAmount)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.HomeCinema.CinemaName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TheatersName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumberHall)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RowAmount)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.MovieTheatersID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.MovieTheatersID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.MovieTheatersID })
+        </td>
+    </tr>
+}
+
+</table>

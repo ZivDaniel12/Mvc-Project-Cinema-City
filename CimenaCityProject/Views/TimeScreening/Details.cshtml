@@ -1,0 +1,58 @@
+﻿@model CimenaCityProject.Models.TimeScreening
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>TimeScreening</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MovieShowTimeID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MovieShowTimeID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TheatresID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TheatresID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsDisplayed)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsDisplayed)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TimeScreeningID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

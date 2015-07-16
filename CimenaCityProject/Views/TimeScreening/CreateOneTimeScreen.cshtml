@@ -1,0 +1,189 @@
+﻿@model CimenaCityProject.Models.TimeScreening
+
+@{
+    var SelectMovieID = (SelectList)ViewBag.MovieID;
+    var SelectHomeCinemaID = (SelectList)ViewBag.HomeCinemaID;
+}
+
+@using (Html.BeginForm("Create", "TimeScreening", FormMethod.Post, new { id = "CreateOne", name = "CreateOne" }))
+{ 
+     @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true)
+        <table>
+            <tr>
+                <th>
+                    @Html.Label("ShowTime", new { @class = "control-label col-md-2" })
+                </th>
+                <th>
+                    @Html.Label("Theatres", new { @class = "control-label col-md-2" })
+                </th>
+                <th>
+                    @Html.Label("Date", new { @class = "control-label col-md-2" })
+                </th>
+                <th>
+                    @Html.Label("Price", new { @class = "control-label col-md-2" })
+                </th>
+                <th>
+                    @Html.Label("Is Displayed", new { @class = "control-label col-md-2" })
+                </th>
+                <th>
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-default" id="NewTimeScreen" />
+                    </div>
+                </th>
+            </tr>
+
+                <tr>
+                    <td>
+                        <div class="col-sm-8">
+                            <br />
+                            @Html.DropDownList("MovieID", SelectMovieID,"Select Movie", new { id = "MovieID", name = "MovieID" })
+                            <br /><br />
+                            @Html.DropDownListFor(model => model.MovieShowTimeID, Enumerable.Empty<SelectListItem>(), "--Loading Value--", new { id = "ShowTime",name = "ShowTime" })
+                            @Html.ValidationMessageFor(model => model.MovieShowTimeID)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="col-sm-8">
+                            <br />
+                            @Html.DropDownList("HomeCinemaID", SelectHomeCinemaID, "Select Home Cinema", new { id = "HomeCinemaID", name = "HomeCinemaID" })
+                            <br /><br />
+                            @Html.DropDownListFor(model => model.TheatresID, Enumerable.Empty<SelectListItem>(), "--Loading Value--", new { id = "TheatresName", name = "TheatresName" })
+                            @Html.ValidationMessageFor(model => model.TheatresID)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="col-sm-8">
+                            <br />
+                            @Html.EditorFor(model => model.Date)
+                            @Html.ValidationMessageFor(model => model.Date)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="col-sm-8">
+                            <br />
+                            @Html.EditorFor(model => model.Price)
+                            @Html.ValidationMessageFor(model => model.Price)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="col-sm-8">
+                            <br />
+                            @Html.EditorFor(model => model.IsDisplayed)
+                            @Html.ValidationMessageFor(model => model.IsDisplayed)
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+            
+        </table>
+    </div>
+}
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+
+<script type="text/javascript" >
+
+    $(function () {
+        $('#HomeCinemaID').change(function () {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetTheatres","TimeScreening")',
+                data: { CinemaID: $('#HomeCinemaID').val() },
+                success: function (data) {
+                    $('#TheatresName').html('');
+                    $.each(data, function (id, option) {
+                        $('#TheatresName').append($('<option></option>').val(option.id).html(option.name));
+                    });
+                },
+                error: function (xhr, ajaxOptions, thrownEror) {
+                    alert("Error by loading the Theatres");
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $('#MovieID').change(function () {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetShowTime", "TimeScreening")',
+                data: { MovieID: $('#MovieID').val() },
+                dataType: 'json',
+                success: function (data) {
+                    $('#ShowTime').html('');
+                    $.each(data, function (id, option) {
+                        var name = DatetimeConverter(option.name)
+                        $('#ShowTime').append($('<option></option>').val(option.id).html(name));
+                    });
+
+                },
+                error: function (xhr, ajaxOptions, thrownEror) {
+                    alert("False" + xhr + "..." + ajaxOptions + "... " + thrownEror);
+                }
+            });
+        });
+    });
+
+
+    // START Datetime Converters
+    function DateConverter(date) {
+        var aux = null;
+        if (date != null) {
+            aux = date.substring(6);
+            aux = aux.substring(0, aux.indexOf(')'));
+        }
+
+        return aux != null ? getISODate(new Date(parseInt(aux))) : "";
+    }
+
+    function DatetimeConverter(date) {
+        var aux = null;
+        if (date != null) {
+            aux = date.substring(6);
+            aux = aux.substring(0, aux.indexOf(')'));
+        }
+        return aux != null ? getISODateTime(new Date(parseInt(aux))) : "";
+    }
+
+    function getISODate(d) {
+        // padding function
+        var s = function (a, b) { return (1e15 + a + "").slice(-b) };
+
+        // default date parameter
+        if (typeof d === 'undefined') {
+            d = new Date();
+        };
+
+        // return ISO datetime
+        return zeroPad(d.getDate(), 2) + '/' +
+        zeroPad(s(d.getMonth() + 1, 2), 2) + '/' +
+        zeroPad(d.getFullYear(), 4);
+    }
+
+    function getISODateTime(d) {
+        // padding function
+        var s = function (a, b) { return (1e15 + a + "").slice(-b) };
+
+        // default date parameter
+        if (typeof d === 'undefined') {
+            d = new Date();
+        };
+
+        // return ISO datetime
+        return zeroPad(d.getHours(), 2) + ":" +
+        zeroPad(d.getMinutes(), 2) + ":" +
+        zeroPad(d.getSeconds(), 2);
+    }
+
+    function zeroPad(num, places) {
+        var zero = places - num.toString().length + 1;
+        return Array(+(zero > 0 && zero)).join("0") + num;
+    }
+    // END Datetime Converters
+
+
+</script>

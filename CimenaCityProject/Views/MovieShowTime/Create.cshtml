@@ -1,0 +1,98 @@
+﻿@using CimenaCityProject.ViewModels;
+@model CimenaCityProject.Models.MovieShowTime
+
+@{
+    ViewBag.Title = "Movie Show Time";
+}
+
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+
+<h2>Enter the New next</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Movie Show Time</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Movie Name
+            <div class="col-md-10" style="color:black" id="SelectedValue">
+               @Html.DropDownList("movieList" )
+            </div>
+        </div>
+
+        <div class="form-group">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Add The Show Time for the Movie
+            <div class="col-md-10" id="ShowTime">
+                @Html.TextBoxFor(model => model.ShowTime, new { @id = "ShowTime" })
+                @Html.ValidationMessageFor(model => model.ShowTime)              
+            </div>
+            <br />
+            <div class="col-md-10" id="ShowTime">
+                @Html.TextBoxFor(model => model.ShowTime, new { @id = "ShowTime" })
+                @Html.ValidationMessageFor(model => model.ShowTime)            
+            </div>
+            <br />
+            <div class="col-md-10" id="ShowTime">
+                @Html.TextBoxFor(model => model.ShowTime, new { @id = "ShowTime" })
+                @Html.ValidationMessageFor(model => model.ShowTime)
+            </div>
+            <br />
+            <div class="col-md-10" id="ShowTime">
+                @Html.TextBoxFor(model => model.ShowTime, new { @id = "ShowTime" })
+                @Html.ValidationMessageFor(model => model.ShowTime)
+            </div>
+            <br />
+        </div>
+       
+   
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" id="addShowTime" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+    $(function () {
+        $('#timepicker').timepicker();
+    });
+
+
+    $('addShowTime').click(function () {
+        var list = [];
+        $('div.ShowTime').find("input:text").each(function () {
+            list.push($(this).val())
+        })
+        var key = { listkey: list }
+        $.ajax({
+            url: '@Url.Action("Index","Movie")',
+            traditional: true,
+            data: list,
+            datatype: "html",
+            success: function (data) {
+                alert('success')
+            },
+            error: function (data) {
+                alert('fail')
+            }
+        })
+    });
+    
+</script>
