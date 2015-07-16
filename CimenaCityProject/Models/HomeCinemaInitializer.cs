@@ -56,93 +56,93 @@ namespace CimenaCityProject.Models
             city.ForEach(h => context.CityList.Add(h));
             context.SaveChanges();
 
-            var homeCinema = new List<HomeCinema> 
-            {
-                new HomeCinema{  CityID= city.Single(c=>c.CityID == 1).CityID, CinemaName="GlobsMax",Address= "Ben Zion 9", PhoneNumber="08-8888888"},
-                new HomeCinema{  CityID= city.Single(c=>c.CityID == 2).CityID, CinemaName="GoodTimes",Address= "Rotshild 14", PhoneNumber="03-3333333"},
-                new HomeCinema{  CityID= city.Single(c=>c.CityID == 3).CityID, CinemaName="RavHen",Address= "Har Gilo 1", PhoneNumber="02-2222222"}
-            };
-            homeCinema.ForEach(h => context.HomeCinemas.Add(h));
-            context.SaveChanges();
+            //var homeCinema = new List<HomeCinema> 
+            //{
+            //    new HomeCinema{  CityID= city.Single(c=>c.CityID == 1).CityID, CinemaName="GlobsMax",Address= "Ben Zion 9", PhoneNumber="08-8888888"},
+            //    new HomeCinema{  CityID= city.Single(c=>c.CityID == 2).CityID, CinemaName="GoodTimes",Address= "Rotshild 14", PhoneNumber="03-3333333"},
+            //    new HomeCinema{  CityID= city.Single(c=>c.CityID == 3).CityID, CinemaName="RavHen",Address= "Har Gilo 1", PhoneNumber="02-2222222"}
+            //};
+            //homeCinema.ForEach(h => context.HomeCinemas.Add(h));
+            //context.SaveChanges();
 
-            var movieTheatrs = new List<MovieTheaters> 
-            {
-                    new MovieTheaters{ HomeCinemaID=homeCinema.Single(h=>h.HomeCinemaID == 1).HomeCinemaID 
-                    , RowAmount=4,TheatersName="NumberOne",NumberHall=1 },
-                    new MovieTheaters{ HomeCinemaID=homeCinema.Single(h=>h.HomeCinemaID == 1).HomeCinemaID 
-                    , RowAmount=4,TheatersName="NumberTw4",NumberHall=2 },
-                    new MovieTheaters{ HomeCinemaID=homeCinema.Single(h=>h.HomeCinemaID == 2).HomeCinemaID 
-                    , RowAmount=4,TheatersName="NumberOne",NumberHall=3 },
-                    new MovieTheaters{ HomeCinemaID=homeCinema.Single(h=>h.HomeCinemaID == 2).HomeCinemaID 
-                    , RowAmount=4,TheatersName="NumberTw3",NumberHall=4 },
-                    new MovieTheaters{ HomeCinemaID=homeCinema.Single(h=>h.HomeCinemaID == 3).HomeCinemaID 
-                    , RowAmount=4,TheatersName="NumberOne",NumberHall=1 },
-                    new MovieTheaters{ HomeCinemaID=homeCinema.Single(h=>h.HomeCinemaID == 3).HomeCinemaID 
-                    , RowAmount=4,TheatersName="NumberTw2",NumberHall=3 }
-            };
-            movieTheatrs.ForEach(m => context.Theaters.Add(m));
-            context.SaveChanges();
-
-
-            var timeScreen = new List<TimeScreening> 
-            {
-                new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 1).MovieShowTimeID,
-                TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==1).MovieTheatersID,
-                Date = Convert.ToDateTime("01/01/2015"), Price = 34, IsDisplayed = true},
-                 new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 2).MovieShowTimeID,
-                TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==1).MovieTheatersID,
-                Date = Convert.ToDateTime("02/02/2015"), Price = 34, IsDisplayed = true},
-                 new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID ==3).MovieShowTimeID,
-                TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==2).MovieTheatersID,
-                Date = Convert.ToDateTime("03/03/2015"), Price = 34, IsDisplayed = true},
-                 new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 4).MovieShowTimeID,
-                TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==2).MovieTheatersID,
-                Date = Convert.ToDateTime("04/04/2015"), Price = 34, IsDisplayed = true},
-                 new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 5).MovieShowTimeID,
-                TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==3).MovieTheatersID,
-                Date = Convert.ToDateTime("05/05/2015"), Price = 34, IsDisplayed = true},
-                 new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 6).MovieShowTimeID,
-                TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==3).MovieTheatersID,
-                Date = Convert.ToDateTime("02/02/2015"), Price = 34, IsDisplayed = true},
-                 new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 7).MovieShowTimeID,
-                TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==1).MovieTheatersID,
-                Date = Convert.ToDateTime("03/03/2015"), Price = 34, IsDisplayed = true},
-                 new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 8).MovieShowTimeID,
-                TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==2).MovieTheatersID,
-                Date = Convert.ToDateTime("04/04/2015"), Price = 34, IsDisplayed = true},
-                 new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 9).MovieShowTimeID,
-                TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==3).MovieTheatersID,
-                Date = Convert.ToDateTime("05/05/2015"), Price = 34, IsDisplayed = true}
-
-            };
-
-            timeScreen.ForEach(ts => context.TimeScreening.Add(ts));
-            context.SaveChanges();
+            //var movieTheatrs = new List<MovieTheaters> 
+            //{
+            //        new MovieTheaters{ HomeCinemaID=homeCinema.Single(h=>h.HomeCinemaID == 1).HomeCinemaID 
+            //        , RowAmount=4,TheatersName="NumberOne",NumberHall=1 },
+            //        new MovieTheaters{ HomeCinemaID=homeCinema.Single(h=>h.HomeCinemaID == 1).HomeCinemaID 
+            //        , RowAmount=4,TheatersName="NumberTw4",NumberHall=2 },
+            //        new MovieTheaters{ HomeCinemaID=homeCinema.Single(h=>h.HomeCinemaID == 2).HomeCinemaID 
+            //        , RowAmount=4,TheatersName="NumberOne",NumberHall=3 },
+            //        new MovieTheaters{ HomeCinemaID=homeCinema.Single(h=>h.HomeCinemaID == 2).HomeCinemaID 
+            //        , RowAmount=4,TheatersName="NumberTw3",NumberHall=4 },
+            //        new MovieTheaters{ HomeCinemaID=homeCinema.Single(h=>h.HomeCinemaID == 3).HomeCinemaID 
+            //        , RowAmount=4,TheatersName="NumberOne",NumberHall=1 },
+            //        new MovieTheaters{ HomeCinemaID=homeCinema.Single(h=>h.HomeCinemaID == 3).HomeCinemaID 
+            //        , RowAmount=4,TheatersName="NumberTw2",NumberHall=3 }
+            //};
+            //movieTheatrs.ForEach(m => context.Theaters.Add(m));
+            //context.SaveChanges();
 
 
-            var rows = new List<Rows>
-            {
-                new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==1).MovieTheatersID, RowNumber=1 , ChairCapacity = 5},
-                new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==1).MovieTheatersID, RowNumber=2 , ChairCapacity = 5},
-                new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==1).MovieTheatersID, RowNumber=3 , ChairCapacity = 5},
-                new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==1).MovieTheatersID, RowNumber=4 , ChairCapacity = 5},
-                new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==2).MovieTheatersID, RowNumber=1 , ChairCapacity = 5},
-                new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==2).MovieTheatersID, RowNumber=2 , ChairCapacity = 5},
-                new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==2).MovieTheatersID, RowNumber=3 , ChairCapacity = 5},
-                new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==2).MovieTheatersID, RowNumber=4 , ChairCapacity = 5}
-            };
-            rows.ForEach(r => context.Rows.Add(r));
-            context.SaveChanges();
+            //var timeScreen = new List<TimeScreening> 
+            //{
+            //    new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 1).MovieShowTimeID,
+            //    TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==1).MovieTheatersID,
+            //    Date = Convert.ToDateTime("01/01/2015"), Price = 34, IsDisplayed = true},
+            //     new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 2).MovieShowTimeID,
+            //    TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==1).MovieTheatersID,
+            //    Date = Convert.ToDateTime("02/02/2015"), Price = 34, IsDisplayed = true},
+            //     new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID ==3).MovieShowTimeID,
+            //    TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==2).MovieTheatersID,
+            //    Date = Convert.ToDateTime("03/03/2015"), Price = 34, IsDisplayed = true},
+            //     new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 4).MovieShowTimeID,
+            //    TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==2).MovieTheatersID,
+            //    Date = Convert.ToDateTime("04/04/2015"), Price = 34, IsDisplayed = true},
+            //     new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 5).MovieShowTimeID,
+            //    TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==3).MovieTheatersID,
+            //    Date = Convert.ToDateTime("05/05/2015"), Price = 34, IsDisplayed = true},
+            //     new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 6).MovieShowTimeID,
+            //    TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==3).MovieTheatersID,
+            //    Date = Convert.ToDateTime("02/02/2015"), Price = 34, IsDisplayed = true},
+            //     new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 7).MovieShowTimeID,
+            //    TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==1).MovieTheatersID,
+            //    Date = Convert.ToDateTime("03/03/2015"), Price = 34, IsDisplayed = true},
+            //     new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 8).MovieShowTimeID,
+            //    TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==2).MovieTheatersID,
+            //    Date = Convert.ToDateTime("04/04/2015"), Price = 34, IsDisplayed = true},
+            //     new TimeScreening { MovieShowTimeID= movieShowTime.Single(mst=>mst.MovieShowTimeID == 9).MovieShowTimeID,
+            //    TheatresID = movieTheatrs.Single(mt=>mt.MovieTheatersID==3).MovieTheatersID,
+            //    Date = Convert.ToDateTime("05/05/2015"), Price = 34, IsDisplayed = true}
 
-            var hallChairs = new List<HallChairs> 
-            {
-                new HallChairs{ RowID=rows.Single(r=>r.RowsID==1).RowsID, ChairNumber= 1},
-                new HallChairs{ RowID=rows.Single(r=>r.RowsID==1).RowsID, ChairNumber= 2},
-                new HallChairs{ RowID=rows.Single(r=>r.RowsID==2).RowsID, ChairNumber= 1},
-                new HallChairs{ RowID=rows.Single(r=>r.RowsID==2).RowsID, ChairNumber= 3} 
-            };
-            hallChairs.ForEach(h => context.HallChairs.Add(h));
-            context.SaveChanges();
+            //};
+
+            //timeScreen.ForEach(ts => context.TimeScreening.Add(ts));
+            //context.SaveChanges();
+
+
+            //var rows = new List<Rows>
+            //{
+            //    new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==1).MovieTheatersID, RowNumber=1 , ChairCapacity = 5},
+            //    new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==1).MovieTheatersID, RowNumber=2 , ChairCapacity = 5},
+            //    new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==1).MovieTheatersID, RowNumber=3 , ChairCapacity = 5},
+            //    new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==1).MovieTheatersID, RowNumber=4 , ChairCapacity = 5},
+            //    new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==2).MovieTheatersID, RowNumber=1 , ChairCapacity = 5},
+            //    new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==2).MovieTheatersID, RowNumber=2 , ChairCapacity = 5},
+            //    new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==2).MovieTheatersID, RowNumber=3 , ChairCapacity = 5},
+            //    new Rows{ TheatersID = movieTheatrs.Single(mt=>mt.MovieTheatersID==2).MovieTheatersID, RowNumber=4 , ChairCapacity = 5}
+            //};
+            //rows.ForEach(r => context.Rows.Add(r));
+            //context.SaveChanges();
+
+            //var hallChairs = new List<HallChairs> 
+            //{
+            //    new HallChairs{ RowID=rows.Single(r=>r.RowsID==1).RowsID, ChairNumber= 1},
+            //    new HallChairs{ RowID=rows.Single(r=>r.RowsID==1).RowsID, ChairNumber= 2},
+            //    new HallChairs{ RowID=rows.Single(r=>r.RowsID==2).RowsID, ChairNumber= 1},
+            //    new HallChairs{ RowID=rows.Single(r=>r.RowsID==2).RowsID, ChairNumber= 3} 
+            //};
+            //hallChairs.ForEach(h => context.HallChairs.Add(h));
+            //context.SaveChanges();
 
             //var chairsOrderd = new List<ChairsOrderd>
             //{

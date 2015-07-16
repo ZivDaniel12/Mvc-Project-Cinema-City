@@ -90,9 +90,9 @@ namespace CimenaCityProject.Controllers
         public ActionResult Details(string ShowTimeList, string HomeCinemaCity, int? MovieID)
         {
 
-            if (ShowTimeList == null && HomeCinemaCity == null && MovieID.HasValue)
+            if (string.IsNullOrEmpty(ShowTimeList) || string.IsNullOrEmpty(HomeCinemaCity) || !MovieID.HasValue)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","Home");
             }
 
             int showtimeID = int.Parse(ShowTimeList);

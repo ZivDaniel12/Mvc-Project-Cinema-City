@@ -1,14 +1,8 @@
-# Mvc-Project-Cinema-City
+﻿# Mvc-Project-Cinema-City
 My project in Mvc Cinema City.  Developed by ZivDaniel asp.net mvc Visual Studio 2013 
 
 Change List : 
 
-now what? 
-complete the "Complete your order."
-the butten confirm dont strong .
-start to working on Edit ( movie, ShowTime, Theatres,
-      homeCinema, Event,TimeScreening ) 
-identity. 
 
 19:47 ‎15/‎07/‎2015
  Adding create new Time screen via ajax

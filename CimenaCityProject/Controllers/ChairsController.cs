@@ -50,11 +50,6 @@ namespace CimenaCityProject.Controllers
             }
             var theatresChair = new TheatersChairs(id, theatresID,timescreenID);
 
-            //only for the develop get all chairs not selected 
-            foreach (var item in theatresChair.HallChairs)
-            {
-                item.IsSelected = false;
-            }
             return View(theatresChair);
         }
 
@@ -125,7 +120,7 @@ namespace CimenaCityProject.Controllers
 
             if (flag == true)
             {
-                //prossed to check out. 
+                //continue to check out. 
                 return RedirectToAction("Details", "CheckOut", new { _cartID = cartID });
             }
             else

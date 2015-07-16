@@ -158,8 +158,7 @@
         });
     });
 
-    $(function () {
-        $('#ShowTime').change(function LoadTheatresName() {
+        $('#ShowTime').change(function () {
             $.ajax({
                 type: "GET",
                 url: '@Url.Action("getTheatresName")',
@@ -173,7 +172,7 @@
                 }
             });
         });
-    });
+    
 
     // START Datetime Converters
     function DateConverter(date) {

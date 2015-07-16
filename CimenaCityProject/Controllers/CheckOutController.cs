@@ -26,31 +26,43 @@ namespace CimenaCityProject.Controllers
         // GET: /CheckOut/Details/5
         public ActionResult Details(string _cartID)
         {
-            string cartID = _cartID;
-
-            if (cartID == null || cartID == string.Empty)
+            
+            if (string.IsNullOrEmpty(_cartID))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            string cartID = _cartID;
 
             Event eventOrder = db.Events.Single(c => c.cartID == cartID);
             var quryEventInfo = new TimeScreeningDetails(eventOrder);
 
-            if (ModelState.IsValid)
+            if (quryEventInfo.Order == null)
             {
-                db.Orders.Add(quryEventInfo.Order);
-                db.SaveChanges();
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            if (string.IsNullOrEmpty(quryEventInfo.ifEror))
+            {
+                if (ModelState.IsValid)
+                {
+                    db.Orders.Add(quryEventInfo.Order);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    quryEventInfo.ifEror = "Error by adding order.";
+                }
+
+                if (quryEventInfo.Event == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(quryEventInfo);
             }
             else
             {
-                quryEventInfo.ifEror = "error by adding order.";
+                return View(quryEventInfo);
             }
-
-            if (quryEventInfo.Event == null)
-            {
-                return HttpNotFound();
-            }
-            return View(quryEventInfo);
         }
 
         //GET: /CheckOut/CheckOutComplete/cartID
@@ -74,8 +86,6 @@ namespace CimenaCityProject.Controllers
         }
 
         // POST: /CheckOut/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include="OrderID,PersonID,CartId,ChairsOrderdID,TimeScreeningID,OrderDate")] Order order)

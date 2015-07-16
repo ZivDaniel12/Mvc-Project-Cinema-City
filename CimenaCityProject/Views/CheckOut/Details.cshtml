@@ -8,12 +8,12 @@
 
 
 
-<h2>Details</h2>
+<h2 style="align-content:center">Check Out Your <br /> Order</h2>
 
 <div>
-    <h4>Order</h4>
+   
 	<hr />
-    <div> @if (@Model.ifEror != null)
+    <div> @if (!@Model.ifEror.IsEmpty())
            {
                @Model.ifEror.ToString()
            } </div> 
@@ -116,9 +116,15 @@
         </dd>
 
     </dl>
-
+    <div style="position:relative;top:10px;left:180px">
+        <div class="btn-group-lg">
+            <p style="font-size:x-large">
+                @Html.ActionLink("Confirm Your Order Now", "CheckoutComplete", new { id = Model.Event.EventID })
+            </p>
+        </div>
+    </div>
 </div>
 <p>
-    @Html.ActionLink("Confirm Your Order Now", "Edit", new { id = Model.TimeScreening.TimeScreeningID }) |
+   
     @Html.ActionLink("Back to List", "Index")
 </p>

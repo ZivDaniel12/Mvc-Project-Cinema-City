@@ -26,6 +26,8 @@ namespace CimenaCityProject.ViewModels
         private TimeScreening timeScreening;
 
         public int TotalChairOrdered { get; set; }
+        public List<int> ChairNumbers { get; set; }
+        public List<int> RowNumber { get; set; }
 
         public string cartID { get; set; }
 
@@ -115,10 +117,16 @@ namespace CimenaCityProject.ViewModels
                     // get the TimeScreening item
                     timeScreening = (from ts in db.TimeScreening
                                      where _Event.MovieShowTimeID == ts.MovieShowTimeID && ts.TheatresID == theaters.MovieTheatersID
-                                     select ts).SingleOrDefault();         
+                                     select ts).SingleOrDefault();
+
+                    ChairNumbers = new List<int>();
+                    RowNumber = new List<int>();
+
+                  
 
                     getTotalChairsOrdered();
 
+                    
 
                     // if there is a order all fine.. if no , go to catch and make one. 
                     try
@@ -160,14 +168,18 @@ namespace CimenaCityProject.ViewModels
         private void getTotalChairsOrdered()
         {
             //get how many chaires ordered... 
+            //what is the chairs number
+            //what is row number
             
             foreach (var item in db.ChairsOrderd)
             {
                 if (item.EventID == evnt.EventID)
                 {
                     TotalChairOrdered++;
+
+
                 }
-            } 
+            }
         }
 
 
