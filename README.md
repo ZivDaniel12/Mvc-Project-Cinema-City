@@ -2,6 +2,11 @@
 My project in Mvc Cinema City.  Developed by ZivDaniel asp.net mvc Visual Studio 2013 
 
 Change List : 
+20:48 ‎16/‎07/‎2015
+update CheckOut View 
+adding print option for the ticket's 
+adding the qr code for verifacation of buying the tickets. 
+
 
 
 19:47 ‎15/‎07/‎2015
