@@ -8,7 +8,7 @@ using System.Data.Entity;
 
 namespace CimenaCityProject.Models 
 {
-    public class HomeCinemaInitializer : DropCreateDatabaseIfModelChanges<HomeCinemaContext>
+    public class HomeCinemaInitializer : DropCreateDatabaseAlways<HomeCinemaContext>
     {
         protected override void Seed(HomeCinemaContext context)
         {

@@ -7,13 +7,6 @@
 <h2>Edit</h2>
 
 
-<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/> 
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-
-<link rel="stylesheet" type="text/css" href="~/js/src/clockpicker.css">
-<script src="~/Scripts/clockpicker.js" type="text/javascript"></script>
-
-
 
 @using (Html.BeginForm())
 {
@@ -61,16 +54,3 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-<script type="text/javascript">
-
-  
-    $('#newShowTimme').clockpicker({
-        placement: 'bottom',
-        autoclose: 'true',
-        'default': 'now',
-    });
-
-
-
-
-</script>

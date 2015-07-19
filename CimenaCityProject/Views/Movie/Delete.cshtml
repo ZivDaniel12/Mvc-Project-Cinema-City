@@ -58,7 +58,7 @@
         </dt>
 
         <dd>
-            @if (Model.PicturePathSmall != null)
+            @if (Model.PictureSmall != null)
             {
                 var base64 = Convert.ToBase64String(Model.PictureSmall);
                 var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
