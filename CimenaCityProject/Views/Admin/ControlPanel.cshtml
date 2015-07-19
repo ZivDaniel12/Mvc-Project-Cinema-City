@@ -1,63 +1,64 @@
-﻿@model IEnumerable<CimenaCityProject.Models.Person>
-
+﻿
 @{
     ViewBag.Title = "Control Panel";
 }
 
 <h2>Control Panel</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.PersonalID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Address)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.BirthDate)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
+<table class="table">
+
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.PersonalID)
+            @Ajax.ActionLink("Movie Page", "Index", "Movie", new AjaxOptions
+                                                                           {
+                                                                               HttpMethod = "GET",
+                                                                               UpdateTargetId = "divResult",
+                                                                               InsertionMode = InsertionMode.Replace
+                                                                           })
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.FirstName)
+            @Ajax.ActionLink("Home Cinema Page", "Index", "HomeCinema", new AjaxOptions
+                                                                           {
+                                                                               HttpMethod = "GET",
+                                                                               UpdateTargetId = "divResult",
+                                                                               InsertionMode = InsertionMode.Replace
+                                                                           })
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.LastName)
+            @Ajax.ActionLink("Contract Page", "Index", "TimeScreening", new AjaxOptions
+                                                                           {
+                                                                               HttpMethod = "GET",
+                                                                               UpdateTargetId = "divResult",
+                                                                               InsertionMode = InsertionMode.Replace
+                                                                           })
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Address)
+            @Ajax.ActionLink("Orders Page", "Index", "Orders", new AjaxOptions
+                                                                           {
+                                                                               HttpMethod = "GET",
+                                                                               UpdateTargetId = "divResult",
+                                                                               InsertionMode = InsertionMode.Replace
+                                                                           })
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.PhoneNumber)
+            @Ajax.ActionLink("Statistic Page", "Index", "Statistic", new AjaxOptions
+                                                                           {
+                                                                               HttpMethod = "GET",
+                                                                               UpdateTargetId = "divResult",
+                                                                               InsertionMode = InsertionMode.Replace
+                                                                           })
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.BirthDate)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.PersonID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.PersonID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.PersonID })
+            @Ajax.ActionLink("User's Page", "Index", "Person", new AjaxOptions
+                                                                               {
+                                                                                   HttpMethod = "GET",
+                                                                                   UpdateTargetId = "divResult",
+                                                                                   InsertionMode = InsertionMode.Replace
+                                                                               })
         </td>
     </tr>
-}
 
 </table>
+
+<div id="divResult"></div>

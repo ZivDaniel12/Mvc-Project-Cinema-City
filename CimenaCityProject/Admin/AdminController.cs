@@ -23,9 +23,8 @@ namespace CimenaCityProject.Admin
         // GET: /ControlPanel/
         public ActionResult ControlPanel()
         {
-            return View(db.Persons.ToList());
+            return View();
         }
-
 
         // GET: /Admin/Details/5
         public ActionResult Details(int? id)

@@ -36,7 +36,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Date, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Date)
+                @Html.EditorFor(model => model.Date, new { htmlAttributes = new { value = @Model.Date.ToString("yyyy/MM/DD"),@class = "customclass"  } })
                 @Html.ValidationMessageFor(model => model.Date)
             </div>
         </div>

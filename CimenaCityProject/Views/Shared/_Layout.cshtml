@@ -23,11 +23,8 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    <li>@Html.ActionLink("Movie", "Index", "Movie")</li>
-                    <li>@Html.ActionLink("Home Cinema", "Index", "HomeCinema")</li>
-                    <li>@Html.ActionLink("Time Screening", "Index", "TimeScreening")</li>
+
+                    <li>@Html.ActionLink("Control Panel", "ControlPanel", "Admin")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -38,10 +35,14 @@
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - Home Cinema</p>
+            <ul class="nav navbar-nav">
+                <li>@Html.ActionLink("About", "About", "Home")</li>
+                <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+            </ul>
         </footer>
     </div>
 
-   
+
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
