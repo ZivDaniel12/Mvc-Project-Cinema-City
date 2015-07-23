@@ -121,7 +121,7 @@ namespace CimenaCityProject.Controllers
             if (flag == true)
             {
                 //continue to check out. 
-                return RedirectToAction("Details", "CheckOut", new { _cartID = cartID });
+                return RedirectToAction("CheckoutReview", "CheckOut", new { _cartID = cartID });
             }
             else
             {

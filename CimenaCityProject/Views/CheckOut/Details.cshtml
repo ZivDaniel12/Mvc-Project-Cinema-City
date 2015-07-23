@@ -1,130 +1,58 @@
-﻿@model CimenaCityProject.ViewModels.TimeScreeningDetails
+﻿@model CimenaCityProject.Models.Order
 
 @{
     ViewBag.Title = "Details";
-    
 }
 
-
-
-
-<h2 style="align-content:center">Check Out Your <br /> Order</h2>
+<h2>Details</h2>
 
 <div>
-   
+    <h4>Order</h4>
 	<hr />
-    <div> @if (!@Model.ifEror.IsEmpty())
-           {
-               @Model.ifEror.ToString()
-           } </div> 
-
-    <dl class="dl-horizontal" style="text-align:match-parent">
-
+    <dl class="dl-horizontal">
         <dt>
-
-        </dt>
-
-        <dd style="text-align:inherit">
-            @{
-                if (Model.Movie.PictureLarge != null)
-                {
-                    var base64 = Convert.ToBase64String(Model.Movie.PictureLarge);
-                    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-
-                    <img src="@imgSrc" alt="Unable to display" />
-                    <br />
-                }
-            }
-        </dd>
-
-        <dt></dt>
-        <dd><span style="font-size:large">..............</span></dd>
-
-        <dt>
-            Order Date
-            <br /> <br /><br />
+            @Html.DisplayNameFor(model => model.Event.cartID)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Order.OrderDate)
-        </dd>
-
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Movie.MovieName)
-            <br /><br />
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Movie.MovieName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Movie.MovieDescrption)
-            <br /><br />
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Movie.MovieDescrption)
-        </dd>
-
-
-        <dt>
-            @Html.DisplayNameFor(model => model.MovieShowTime.ShowTime)
-            <br /><br />
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.MovieShowTime.ShowTime.TimeOfDay)
-        </dd>
-        <dt>
-            Screening Date
-            <br /><br />
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TimeScreening.Date)
-        </dd>
-        
-        <dt>
-            Ticket Price
-            <br /> <br />
-        </dt>
-
-        <dd>
-            @((Model.TimeScreening.Price).ToString()) &#8362;
-        </dd>
-
-
-
-        @*chairs need to be here..*@
-        <dt>
-           ChairsOrdered
-            <br /><br />
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TotalChairOrdered)
+            @Html.DisplayFor(model => model.Event.cartID)
         </dd>
 
         <dt>
-            Total Price
-            <br /><br />
+            @Html.DisplayNameFor(model => model.TimeScreening.TimeScreeningID)
         </dt>
 
         <dd>
-            @((Model.TimeScreening.Price*Model.TotalChairOrdered).ToString()) &#8362;
+            @Html.DisplayFor(model => model.TimeScreening.TimeScreeningID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CartId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CartId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalChairsOrdered)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalChairsOrdered)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OrderDate)
         </dd>
 
     </dl>
-    <div style="position:relative;top:10px;left:180px">
-        <div class="btn-group-lg">
-            <p style="font-size:x-large">
-                @Html.ActionLink("Confirm Your Order Now", "CheckoutComplete", new { id = Model.Event.EventID })
-            </p>
-        </div>
-    </div>
 </div>
 <p>
-   
+    @Html.ActionLink("Edit", "Edit", new { id = Model.OrderID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

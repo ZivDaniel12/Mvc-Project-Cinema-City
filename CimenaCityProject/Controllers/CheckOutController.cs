@@ -23,8 +23,21 @@ namespace CimenaCityProject.Controllers
             return View(db.Orders.ToList());
         }
 
-        // GET: /CheckOut/Details/5
-        public ActionResult Details(string _cartID)
+        // GET: /CheckOut/Details/1
+        public ActionResult Details(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var order = db.Orders.Find(id);
+            return View(order);
+        }
+
+
+
+        // GET: /CheckOut/CheckoutReview/_cartID
+        public ActionResult CheckoutReview(string _cartID)
         {
             
             if (string.IsNullOrEmpty(_cartID))

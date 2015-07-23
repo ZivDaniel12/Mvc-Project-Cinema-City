@@ -293,7 +293,6 @@
     <Content Include="Views\CheckOut\CheckoutError.cshtml" />
     <Content Include="Views\CheckOut\Create.cshtml" />
     <Content Include="Views\CheckOut\Delete.cshtml" />
-    <Content Include="Views\CheckOut\Details.cshtml" />
     <Content Include="Views\CheckOut\Edit.cshtml" />
     <Content Include="Views\CheckOut\Index.cshtml" />
     <Content Include="Views\CheckOut\CheckoutStart.cshtml" />
@@ -328,6 +327,7 @@
     <Content Include="Views\HomeCinema\Error.cshtml" />
     <Content Include="Views\TimeScreening\CreateOneTimeScreen.cshtml" />
     <Content Include="Views\Admin\ControlPanel.cshtml" />
+    <Content Include="Views\CheckOut\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
