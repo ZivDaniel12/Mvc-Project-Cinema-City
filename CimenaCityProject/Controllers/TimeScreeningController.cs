@@ -177,6 +177,7 @@ namespace CimenaCityProject.Controllers
         //auto complete for Cinema
         public JsonResult GetHomeCinemaName(string term)
         {
+
             List<string> HomeCinemaName;
             HomeCinemaName = db.HomeCinemas.Where(x => x.CinemaName.Contains(term))
                 .Select(y => y.CinemaName).ToList();
@@ -184,20 +185,22 @@ namespace CimenaCityProject.Controllers
             return Json(HomeCinemaName, JsonRequestBehavior.AllowGet);
         }
 
-    
+       // get the theatres for CreatePage via cinema id 
         public ActionResult GetTheatres(int? CinemaID)
         {
+            
             var data = (from d in db.Theaters
                         where d.HomeCinemaID == CinemaID
                         select new
                         {
                             id = d.MovieTheatersID,
-                            name = d.TheatersName
+                            name = d.TheatersName 
                         }).ToList();
 
             return Json(data,JsonRequestBehavior.AllowGet);
         }
 
+        // get the showtime for CreatePage via movie id
         public JsonResult GetShowTime(int? MovieID)
         {
 

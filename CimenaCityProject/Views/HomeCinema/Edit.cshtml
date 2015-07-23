@@ -11,13 +11,12 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>HomeCinema</h4>
         <hr />
         @Html.ValidationSummary(true)
         @Html.HiddenFor(model => model.HomeCinemaID)
-
         <div class="form-group">
             @Html.LabelFor(model => model.CinemaName, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -55,8 +54,40 @@
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
+        <br />
+        <div class="form-group">
+            <div class="col-md-10 col-md-offset-2">
+                <table>
+                    <tr>
+                        <th>
+                            Theatres
+                        </th>
+                    </tr>
+                    @foreach (var item in db.Theaters)
+                    {
+                        if (Model.HomeCinemaID == item.HomeCinemaID)
+                        {
+                            <tr>
+                                <td>
+
+                                    @item.TheatersName
+                                    <br />
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit","Theatres",new { id = item.MovieTheatersID },null )
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+        </div>
+       
+        <br />      
     </div>
 }
+
 
 <div>
     @Html.ActionLink("Back to List", "Index")

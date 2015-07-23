@@ -4,59 +4,127 @@
 @{
     ViewBag.Title = "Index";
 }
-
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery-ui.js"></script>
 <h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create") <br /> @Html.ActionLink(" Return Control Panel", "ControlPanel", "Admin")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.CinemaName)
-        </th>
-        <th>
-           City
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Address)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </th>
-        <th>
-            Theatres
-        </th>
-        <th></th>
-    </tr>
-    @{  HomeCinemaContext db = new HomeCinemaContext();}
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.CinemaName)
-        </td>
-        <td>
-                 @db.CityList.Where(x => x.CityID == item.CityID).SingleOrDefault().EnglishName
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Address)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PhoneNumber)
-        </td>
-        <td>
-            @{ 
-  
-  int number =   db.Theaters.Count(x => x.HomeCinemaID == item.HomeCinemaID);
-  @number 
-            }
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.HomeCinemaID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.HomeCinemaID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.HomeCinemaID })
-        </td>
-    </tr>
-}
+<div id="divLoading" style="display:none">
+    <img src="~/Image/Elements/ajax-loader.gif" />
+</div>
+<div id="divResult">
+    <table class="table">
+        <tr>
+            <td>
 
-</table>
+                @Ajax.ActionLink("Cinema Name", "Index", new { sortingOrder = "CinemaName" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+
+            </td>
+            <td>
+                @Ajax.ActionLink("Cinema Name", "Index", new { sortingOrder = "City" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+                
+            </td>
+            <td>
+                @Ajax.ActionLink("Address", "Index", new { sortingOrder = "Address" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+           
+            </td>
+            <td>
+                @Ajax.ActionLink("Phone Number", "Index", new { sortingOrder = "PhoneNumber" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+                
+            </td>
+            <td>
+                Theatres
+            </td>
+            <td>
+                @Ajax.ActionLink("Is Showing", "Index", new { sortingOrder = "Showing" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+            </td>
+            <td></td>
+        </tr>
+
+        @{  HomeCinemaContext db = new HomeCinemaContext();}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CinemaName)
+                </td>
+                <td>
+                    @db.CityList.Where(x => x.CityID == item.CityID).SingleOrDefault().EnglishName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    @{
+                        <table>
+                            @foreach (var theatr in db.Theaters)
+                            {
+                                if (item.HomeCinemaID == theatr.HomeCinemaID)
+                                {
+
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayName(theatr.TheatersName)
+                                        </td>
+                                        <td>
+                                            <span>&nbsp;</span>
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Details", "Details", "Theatres", new { id = theatr.MovieTheatersID }, null)
+                                        </td>
+                                    </tr>
+
+                                }
+                            }
+
+                        </table>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(model=>item.Showing)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.HomeCinemaID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.HomeCinemaID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.HomeCinemaID })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

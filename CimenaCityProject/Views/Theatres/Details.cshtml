@@ -45,6 +45,8 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.MovieTheatersID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MovieTheatersID }) | @Html.ActionLink("Delete", "Delete", new { id = Model.MovieTheatersID }) <br />
+    Back To: 
+    @Html.ActionLink("Theatres", "Index") |
+    @Html.ActionLink(" Home-Cinema", "Index","HomeCinema")
 </p>

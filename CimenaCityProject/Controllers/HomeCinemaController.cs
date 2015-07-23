@@ -17,9 +17,38 @@ namespace CimenaCityProject.Controllers
         private HomeCinemaContext db = new HomeCinemaContext();
 
         // GET: /HomeCinema/
-        public ActionResult Index()
+        public ActionResult Index(string sortingOrder)
         {
-            return View(db.HomeCinemas.ToList());
+            var result = new List<HomeCinema>();
+            if (!string.IsNullOrEmpty(sortingOrder))
+            {
+                switch (sortingOrder)
+                {
+                    case "CinemaName":
+                        result = db.HomeCinemas.OrderBy(x => x.CinemaName).ToList();
+                        break;
+                    case "City":
+                        result = db.HomeCinemas.OrderBy(x => x.CityID).ToList();
+                        break;
+                    case "Address":
+                        result = db.HomeCinemas.OrderBy(x => x.Address).ToList();
+                        break;
+                    case "PhoneNumber":
+                        result = db.HomeCinemas.OrderBy(x => x.PhoneNumber).ToList();
+                        break;
+                    case "Showing":
+                        result = db.HomeCinemas.OrderByDescending(x => x.Showing).ToList();
+                        break;
+                    default:
+                        result = db.HomeCinemas.ToList();
+                        break;
+                }
+            }
+            else
+            {
+                result = db.HomeCinemas.ToList();
+            }
+            return View(result);
         }
 
         // GET: /HomeCinema/Details/5
@@ -98,7 +127,7 @@ namespace CimenaCityProject.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CityID = new SelectList(db.CityList.ToArray(), "CityID", "EnglishName");
+            ViewBag.CityID = new SelectList(db.CityList, "CityID", "EnglishName",homecinema.CityID);
             return View(homecinema);
         }
 

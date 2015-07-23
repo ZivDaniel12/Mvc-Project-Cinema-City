@@ -8,73 +8,82 @@
 
 }
 
+
 <style type="text/css">
-    .html-marquee {
-        height:300px;
-        width:300px;
+    .marquee {
+        height: 400px;
+        width: 1200px;
+        overflow:hidden
     }
 </style>
 
 
-<div class=" center-block" >
+
+<div  >
     <h4 style="float:none">The Last New Movie's</h4>
 
-    <div class="center-block" style="width:200px;">
-        <marquee id="marqueePlace" class="html-marquee" direction="up" behavior="scroll" scrollamount="2"
-                 onmouseover="stop()" onmouseout="start()">
+    <div >
+        <div id="marquee" class="marquee"  >
 
             <table>
+                <tr>
+                    @for (int i = 0; i < 4; i++)
+                    {
+                        foreach (var item in Model.Movie)
+                        {
+                            <th>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </th>
+                            <th>
+                                @if (item.PictureSmall != null)
+                                {
+                                    var base64 = Convert.ToBase64String(item.PictureMedium);
+                                    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                    <a href="@Url.Action("Details", "Movie", new { id = item.MovieID })">
+                                        <img id="inputImage" src="@imgSrc" alt="@item.MovieID" />
+                                    </a>
+                                }
+                                <br />
+                                @Html.DisplayFor(model => item.MovieName)
 
-                @foreach (var item in Model.Movie)
-                {
-                    <tr>
-                        <th>
-                            @if (item.PictureSmall != null)
-                            {
-                                var base64 = Convert.ToBase64String(item.PictureMedium);
-                                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-                                <a href="@Url.Action("Details", "Movie", new { id = item.MovieID })">
-                                    <img id="inputImage" src="@imgSrc" alt="@item.MovieID"  />
-                                </a>
-                            }
-                            <br />
-                        </th>
-                    </tr>
-                    <tr class="display-field">
-                        <td style="font-size:x-large">
-                            @Html.DisplayFor(model => item.MovieName)
-                        </td>
-                    </tr>
+                                <br />
+                                Director
 
-                    <tr class="display-label">
-                        <th>
-                            Director
-                        </th>
-                    </tr>
-                    <tr class="display-field">
-                        <td>
-                            @Html.DisplayFor(model => item.Director)
-                        </td>
-                    </tr>
+                                @Html.DisplayFor(model => item.Director)
+                                <br />
+                                Release Date
 
-                    <tr class="display-label">
-                        <th>
-                            Release Date
-                        </th>
-                    </tr>
-                    <tr class="display-field">
-                        <td>
-                            @Html.DisplayFor(model => item.ReleaseDate)
-                            <br /><br />
-                        </td>
-                    </tr>
+                                @Html.DisplayFor(model => item.ReleaseDate)
+                                <br />
+                            </th>
 
-                }
 
+                        }
+                    }
+
+                </tr>
             </table>
 
-        </marquee>
+        </div>
 
     </div>
 
 </div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type='text/javascript' src='//cdn.jsdelivr.net/jquery.marquee/1.3.1/jquery.marquee.min.js'></script>
+@*<script type='text/javascript' src="//assets.codepen.io/assets/common/stopExecutionOnTimeout-6c99970ade81e43be51fa877be0f7600.js"></script>*@
+<script type="text/javascript">
+    $('#marquee').marquee({
+        diraction: 'right',
+        duplicated: 'true',
+        speed: 35000,
+    })
+
+    $('#marquee').mouseenter(function () {
+        $('#marquee').marquee('pause')
+    })
+    $('#marquee').mouseleave(function () {
+        $('#marquee').marquee('resume')
+    })
+
+</script>

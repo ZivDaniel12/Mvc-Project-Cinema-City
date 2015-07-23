@@ -1,10 +1,12 @@
-﻿@model CimenaCityProject.ViewModels.TimeScreeningData
+﻿@using CimenaCityProject.Models
+@model CimenaCityProject.ViewModels.TimeScreeningData
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Contracts";
+    HomeCinemaContext db = new HomeCinemaContext();
 }
 
-<h2>Index</h2>
+<h2>Contracts</h2>
 <link href="~/Content/jquery-ui.css" rel="stylesheet" />
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script src="~/Scripts/jquery.sigmacape.unobtrusive-1.1.2.js"></script>
@@ -22,7 +24,6 @@
         });
     });
 
-    
 </script>
 
 <p>
@@ -50,12 +51,12 @@
             <div>
                 <label><b>Search by Movie   </b></label>
                 @Html.TextBox("searchByMovie", null, new { id = "searchByMovie" })
-            </div>
-            <div>
+
                 <label><b>Search by Home Cinema </b></label>
                 @Html.TextBox("searchByHomeCinema", null, new { id = "searchByHomeCinema" })
+
+                <input type="submit" value="Search " />
             </div>
-            <input type="submit" value="Search " />
         </div>
     </div>
 }
@@ -98,10 +99,9 @@
                     {
                         if (movie.MovieID == Model.ShowsTime.Where(x => x.MovieShowTimeID == item.MovieShowTimeID).FirstOrDefault().MovieID)
                         {
-                            @Html.DisplayFor(modelItem => movie.MovieName)
+                            @Html.ActionLink(movie.MovieName, "Details", "Movie", new { id = movie.MovieID }, null)
                             break;
                         }
-
                     }
                 </td>
                 <td>
@@ -120,7 +120,8 @@
                     {
                         if (cinema.HomeCinemaID == Model.Theatres.Where(x => x.MovieTheatersID == item.TheatresID).FirstOrDefault().HomeCinemaID)
                         {
-                            @Html.DisplayFor(modelItem => cinema.CinemaName)
+                            string cityName = db.CityList.Where(x=>x.CityID == cinema.CityID).FirstOrDefault().EnglishName;
+                            @Html.ActionLink(cinema.CinemaName, "Details", "HomeCinema", new { id = cinema.HomeCinemaID }, null) <span>| &nbsp;</span> @Html.DisplayFor(modelItem=>cityName)
                             break;
                         }
                     }

@@ -24,7 +24,6 @@ namespace CimenaCityProject.Controllers
             viewMovieQry.MovieShowTime = (from mst in db.MovieShowTimes select mst).ToArray();
 
             return View(viewMovieQry);
-//            return View(db.Movies.ToList());
         }
 
         public ActionResult About()
@@ -36,9 +35,7 @@ namespace CimenaCityProject.Controllers
 
         public ActionResult Contact()
         {
-            ViewBag.Message = db.HomeCinemas.ToList();
-
-            return View();
+            return View(db.HomeCinemas.ToList());
         }
     }
 }

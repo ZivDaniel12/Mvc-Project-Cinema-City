@@ -1,0 +1,54 @@
+﻿@using CimenaCityProject.Models
+@model IEnumerable<CimenaCityProject.Models.HomeCinema>
+
+    <table class="table">
+        @{  HomeCinemaContext db = new HomeCinemaContext();}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CinemaName)
+                </td>
+                <td>
+                    @db.CityList.Where(x => x.CityID == item.CityID).SingleOrDefault().EnglishName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    @{
+                        <table class="table">
+                            @foreach (var theatr in db.Theaters)
+                            {
+                                if (item.HomeCinemaID == theatr.HomeCinemaID)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayName(theatr.TheatersName)
+                                        </td>
+                                        <td>
+                                            <span>&nbsp;</span>
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Details", "Details", "Theatres", new { id = theatr.MovieTheatersID }, null)
+                                        </td>
+                                    </tr>
+
+                                }
+                            }
+
+                        </table>
+}
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.HomeCinemaID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.HomeCinemaID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.HomeCinemaID })
+                </td>
+            </tr>
+        }
+
+    </table>

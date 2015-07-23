@@ -5,14 +5,14 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h3>@Model.CinemaName Details</h3>
 @{HomeCinemaContext db = new HomeCinemaContext();}
 <div>
-    <h4>HomeCinema</h4>
+    <h4></h4>
 	<hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.CinemaName)
+            Cinema Name 
         </dt>
 
         <dd>
@@ -20,7 +20,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => db.CityList.Where(x => x.CityID == model.CityID).SingleOrDefault().EnglishName)
+            English Name
         </dt>
 
         <dd>
@@ -28,7 +28,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Address)
+            Address
         </dt>
 
         <dd>
@@ -36,13 +36,47 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.PhoneNumber)
+            Phone Number
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.PhoneNumber)
         </dd>
+        <dt>
+            <br />
+        </dt>
+        <dd>
+            <br />
+        </dd>
+        <dt>
+            Theatres
+        </dt>
+        <dd>
+            @{
+                <table>
+                    @foreach (var theatr in db.Theaters)
+                    {
+                        if (Model.HomeCinemaID == theatr.HomeCinemaID)
+                        {
 
+                            <tr>
+                                <td>
+                                    @Html.DisplayName(theatr.TheatersName)
+                                </td>
+                                <td>
+                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Details", "Details", "Theatres", new { id = theatr.MovieTheatersID }, null)
+                                </td>
+                            </tr>
+
+                        }
+                    }
+
+                </table>
+            }
+        </dd>
     </dl>
 </div>
 <p>

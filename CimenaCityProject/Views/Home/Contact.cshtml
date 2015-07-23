@@ -1,17 +1,54 @@
-﻿@{
+﻿@using CimenaCityProject.Models;
+@model IEnumerable<CimenaCityProject.Models.HomeCinema>
+
+
+@{
     ViewBag.Title = "Contact";
 }
 <h2>@ViewBag.Title.</h2>
 <h3>@ViewBag.Message</h3>
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
+<table style="width:550px;border-spacing:10px">
+    <tr>
+        <th>
+            Cinema Name
+        </th>
+        <th>
+            City
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Address)
+        </th>
+        <th>
+            Phone Number
+        </th>
+
+    </tr>
+    @{  HomeCinemaContext db = new HomeCinemaContext();}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CinemaName)
+            </td>
+            <td>
+                @db.CityList.Where(x => x.CityID == item.CityID).SingleOrDefault().EnglishName
+            </td>
+            <td>
+                <address><br />  @Html.DisplayFor(modelItem => item.Address) </address>
+            </td>
+            <td>
+                <abbr title="Phone">  @Html.DisplayFor(modelItem => item.PhoneNumber) </abbr>
+            </td>
+        </tr>
+    }
+   
+</table>
+
+<br /><br /><br /><br />
+
 
 <address>
-    <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
+    <strong>Support:</strong> <a href="mailto:Support@CinemaCity.com">Support@CinemaCity.com</a><br />
+    <strong>Marketing:</strong> <a href="mailto:CustemerServiceg@CinemaCity.com">CustemerServiceg@CinemaCity.com</a>
 </address>

@@ -60,6 +60,13 @@ namespace CimenaCityProject.Controllers
         {
             // here  start to close the Event with the cartID
             string cartID = Guid.NewGuid().ToString();
+            foreach (var item in db.Orders)
+            {
+                if (item.CartId == cartID)
+                {
+                    cartID = Guid.NewGuid().ToString();
+                }
+            }
             bool flag = false;
 
             var theatresChair = new TheatersChairs(
