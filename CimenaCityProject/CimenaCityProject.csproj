@@ -166,6 +166,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ChairsController.cs" />
     <Compile Include="Controllers\CheckOutController.cs" />
+    <Compile Include="Controllers\EcomController.cs" />
     <Compile Include="Controllers\HomeCinemaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MovieController.cs" />
@@ -215,6 +216,13 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Image\Elements\ajax-loader.gif" />
+    <Content Include="Image\Rate\star-black32.png" />
+    <Content Include="Image\Rate\star-gold32.png" />
+    <Content Include="Image\Rate\star-red32.png" />
+    <Content Include="Image\Rate\star-white32.png" />
+    <Content Include="Image\Rate\star_2.gif" />
+    <Content Include="Image\Rate\star_3.gif" />
+    <Content Include="Image\Rate\star_4.gif" />
     <Content Include="Image\SelectChair\available_seat_img.gif" />
     <Content Include="Image\SelectChair\booked_seat_img.gif" />
     <Content Include="Image\SelectChair\selected_seat_img.gif" />
@@ -225,8 +233,8 @@
     </Content>
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery.sigmacape.unobtrusive-1.1.2.js" />
-    <Content Include="Views\CheckOut\CheckoutReview.cshtml" />
-    <Content Include="Views\CheckOut\CheckoutCancel.cshtml">
+    <Content Include="Views\Ecom\CheckoutReview.cshtml" />
+    <Content Include="Views\Ecom\CheckoutCancel.cshtml">
       <BrowseToURL>~/CheckOut/CheckoutCancel</BrowseToURL>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -275,7 +283,6 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Movie\Create.cshtml" />
     <Content Include="Views\Movie\Delete.cshtml" />
-    <Content Include="Views\Movie\Details.cshtml" />
     <Content Include="Views\Movie\Index.cshtml" />
     <Content Include="Views\Movie\Edit.cshtml" />
     <Content Include="Views\Movie\FileUpload.cshtml" />
@@ -289,13 +296,13 @@
     <Content Include="Views\Person\Details.cshtml" />
     <Content Include="Views\Person\Edit.cshtml" />
     <Content Include="Views\Person\Index.cshtml" />
-    <Content Include="Views\CheckOut\CheckoutComplete.cshtml" />
-    <Content Include="Views\CheckOut\CheckoutError.cshtml" />
+    <Content Include="Views\Ecom\CheckoutComplete.cshtml" />
+    <Content Include="Views\Ecom\CheckoutError.cshtml" />
     <Content Include="Views\CheckOut\Create.cshtml" />
     <Content Include="Views\CheckOut\Delete.cshtml" />
     <Content Include="Views\CheckOut\Edit.cshtml" />
     <Content Include="Views\CheckOut\Index.cshtml" />
-    <Content Include="Views\CheckOut\CheckoutStart.cshtml" />
+    <Content Include="Views\Ecom\CheckoutStart.cshtml" />
     <Content Include="Views\Chairs\Create.cshtml" />
     <Content Include="Views\Chairs\Delete.cshtml" />
     <Content Include="Views\Chairs\Details.cshtml" />
@@ -329,6 +336,9 @@
     <Content Include="Views\Admin\ControlPanel.cshtml" />
     <Content Include="Views\CheckOut\Details.cshtml" />
     <Content Include="Views\HomeCinema\IndexSorted.cshtml" />
+    <Content Include="Views\Ecom\Movie.cshtml" />
+    <Content Include="Views\Movie\Details.cshtml" />
+    <Content Include="Views\Ecom\Chair.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

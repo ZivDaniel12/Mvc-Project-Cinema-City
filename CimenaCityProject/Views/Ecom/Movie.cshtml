@@ -1,0 +1,238 @@
+﻿@using CimenaCityProject.Models;
+@using CimenaCityProject.CustomHtmlHelper;
+@model CimenaCityProject.ViewModels.MovieData
+@{
+    ViewBag.Title = "Details";
+    var HomeCinemaCity = (SelectList)ViewBag.HomeCinemaCity;
+    var ShowTimeList = (SelectList)ViewBag.ShowTimeList;
+}
+
+<h2>Details</h2>
+
+
+<div>
+    <h4>Movie</h4>
+    <hr />
+    @using (Html.BeginForm("Movie", "Ecom", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        @Html.Raw(TempData["msg"])
+        @Html.HiddenFor(m => m.Movie.Single().MovieID)
+
+        <dl class=" dl-horizontal">
+            <dt>
+                @Html.DisplayFor(model => model.Movie.Single().MovieName)
+            </dt>
+            @*(me => me.MovieName == "MovieName").SingleOrDefault()*@
+            <dd>
+                @{
+        if (Model.Movie.Where(me => me.PictureLarge == me.PictureLarge).SingleOrDefault().PictureLarge != null)
+        {
+            var base64 = Convert.ToBase64String(Model.Movie.Where(me => me.PictureLarge == me.PictureLarge).SingleOrDefault().PictureLarge);
+            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+            <img src="@imgSrc" alt="Unable to display" />
+                    <br />
+        }
+                }
+            </dd>
+            <dt>
+                <br />
+                Director
+
+            </dt>
+
+            <dd>
+                <br />
+                @Html.DisplayFor(model => model.Movie.Where(me => me.Director == me.Director).SingleOrDefault().Director)
+            </dd>
+
+            <dt>
+                <br />
+                MovieDescrption
+            </dt>
+
+            <dd>
+                <br />
+                @Html.DisplayFor(model => model.Movie.Where(me => me.MovieDescrption == me.MovieDescrption).SingleOrDefault().MovieDescrption)
+            </dd>
+
+            <dt>
+                <br />
+                Release Date
+            </dt>
+
+            <dd>
+                <br />
+                @Html.DisplayFor(model => model.Movie.Where(me => me.ReleaseDate == me.ReleaseDate).SingleOrDefault().ReleaseDate)
+            </dd>
+
+            <dt>
+                <br />
+                Rate
+            </dt>
+            <dd>
+                <br />
+                @Html.DisplayFor(model => model.Movie.Where(me => me.Rate == me.Rate).SingleOrDefault().Rate) STARS
+
+            </dd>
+            <dt>
+                <br />
+                Home Cinema
+            </dt>
+            <dd>
+                <br />
+                <p style="color: black">
+                    @Html.DropDownList("HomeCinemaCity", HomeCinemaCity, "Chosee HomeCinema", new { id = "HomeCinemaCity" })
+                </p>
+            </dd>
+            <dt>
+                <br />
+                <br />
+                Show Times
+            </dt>
+            <dd>
+                <br />
+                <div id="divResult"></div>
+                <br />
+                <p style="color:black">
+                    @Html.DropDownList("ShowTimeList", ShowTimeList, "Select Time", new { id = "ShowTime", name = "ShowTime" })
+                </p>
+            </dd>
+        </dl>
+
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2">
+                <input type="submit" value="Buy Tickets Now!" class="btn btn-default" />
+            </div>
+        </div>
+    }
+</div>
+
+@Html.ActionLink("Back to List", "Index")
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+
+
+
+    $(function () {
+        $('#HomeCinemaCity').change(function () {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetShowTime", "Ecom")',
+                data: {
+                    HomeCinemaID: $('#HomeCinemaCity').val(),
+                    MovieID: $('#MovieID').val()
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#ShowTime').html('');
+                    $.each(data, function (id, option) {
+                        var name = DatetimeConverter(option.name)
+                        $('#ShowTime').append($('<option></option>').val(option.id).html(name))
+                        $.ajax({
+                            type: "GET",
+                            url: '@Url.Action("getTheatresName", "Ecom")',
+                            data: { ShowTimeID: $('#ShowTime').val() },
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#divResult').html(data);
+                            },
+                            error: function (xhr, ajaxOptions, thrownEror) {
+                                //alert("False" + xhr + "..." + ajaxOptions + "... " + thrownEror);
+                            }
+                        });
+                    })
+                },
+                error: function (xhr, ajaxOptions, thrownEror) {
+                    //alert("False" + xhr + "..." + ajaxOptions + "... " + thrownEror);
+                }
+            });
+        });
+    });
+
+        $('#ShowTime').change(function () {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("getTheatresName")',
+                data: { ShowTimeID: $('#ShowTime').val() },
+                dataType: 'json',
+                success: function (data) {
+                    $('#divResult').html(data);
+                    
+                },
+                error: function (xhr, ajaxOptions, thrownEror) {
+                    //alert("False" + xhr + "..." + ajaxOptions + "... " + thrownEror);
+                }
+            });
+        });
+
+
+    // START Datetime Converters
+    function DateConverter(date) {
+        var aux = null;
+        if (date != null) {
+            aux = date.substring(6);
+            aux = aux.substring(0, aux.indexOf(')'));
+        }
+
+        return aux != null ? getISODate(new Date(parseInt(aux))) : "";
+    }
+
+    function DatetimeConverter(date) {
+        var aux = null;
+        if (date != null) {
+            aux = date.substring(6);
+            aux = aux.substring(0, aux.indexOf(')'));
+        }
+        return aux != null ? getISODateTime(new Date(parseInt(aux))) : "";
+    }
+
+    function getISODate(d) {
+        // padding function
+        var s = function (a, b) { return (1e15 + a + "").slice(-b) };
+
+        // default date parameter
+        if (typeof d === 'undefined') {
+            d = new Date();
+        };
+
+        // return ISO datetime
+        return zeroPad(d.getDate(), 2) + '/' +
+        zeroPad(s(d.getMonth() + 1, 2), 2) + '/' +
+        zeroPad(d.getFullYear(), 4);
+    }
+
+    function getISODateTime(d) {
+        // padding function
+        var s = function (a, b) { return (1e15 + a + "").slice(-b) };
+
+        // default date parameter
+        if (typeof d === 'undefined') {
+            d = new Date();
+        };
+
+        // return ISO datetime
+        return zeroPad(d.getHours(), 2) + ":" +
+        zeroPad(d.getMinutes(), 2) + ":" +
+        zeroPad(d.getSeconds(), 2);
+    }
+
+    function zeroPad(num, places) {
+        var zero = places - num.toString().length + 1;
+        return Array(+(zero > 0 && zero)).join("0") + num;
+    }
+    // END Datetime Converters
+
+
+</script>
+
+
+

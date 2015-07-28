@@ -23,10 +23,10 @@ namespace CimenaCityProject.Controllers
         private HomeCinemaContext db = new HomeCinemaContext();
         
         // GET: /Movie/
-        public ActionResult Index(int? id, int? MovieShowTimeID)
+        public ActionResult Index(int? id, int? MovieShowTimeID,string sortingOrder)
         {
             var viewMovieQry = new MovieData();
-
+            
             if (id != null)
             {
                 ViewBag.MovieDataID = id.Value;
@@ -42,93 +42,121 @@ namespace CimenaCityProject.Controllers
                         (d => d.MovieShowTimeID == MovieShowTimeID.Value).SingleOrDefault().MovieID);
             }
 
+            if (!string.IsNullOrEmpty(sortingOrder))
+            {
+                switch (sortingOrder)
+                {
+                    case "MovieName":
+                        viewMovieQry.Movie = viewMovieQry.Movie.OrderBy(x => x.MovieName).ToList();
+                        break;
+                    case "ReleaseDate":
+                        viewMovieQry.Movie = viewMovieQry.Movie.OrderBy(x => x.ReleaseDate).ToList();
+                        break;
+                    case "Rate":
+                        viewMovieQry.Movie = viewMovieQry.Movie.OrderByDescending(x => x.Rate).ToList();
+                        break;
+                    case "Director":
+                        viewMovieQry.Movie = viewMovieQry.Movie.OrderBy(x => x.Director).ToList();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
             return View(viewMovieQry);
         }
 
         // GET: /Movie/Details/5
-        public ActionResult Details(int? id, int? error)
+        public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            // this if mmber come form the SelectChair and was error overther.. 
-            if (error != null)
-            {
-                switch (error)
-                {
-                    case 1:
-                        TempData["msg"] = "<script>alert('All Chair for this Time Selected..');</script>";
-                        break;
-                    default:
-                        break;
-                }
-               
-            }           
-            //I need to add the geoLocation system.devices.location?
-
-            // find the movie by the ID 
-            var viewMovieQry = new MovieData(id);
-          
-            //DropDownList. 
-            ViewBag.HomeCinemaCity = new SelectList(db.HomeCinemas.Where(x => x.Showing == true).ToList(), "HomeCinemaID", "CinemaName");
-            ViewBag.ShowTimeList = new SelectList(db.MovieShowTimes.Where(mst => mst.MovieID == id && mst.IsDisplay == true).OrderBy(x=>x.ShowTime.CompareTo(DateTime.Now)).ToArray(), "MovieShowTimeID", "ShowTime");
-
-            // check if have any result in null go to ERR 400 
-            if (viewMovieQry.Movie == null)
+            Movie movie = db.Movies.Find(id);
+            if (movie == null)
             {
                 return HttpNotFound();
             }
-            return View(viewMovieQry);
+            return View(movie);
+
+            //// this if mmber come form the SelectChair and was error overther.. 
+            //if (error != null)
+            //{
+            //    switch (error)
+            //    {
+            //        // the first case i think can be. 
+            //        case 1:
+            //            TempData["msg"] = "<script>alert('All Chair for this Time Selected..');</script>";
+            //            break;
+            //        default:
+            //            break;
+            //    }
+            //}           
+            ////I need to add the geoLocation system.devices.location?
+            //// find the movie by the ID 
+            //var viewMovieQry = new MovieData(id);
+          
+            ////DropDownList. 
+            //ViewBag.HomeCinemaCity = new SelectList(db.HomeCinemas.Where(x => x.Showing == true).ToList(), "HomeCinemaID", "CinemaName");
+            //ViewBag.ShowTimeList = new SelectList(db.MovieShowTimes.Where(mst => mst.MovieID == id && mst.IsDisplay == true)
+            //.OrderBy(x=>x.ShowTime.CompareTo(DateTime.Now)).ToArray(), "MovieShowTimeID", "ShowTime");
+
+            //// check if have any result in null go to ERR 400 
+            //if (viewMovieQry.Movie == null)
+            //{
+            //    return HttpNotFound();
+            //}
+            //return View(viewMovieQry);
         }
 
+        ////POST: /Movie/Details/5
+        //[HttpPost]
+        //public ActionResult Details(string ShowTimeList, string HomeCinemaCity, int? MovieID)
+        //{
+        //    //if (string.IsNullOrEmpty(ShowTimeList) || string.IsNullOrEmpty(HomeCinemaCity) || !MovieID.HasValue)
+        //    //{
+        //    //    return RedirectToAction("Index","Home");
+        //    //}
 
+        //    //int showtimeID = int.Parse(ShowTimeList);
+        //    //int homeCinemaID = int.Parse(HomeCinemaCity);
 
-        //POST: /Movie/Details/5
-        [HttpPost]
-        public ActionResult Details(string ShowTimeList, string HomeCinemaCity, int? MovieID)
-        {
+        //    //List<TimeScreening> tsID = db.TimeScreening.Where(ts => ts.MovieShowTimeID == showtimeID).ToList();
+        //    //List<MovieTheaters> mtID = db.Theaters.Where(mth => mth.HomeCinemaID == homeCinemaID).ToList();
 
-            if (string.IsNullOrEmpty(ShowTimeList) || string.IsNullOrEmpty(HomeCinemaCity) || !MovieID.HasValue)
-            {
-                return RedirectToAction("Index","Home");
-            }
+        //    //int theatresID = 1;
+        //    //int timescreenid = 1; 
+        //    //bool flag = false;
+        //    //foreach (var theatres in mtID)
+        //    //{
 
-            int showtimeID = int.Parse(ShowTimeList);
-            int homeCinemaID = int.Parse(HomeCinemaCity);
+        //    //    // if flag is true break; 
+        //    //    if (!flag)
+        //    //    {
+        //    //        foreach (var tScreening in tsID)
+        //    //        {
+        //    //            if (theatres.MovieTheatersID == tScreening.TheatresID && tScreening.MovieShowTimeID == showtimeID)
+        //    //            {
+        //    //                timescreenid = tScreening.TimeScreeningID;
+        //    //                theatresID = theatres.MovieTheatersID;
+        //    //                flag = true;
+        //    //                break;
+        //    //            }
+        //    //        }
+        //    //    }
+        //    //    else
+        //    //        break;
+        //    //}
 
-            List<TimeScreening> tsID = db.TimeScreening.Where(ts => ts.MovieShowTimeID == showtimeID).ToList();
-            List<MovieTheaters> mtID = db.Theaters.Where(mth => mth.HomeCinemaID == homeCinemaID).ToList();
-
-            int theatresID = 1;
-            int timescreenid = 1; 
-            bool flag = false;
-            foreach (var theatres in mtID)
-            {
-
-                // if flag is true break; 
-                if (!flag)
-                {
-                    foreach (var tScreening in tsID)
-                    {
-                        if (theatres.MovieTheatersID == tScreening.TheatresID && tScreening.MovieShowTimeID == showtimeID)
-                        {
-                            timescreenid = tScreening.TimeScreeningID;
-                            theatresID = theatres.MovieTheatersID;
-                            flag = true;
-                            break;
-                        }
-                    }
-                }
-                else
-                    break;
-            }
-
-            return RedirectToAction("SelectChair", "Chairs", new { id = showtimeID, theatresID = theatresID, timescreenID=timescreenid});
-        }
+        //    //return RedirectToAction("SelectChair", "Chairs", new { id = showtimeID, theatresID = theatresID, timescreenID=timescreenid});
+        //    return View();
+        //}
 
         // GET: /Movie/Create
+
+
         public ActionResult Create()
         {
             return View();
@@ -223,24 +251,15 @@ namespace CimenaCityProject.Controllers
         // GET: /Movie/Edit/5
         public ActionResult Edit(int? id)
         {
-
             if (TempData.ContainsKey("MovieID"))
             {
                 TempData.Remove("MovieID");
             }
-            
-            
-
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
-            MovieData md =  new MovieData();
-            md.MovieShowTime = from mst in db.MovieShowTimes
-                               where mst.MovieID == id
-                               orderby mst.ShowTime
-                               select mst;
+            MovieData md = new MovieData(id);
 
             ViewData.Add("showTimeQry",md);
 
@@ -391,7 +410,6 @@ namespace CimenaCityProject.Controllers
 
         }
 
-
         // POST: /Movie/FileUpload/1
         [HttpPost, ActionName("FileUpload")]
         public ActionResult FileUploadPost(HttpPostedFileBase file 
@@ -469,73 +487,6 @@ namespace CimenaCityProject.Controllers
                 return RedirectToAction("Index", "Movie");
             }
 
-        }
-
-
-        public JsonResult GetShowTime(int HomeCinemaID,int MovieID)
-        {
-            List<dynamic> data = new List<dynamic>();
-            foreach (var showtime in db.MovieShowTimes)
-            {
-                foreach (var theatres in db.Theaters)
-                {
-                    if (showtime.MovieID == MovieID && theatres.HomeCinemaID == HomeCinemaID)
-                    {
-                        try
-                        {
-                            int mvieShowTimeID = db.TimeScreening
-                                .Where(x => x.TimeScreeningID == db.TimeScreening
-                                    .Where(y=>y.MovieShowTimeID == 
-                                        showtime.MovieShowTimeID & y.TheatresID == 
-                                        theatres.MovieTheatersID)
-                                        .FirstOrDefault().TimeScreeningID)
-                                        .First().MovieShowTimeID;
-                           
-                            //add to list. 
-                            data.AddRange((from time in db.MovieShowTimes
-                                           where time.MovieShowTimeID == mvieShowTimeID
-                                           select new
-                                           {
-                                               id = time.MovieShowTimeID,
-                                               name = time.ShowTime
-                                           }).ToList());
-                        }
-                        catch (Exception ex )
-                        {
-                            string message = ex.Message;
-                            // sometime we have a homecinema but he didnt screen this movie . so for this the catch.
-                        }
-                        
-                    }
-                }
-            }
-
-            return Json(data, JsonRequestBehavior.AllowGet);
-        }
-        public JsonResult getTheatresName(int ShowTimeID)
-        {
-            bool flag = false;
-            string data = string.Empty;
-            foreach (var theatres in db.Theaters)
-            {
-                if (!flag)
-                {
-                    foreach (var timescreen in db.TimeScreening)
-                    {
-                        if (timescreen.MovieShowTimeID == ShowTimeID && theatres.MovieTheatersID == timescreen.TheatresID)
-                        {
-                            data = theatres.TheatersName + " " + theatres.NumberHall;
-                            flag = true;
-                            break;
-                        }
-                    }
-                }
-                else
-                    break;
-               
-            }
-            return Json(data, JsonRequestBehavior.AllowGet);
-        
         }
 
         //change the size of the pic XL L S .

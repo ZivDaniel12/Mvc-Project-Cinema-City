@@ -1,11 +1,12 @@
-﻿
-@using CimenaCityProject.Models
+﻿@using CimenaCityProject.Models
 @model CimenaCityProject.ViewModels.MovieData
 
 
 @{
     ViewBag.Title = "Movie Index";
 }
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery-ui.js"></script>
 
 <h2>Movie Index</h2>
 
@@ -13,84 +14,120 @@
     @Html.ActionLink("Create New", "Create") <br /><span>_____</span> <br /> @Html.ActionLink(" Go to Show Time's index","Index","MovieShowTime") |
     @Html.ActionLink(" Return Control Panel", "ControlPanel", "Admin")
 </p>
-<table class="table">
 
-    <tr>
-        <th>
-          Movie Name
-        </th>
-        <th>
-          Movie 
-        </th>
-        <th>
-          Release Date
-        </th>
-        <th>
-          Rate
-        </th>
-        <th>
-           Director
-        </th>
-        <th>
-           Movie Descrption
-        </th>
+<div id="divLoading" style="display:none">
+    <img src="~/Image/Elements/ajax-loader.gif" />
+</div>
+<div id="divResult">
+    <table class="table">
 
-        <th>
-            Movie Show Time
-        </th>
-
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model.Movie)
-    {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.MovieName)
-            </td>
-            <td>
-                @if (item.PictureSmall != null)
-                {
-                    var base64 = Convert.ToBase64String(item.PictureSmall);
-                    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+            <th>
+                @Ajax.ActionLink("Movie Name", "Index", new { sortingOrder = "MovieName" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+                
+            </th>
+            <th>
 
-                    <img src="@imgSrc" alt="Unable to display" />
-                    <br />
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReleaseDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Director)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MovieDescrption)
-            </td>
+            </th>
+            <th>
+                @Ajax.ActionLink("Release Date", "Index", new { sortingOrder = "ReleaseDate" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+                
+            </th>
+            <th>
+                @Ajax.ActionLink("Rate", "Index", new { sortingOrder = "Rate" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+                
+            </th>
+            <th>
+                @Ajax.ActionLink("Director", "Index", new { sortingOrder = "Director" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+                
+            </th>
+            <th>
+                Movie Descrption
+            </th>
 
-            <td>
-                @{
-                    foreach (var showTime in Model.MovieShowTime)
+            <th>
+               Show Time
+            </th>
+
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Movie)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MovieName)
+                </td>
+                <td>
+                    @if (item.PictureSmall != null)
                     {
-                        if (showTime.MovieID == item.MovieID)
+                        var base64 = Convert.ToBase64String(item.PictureSmall);
+                        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+                        <img src="@imgSrc" alt="Unable to display" />
+                        <br />
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReleaseDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rate)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Director)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MovieDescrption)
+                </td>
+
+                <td>
+                    @{
+                        foreach (var showTime in Model.MovieShowTime)
                         {
-                            @showTime.ShowTime.TimeOfDay
-                                <br />
+                            if (showTime.MovieID == item.MovieID)
+                            {
+                                @showTime.ShowTime.TimeOfDay
+                                    <br />
+                            }
                         }
                     }
-                }
-            </td>
-            <td></td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.MovieID })|
-                @Html.ActionLink("Details", "Details", new { id = item.MovieID })|
-                @Html.ActionLink("Delete", "Delete", new { id = item.MovieID })
+                </td>
+                <td></td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.MovieID })|
+                    @Html.ActionLink("Details", "Details", new { id = item.MovieID })|
+                    @Html.ActionLink("Delete", "Delete", new { id = item.MovieID })
 
-            </td>
-        </tr>
-    }
+                </td>
+            </tr>
+        }
 
-</table>
+    </table>
+</div>
+

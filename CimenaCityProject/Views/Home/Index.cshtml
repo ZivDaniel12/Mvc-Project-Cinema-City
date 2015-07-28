@@ -20,7 +20,7 @@
 
 
 <div  >
-    <h4 style="float:none">The Last New Movie's</h4>
+    <h4 style="float:none">Now in Cinema!</h4>
 
     <div >
         <div id="marquee" class="marquee"  >
@@ -39,7 +39,7 @@
                                 {
                                     var base64 = Convert.ToBase64String(item.PictureMedium);
                                     var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-                                    <a href="@Url.Action("Details", "Movie", new { id = item.MovieID })">
+                                    <a href="@Url.Action("Movie", "Ecom", new { id = item.MovieID })">
                                         <img id="inputImage" src="@imgSrc" alt="@item.MovieID" />
                                     </a>
                                 }

@@ -7,7 +7,6 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
-
 using CimenaCityProject.Models;
 using CimenaCityProject.ViewModels;
 
@@ -41,104 +40,106 @@ namespace CimenaCityProject.Controllers
             return View(chairsorderd);
         }
 
-        // GET: /Chairs/SelectChair/showTimeID
-        public ActionResult SelectChair(int? id, int? theatresID,int? timescreenID)
-        {
-            if (!id.HasValue || !theatresID.HasValue || !timescreenID.HasValue)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var theatresChair = new TheatersChairs(id, theatresID,timescreenID);
+        //// GET: /Chairs/SelectChair/showTimeID
+        //public ActionResult SelectChair(int? id, int? theatresID,int? timescreenID)
+        //{
+        //    if (!id.HasValue || !theatresID.HasValue || !timescreenID.HasValue)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    var theatresChair = new TheatersChairs(id, theatresID,timescreenID);
 
-            return View(theatresChair);
-        }
+        //    return View(theatresChair);
+        //}
 
-        // POST: /Chairs/SelectChair
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult SelectChair(string[] SelectedChair, TheatersChairs theatersChairs)
-        {
-            // here  start to close the Event with the cartID
-            string cartID = Guid.NewGuid().ToString();
-            foreach (var item in db.Orders)
-            {
-                if (item.CartId == cartID)
-                {
-                    cartID = Guid.NewGuid().ToString();
-                }
-            }
-            bool flag = false;
+        //// POST: /Chairs/SelectChair
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult SelectChair(string[] SelectedChair, TheatersChairs theatersChairs)
+        //{
+        //    // here  start to close the Event with the cartID
+        //    string cartID = Guid.NewGuid().ToString();
+        //    foreach (var item in db.Orders)
+        //    {
+        //        if (item.CartId == cartID)
+        //        {
+        //            cartID = Guid.NewGuid().ToString();
+        //        }
+        //    }
+        //    bool flag = false;
 
-            var theatresChair = new TheatersChairs(
-                                                    theatersChairs.TimeScreening.MovieShowTimeID
-                                                    , theatersChairs.TimeScreening.TheatresID
-                                                     , theatersChairs.TimeScreening.TimeScreeningID);
+        //    var theatresChair = new TheatersChairs(
+        //                                            theatersChairs.TimeScreening.MovieShowTimeID
+        //                                            , theatersChairs.TimeScreening.TheatresID
+        //                                             , theatersChairs.TimeScreening.TimeScreeningID);
 
-            int MovieID = db.MovieShowTimes.Where(mID => mID.MovieShowTimeID == theatersChairs.TimeScreening.MovieShowTimeID).SingleOrDefault().MovieID;
+        //    int MovieID = db.MovieShowTimes.Where(mID => mID.MovieShowTimeID == theatersChairs.TimeScreening.MovieShowTimeID).SingleOrDefault().MovieID;
 
-            Event newEvent = new Event();
-            newEvent.cartID = cartID;
-            newEvent.MovieShowTimeID = theatersChairs.TimeScreening.MovieShowTimeID;
-            if (ModelState.IsValid)
-            {
-                db.Events.Add(newEvent);
-                db.SaveChanges();
-                flag = true;
-            }
-            else
-            {
-                flag = false;
-                cartID = "Eror";
-            }
+        //    Event newEvent = new Event();
+        //    newEvent.cartID = cartID;
+        //    newEvent.MovieShowTimeID = theatersChairs.TimeScreening.MovieShowTimeID;
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Events.Add(newEvent);
+        //        db.SaveChanges();
+        //        flag = true;
+        //    }
+        //    else
+        //    {
+        //        flag = false;
+        //        cartID = "Eror";
+        //    }
 
-            for (int i = 0; i < SelectedChair.Length; i++)
-            {
-                HallChairs hallChairSelected = db.HallChairs.Find(Convert.ToInt16(SelectedChair[i]));
-                hallChairSelected.IsSelected = true;
+        //    for (int i = 0; i < SelectedChair.Length; i++)
+        //    {
+        //        HallChairs hallChairSelected = db.HallChairs.Find(Convert.ToInt16(SelectedChair[i]));
+        //        hallChairSelected.IsSelected = true;
 
-                ChairsOrderd newChairOrder = new ChairsOrderd();
-                newChairOrder.EventID = newEvent.EventID;
-                newChairOrder.HallChairID = hallChairSelected.HallChairsID;
+        //        ChairsOrderd newChairOrder = new ChairsOrderd();
+        //        newChairOrder.EventID = newEvent.EventID;
+        //        newChairOrder.HallChairID = hallChairSelected.HallChairsID;
  
-                try
-                {
-                    if (ModelState.IsValid)
-                    {
+        //        try
+        //        {
+        //            if (ModelState.IsValid)
+        //            {
                         
-                        db.Entry<HallChairs>(hallChairSelected).State = EntityState.Modified;
-                        db.ChairsOrderd.Add(newChairOrder);
-                        db.SaveChanges();
-                        flag = true;
-                    }
-                    else
-                    {
-                        flag = false;
-                        cartID = "Eror";
-                        break;
-                    }
-                }
-                catch (Exception)
-                {
-                    flag = false;
-                    cartID = "Eror";
-                    break;
-                }
-            }
+        //                db.Entry<HallChairs>(hallChairSelected).State = EntityState.Modified;
+        //                db.ChairsOrderd.Add(newChairOrder);
+        //                db.SaveChanges();
+        //                flag = true;
+        //            }
+        //            else
+        //            {
+        //                flag = false;
+        //                cartID = "Error";
+        //                break;
+        //            }
+        //        }
+        //        catch (Exception)
+        //        {
+        //            flag = false;
+        //            cartID = "Error";
+        //            break;
+        //        }
+        //    }
 
-            if (flag == true)
-            {
-                //continue to check out. 
-                return RedirectToAction("CheckoutReview", "CheckOut", new { _cartID = cartID });
-            }
-            else
-            {
-                //get back to movie via MovieID and error massage 
-                return RedirectToAction("Details", "Movie", new {id=MovieID,  error = "Cant add you chair to ticket, try again. " });
-            }
+        //    if (flag == true)
+        //    {
+        //        //continue to check out. 
+        //        return RedirectToAction("CheckoutReview", "CheckOut", new { _cartID = cartID });
+        //    }
+        //    else
+        //    {
+        //        //get back to movie via MovieID and error massage 
+        //        return RedirectToAction("Details", "Movie", new {id=MovieID,  error = "Cant add you chair to ticket, try again. " });
+        //    }
 
-        }
+        //}
 
         // GET: /Chairs/Create
+
+
         public ActionResult Create()
         {
             return View();

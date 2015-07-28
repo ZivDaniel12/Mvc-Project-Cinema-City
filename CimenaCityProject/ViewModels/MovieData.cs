@@ -20,15 +20,15 @@ namespace CimenaCityProject.ViewModels
             MovieShowTime = (from mst in db.MovieShowTimes orderby mst.ShowTime.Hour select mst).ToArray();
             HomeCinema = (from hc in db.HomeCinemas select hc).ToArray();
         }
-        public MovieData(int? id)
+        public MovieData(int? MovieID)
         {
             Movie = (from me in db.Movies
-                     where me.MovieID == id
+                     where me.MovieID == MovieID
                      select me).ToArray();
 
             // find all the movie show time by the MovieID 
             MovieShowTime = (from mst in db.MovieShowTimes
-                             where mst.MovieID == id
+                             where mst.MovieID == MovieID
                              select mst).ToArray();
         }
 

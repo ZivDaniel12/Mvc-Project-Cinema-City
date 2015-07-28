@@ -34,64 +34,6 @@ namespace CimenaCityProject.Controllers
             return View(order);
         }
 
-
-
-        // GET: /CheckOut/CheckoutReview/_cartID
-        public ActionResult CheckoutReview(string _cartID)
-        {
-            
-            if (string.IsNullOrEmpty(_cartID))
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            string cartID = _cartID;
-
-            Event eventOrder = db.Events.Single(c => c.cartID == cartID);
-            var quryEventInfo = new TimeScreeningDetails(eventOrder);
-
-            if (quryEventInfo.Order == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            if (string.IsNullOrEmpty(quryEventInfo.ifEror))
-            {
-                if (ModelState.IsValid)
-                {
-                    db.Orders.Add(quryEventInfo.Order);
-                    db.SaveChanges();
-                }
-                else
-                {
-                    quryEventInfo.ifEror = "Error by adding order.";
-                }
-
-                if (quryEventInfo.Event == null)
-                {
-                    return HttpNotFound();
-                }
-                return View(quryEventInfo);
-            }
-            else
-            {
-                return View(quryEventInfo);
-            }
-        }
-
-        //GET: /CheckOut/CheckOutComplete/cartID
-        public ActionResult CheckoutComplete(int? id)
-        {
-            if (id==null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Event evnt = db.Events.Find(id);
-            var orderComplete = new TimeScreeningDetails(evnt);
-
-            return View(orderComplete);
-        }
-
-
         // GET: /CheckOut/Create
         public ActionResult Create()
         {

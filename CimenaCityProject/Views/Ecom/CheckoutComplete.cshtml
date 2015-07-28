@@ -1,29 +1,23 @@
-﻿@model CimenaCityProject.ViewModels.TimeScreeningDetails
+﻿@using CimenaCityProject.CustomHtmlHelper
+@model CimenaCityProject.ViewModels.TimeScreeningDetails
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Check Out Complete".ToString();
 
 }
 
-
-
-
-<h2 style="align-content:center">Check Out Your <br /> Order</h2>
-
 <div>
 
+    <h2>Your Ticket's Order</h2>
+    <h4>Secssesful!</h4>
     <hr />
     <div>
-        @if (!@Model.ifEror.IsEmpty())
-        {
-            @Model.ifEror.ToString()
-        }
+
     </div>
 
     <dl class="dl-horizontal" style="text-align:match-parent">
 
         <dt>
-
         </dt>
 
         <dd style="text-align:inherit">
@@ -41,7 +35,8 @@
 
         <dt></dt>
         <dd><span style="font-size:large">..............</span></dd>
-
+    </dl>
+    <dl class="dl-horizontal" style="text-align:match-parent" id="printarea">
         <dt>
             Order Date
             <br /> <br />
@@ -51,16 +46,13 @@
             @Html.DisplayFor(model => model.Order.OrderDate)
         </dd>
 
-
         <dt>
             @Html.DisplayNameFor(model => model.Movie.MovieName)
             <br /><br />
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Movie.MovieName)
         </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.MovieShowTime.ShowTime)
             <br /><br />
@@ -87,8 +79,6 @@
             @((Model.TimeScreening.Price).ToString()) &#8362;
         </dd>
 
-
-
         @*chairs need to be here..*@
         <dt>
             ChairsOrdered
@@ -107,17 +97,40 @@
         <dd>
             @((Model.TimeScreening.Price * Model.TotalChairOrdered).ToString()) &#8362;
         </dd>
-
+        <dt>
+            Verifacation Code
+        </dt>
+        <dd>
+            <div>
+                <div style="align-items:flex-end">
+                    @Html.QRCode(Model.cartID)
+                </div>
+            </div>
+        </dd>
     </dl>
-    <div style="position:relative;top:10px;left:180px">
-        <div class="btn-group-lg">
-            <p style="font-size:x-large">
-                @Html.ActionLink("Confirm Your Order Now", "CheckoutComplete", new { id = Model.Event.EventID })
-            </p>
+    <div>
+        <div class="form-group" style="position:relative;left:240px;">
+            <input type="button" value="Print Your Ticket" class="btn" onclick="PrintDoc()" />
+            <br />
         </div>
     </div>
 </div>
-<p>
 
-    @Html.ActionLink("Back to List", "Index")
+
+<p>
+    @Html.ActionLink("Home", "Index", "Home")
 </p>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script type="text/javascript">
+    /*--This JavaScript method for Print command--*/
+    function PrintDoc() {
+        var toPrint = document.getElementById('printarea');
+        var popupWin = window.open('', '_blank');
+        popupWin.document.open();
+        popupWin.document.write('<html><title>::Print Your Tickets::</title></head><body onload="window.print()">')
+        popupWin.document.write(toPrint.innerHTML);
+        popupWin.document.write('</html>');
+        popupWin.document.close();
+    }
+
+</script>
