@@ -186,6 +186,7 @@
     <Compile Include="Models\CheckOut.cs" />
     <Compile Include="Models\CityList.cs" />
     <Compile Include="Models\Event.cs" />
+    <Compile Include="Models\Genre.cs" />
     <Compile Include="Models\HallChairs.cs" />
     <Compile Include="Models\HomeCinema.cs" />
     <Compile Include="Models\HomeCinemaContext.cs" />
@@ -339,6 +340,8 @@
     <Content Include="Views\Ecom\Movie.cshtml" />
     <Content Include="Views\Movie\Details.cshtml" />
     <Content Include="Views\Ecom\Chair.cshtml" />
+    <Content Include="Views\TimeScreening\SortingIndexResult.cshtml" />
+    <Content Include="Views\Admin\Statistic.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

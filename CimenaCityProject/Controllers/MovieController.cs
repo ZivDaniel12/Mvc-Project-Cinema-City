@@ -159,15 +159,20 @@ namespace CimenaCityProject.Controllers
 
         public ActionResult Create()
         {
+            ViewData.Add("Genre", new SelectList(db.Genre.ToArray(), "GenreID", "EnglishName"));
             return View();
         }
 
         // POST: /Movie/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(HttpPostedFileBase file,[Bind(Include = "MovieID,ReleaseDate,MovieName,Rate,Director,MovieDescrption,Picture")] Movie movie )
+        public ActionResult Create(HttpPostedFileBase file, [Bind(Include = "MovieID,ReleaseDate,MovieName,Rate,Director,MovieDescrption,Picture")] Movie movie, int Genre)
         {
-
+            if (Genre == 0)
+            {
+                return View(movie);
+            }
+            movie.GenreID = Genre;
             //add the Picture
             if (file != null)
             {
@@ -176,7 +181,7 @@ namespace CimenaCityProject.Controllers
                                        Server.MapPath("~/Image/" + pic));
                 try
                 {
-                    // file is uploaded
+                    // file is saved on fisical path
                     file.SaveAs(path);
                 }
                 catch (Exception ex)
@@ -201,15 +206,15 @@ namespace CimenaCityProject.Controllers
                     ImageConverter imgCon = new ImageConverter();
 
                     Image imgSmall = Image.FromFile(VersionResizings[0]);
-                    imgSmall.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                  //  imgSmall.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                     byte[] small = (byte[])imgCon.ConvertTo(imgSmall, typeof(byte[]));
 
                     Image imgMedume = Image.FromFile(VersionResizings[1]);
-                    imgMedume.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                //    imgMedume.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                     byte[] mediume = (byte[])imgCon.ConvertTo(imgMedume, typeof(byte[]));
 
                     Image imgLarge = Image.FromFile(VersionResizings[2]);
-                    imgLarge.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+              //      imgLarge.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                     byte[] large = (byte[])imgCon.ConvertTo(imgLarge, typeof(byte[]));
 
                     if (VersionResizings.Count == 3)
@@ -261,6 +266,7 @@ namespace CimenaCityProject.Controllers
             }
             MovieData md = new MovieData(id);
 
+            ViewData.Add("Genre", new SelectList(db.Genre.ToArray(), "GenreID", "EnglishName", md.Movie.Where(x => x.MovieID == id).Select(y => y.GenreID)));
             ViewData.Add("showTimeQry",md);
 
             Movie movie = db.Movies.Find(id);
@@ -277,13 +283,12 @@ namespace CimenaCityProject.Controllers
         // POST: /Movie/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string ReleaseDate,[Bind(Include = "MovieID,ReleaseDate,MovieName,Rate,Director,MovieDescrption,Picture")]Movie movie, HttpPostedFileBase file)
+        public ActionResult Edit(string ReleaseDate, int Genre, [Bind(Include = "MovieID,ReleaseDate,MovieName,Rate,Director,MovieDescrption,Picture")]Movie movie, HttpPostedFileBase file)
         {
-            if (ReleaseDate != "" && ReleaseDate != null)
-            {
-                movie.ReleaseDate = Convert.ToDateTime(ReleaseDate);
-            }
+        
+            ViewData.Add("Genre", new SelectList(db.Genre.ToArray(), "GenreID", "EnglishName"));
 
+            movie.GenreID = Genre;
             //upload file. 
             if (file != null)
             {

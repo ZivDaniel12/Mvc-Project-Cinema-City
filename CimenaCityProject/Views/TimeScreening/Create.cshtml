@@ -55,13 +55,13 @@
             @for (int i = 0; i < numberOfNewTimeScreening.Value; i++)
             {
                 string HomeCinemaID = "["+i + "].HomeCinemaID".ToString();
-                string TheatresID = "["+ i + "].TheatresID".ToString();   
+                string TheatresID = "[" + i + "].MovieTheatersID".ToString();   
                  
                 <tr>
                     <td>
                         <div class="col-sm-8">
                             <br />
-                            @Html.DropDownListFor(model => model[i].MovieShowTime.Single().MovieID, SelectMovieID, "Select Movie")
+                            @Html.DropDownListFor(model => model[i].MovieShowTime.MovieID, SelectMovieID, "Select Movie")
                             <br /><br />
                             @Html.DropDownListFor(model => model[i].MovieShowTimeID, Enumerable.Empty<SelectListItem>(), "--Loading Value--")
                             @Html.ValidationMessageFor(model => model[i].MovieShowTimeID)
@@ -72,8 +72,8 @@
                             <br />
                             @Html.DropDownListFor(model => int.Parse(model[i].MovieTheaters.HomeCinemaID.ToString()), SelectHomeCinemaID, "Select Home Cinema", new { @class = HomeCinemaID })
                             <br /><br />
-                            @Html.DropDownListFor(model => int.Parse(model[i].TheatresID.ToString()), Enumerable.Empty<SelectListItem>(), "--Loading Value--", new { @class = TheatresID})
-                            @Html.ValidationMessageFor(model => model[i].TheatresID)
+                            @Html.DropDownListFor(model => int.Parse(model[i].MovieTheatersID.ToString()), Enumerable.Empty<SelectListItem>(), "--Loading Value--", new { @class = TheatresID })
+                            @Html.ValidationMessageFor(model => model[i].MovieTheatersID)
                         </div>
                     </td>
                     <td>
@@ -117,7 +117,7 @@
     for (var j = 0; j < numberOfNewTimeScreening; j++)
     {
         string HomeCinemaID = "#[" + j + "].HomeCinemaID";
-        string TheatresID = "[" + j + "].TheatresID";  
+        string TheatresID = "[" + j + "].MovieTheatersID";  
            
 <script type="text/javascript">
     $(function () {

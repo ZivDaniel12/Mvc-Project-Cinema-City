@@ -15,15 +15,18 @@ namespace CimenaCityProject.Models
         [Key]
         public int MovieID { get; set; }
 
-        [Display(Name = "Release Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yy}")]
-        public DateTime ReleaseDate { get; set; }
-        
-
         //     [Required]
         [Display(Name = "Movie Name")]
         //       [StringLength(30, ErrorMessage = "You can enter up to 30 characters ")]
         public string MovieName { get; set; }
+
+
+        [Display(Name = "Release Date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime ReleaseDate { get; set; }
+
+        [Display(Name = "Genre")]
+        public int GenreID { get; set; }
 
 
         // do i need to put here "[range(0,5)]" attribute? 
@@ -49,6 +52,9 @@ namespace CimenaCityProject.Models
         public string PicturePathMedium { get; set; }
         public byte[] PictureLarge { get; set; }
         public string PicturePathLarge { get; set; }
+
+   //     [ForeignKey("GenreID")]
+        public virtual Genre Genre  { get; set; }
 
         public virtual  ICollection<MovieShowTime> MovieShowTimes { get; set; }
     }

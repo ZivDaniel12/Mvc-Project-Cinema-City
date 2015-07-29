@@ -15,6 +15,7 @@ namespace CimenaCityProject.Models
         { }
 
         public DbSet<CityList> CityList { get; set; }
+        public DbSet<Genre> Genre { get; set; }
 
         public DbSet<Movie> Movies { get; set; }
         public DbSet<MovieShowTime> MovieShowTimes { get; set; }

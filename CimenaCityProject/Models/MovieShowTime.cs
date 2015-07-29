@@ -26,10 +26,6 @@ namespace CimenaCityProject.Models
 
         [ForeignKey("MovieID")]
         public virtual Movie Movie { get; set; }
-
-        
-
-
-
+        public virtual ICollection<TimeScreening> TimeScreening { get; set; }
     }
 }

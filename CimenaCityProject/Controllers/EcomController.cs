@@ -7,7 +7,6 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
-
 using CimenaCityProject.Models;
 using CimenaCityProject.CustomHtmlHelper;
 using CimenaCityProject.ViewModels;
@@ -85,7 +84,7 @@ namespace CimenaCityProject.Controllers
                 {
                     foreach (var tScreening in tsID)
                     {
-                        if (theatres.MovieTheatersID == tScreening.TheatresID && tScreening.MovieShowTimeID == showtimeID)
+                        if (theatres.MovieTheatersID == tScreening.MovieTheatersID && tScreening.MovieShowTimeID == showtimeID)
                         {
                             timescreenid = tScreening.TimeScreeningID;
                             theatresID = theatres.MovieTheatersID;
@@ -133,7 +132,7 @@ namespace CimenaCityProject.Controllers
 
             var theatresChair = new TheatersChairs(
                                                     theatersChairs.TimeScreening.MovieShowTimeID
-                                                    , theatersChairs.TimeScreening.TheatresID
+                                                    , theatersChairs.TimeScreening.MovieTheatersID
                                                      , theatersChairs.TimeScreening.TimeScreeningID);
 
             int MovieID = db.MovieShowTimes.Where(mID => mID.MovieShowTimeID == theatersChairs.TimeScreening.MovieShowTimeID).SingleOrDefault().MovieID;
@@ -280,7 +279,7 @@ namespace CimenaCityProject.Controllers
                             int mvieShowTimeID = db.TimeScreening
                                 .Where(x => x.TimeScreeningID == db.TimeScreening
                                     .Where(y => y.MovieShowTimeID ==
-                                        showtime.MovieShowTimeID & y.TheatresID ==
+                                        showtime.MovieShowTimeID & y.MovieTheatersID ==
                                         theatres.MovieTheatersID)
                                         .FirstOrDefault().TimeScreeningID)
                                         .First().MovieShowTimeID;
@@ -317,7 +316,7 @@ namespace CimenaCityProject.Controllers
                 {
                     foreach (var timescreen in db.TimeScreening)
                     {
-                        if (timescreen.MovieShowTimeID == ShowTimeID && theatres.MovieTheatersID == timescreen.TheatresID)
+                        if (timescreen.MovieShowTimeID == ShowTimeID && theatres.MovieTheatersID == timescreen.MovieTheatersID)
                         {
                             data = theatres.TheatersName + "  Room Number: " + theatres.NumberHall;
                             flag = true;

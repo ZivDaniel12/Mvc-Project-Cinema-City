@@ -2,16 +2,16 @@
 @using CimenaCityProject.CustomHtmlHelper;
 @model CimenaCityProject.ViewModels.MovieData
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Movie";
     var HomeCinemaCity = (SelectList)ViewBag.HomeCinemaCity;
     var ShowTimeList = (SelectList)ViewBag.ShowTimeList;
 }
 
-<h2>Details</h2>
+<h2>Select Your Time</h2>
 
 
 <div>
-    <h4>Movie</h4>
+    
     <hr />
     @using (Html.BeginForm("Movie", "Ecom", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {

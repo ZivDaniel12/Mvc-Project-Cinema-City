@@ -116,7 +116,7 @@ namespace CimenaCityProject.ViewModels
 
                     // get the TimeScreening item
                     timeScreening = (from ts in db.TimeScreening
-                                     where _Event.MovieShowTimeID == ts.MovieShowTimeID && ts.TheatresID == theaters.MovieTheatersID
+                                     where _Event.MovieShowTimeID == ts.MovieShowTimeID && ts.MovieTheatersID == theaters.MovieTheatersID
                                      select ts).SingleOrDefault();
 
                     ChairNumbers = new List<int>();

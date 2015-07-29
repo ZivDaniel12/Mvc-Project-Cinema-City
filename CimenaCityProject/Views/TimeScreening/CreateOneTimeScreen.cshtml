@@ -51,14 +51,14 @@
                             <br />
                             @Html.DropDownList("HomeCinemaID", SelectHomeCinemaID, "Select Home Cinema", new { id = "HomeCinemaID", name = "HomeCinemaID" })
                             <br /><br />
-                            @Html.DropDownListFor(model => model.TheatresID, Enumerable.Empty<SelectListItem>(), "--Loading Value--", new { id = "TheatresName", name = "TheatresName" })
-                            @Html.ValidationMessageFor(model => model.TheatresID)
+                            @Html.DropDownListFor(model => model.MovieTheatersID, Enumerable.Empty<SelectListItem>(), "--Loading Value--", new { id = "TheatresName", name = "TheatresName" })
+                            @Html.ValidationMessageFor(model => model.MovieTheatersID)
                         </div>
                     </td>
                     <td>
                         <div class="col-sm-8">
                             <br />
-                            @Html.EditorFor(model => model.Date)
+                            @Html.TextBoxFor(model => model.Date,new { @class = "datepicker" })
                             @Html.ValidationMessageFor(model => model.Date)
                         </div>
                     </td>
@@ -83,9 +83,16 @@
     </div>
 }
 
+
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
 
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script type="text/javascript" >
+    $(function () {
+        $('#Date').datepicker({ dateFormat: 'dd/MM/yy'});
+    });
+
 
     $(function () {
         $('#HomeCinemaID').change(function () {

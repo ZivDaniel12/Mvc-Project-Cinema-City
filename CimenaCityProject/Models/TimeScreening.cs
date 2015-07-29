@@ -15,7 +15,7 @@ namespace CimenaCityProject.Models
 
         public int MovieShowTimeID { get; set; }
 
-        public int TheatresID { get; set; }
+        public int MovieTheatersID { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
@@ -25,11 +25,13 @@ namespace CimenaCityProject.Models
 
         public bool IsDisplayed { get; set; }
 
+      //  [ForeignKey("MovieShowTimeID")]
+        public virtual MovieShowTime MovieShowTime { get; set; }
 
-        public virtual ICollection<MovieShowTime> MovieShowTime { get; set; }
-
-
+     //   [ForeignKey("MovieTheatersID")]
         public virtual MovieTheaters MovieTheaters { get; set; }
 
+        //[ForeignKey("TimeScreeningID")]
+        //public virtual Order Order { get; set; }
     }
 }

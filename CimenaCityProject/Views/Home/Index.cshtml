@@ -47,17 +47,15 @@
                                 @Html.DisplayFor(model => item.MovieName)
 
                                 <br />
-                                Director
+                                <span>Genre - </span>
+
+                                @Html.DisplayFor(model => item.Genre.EnglishName)
+                                <br />
+                                <span> Director - </span>
 
                                 @Html.DisplayFor(model => item.Director)
                                 <br />
-                                Release Date
-
-                                @Html.DisplayFor(model => item.ReleaseDate)
-                                <br />
                             </th>
-
-
                         }
                     }
 

@@ -12,19 +12,20 @@ namespace CimenaCityProject.Models
     {
         
         public int OrderID { get; set; }
-    
-        public string CartId { get; set; }
 
-        public int TotalChairsOrdered { get; set; }
-        
         public int TimeScreeningID { get; set; }
 
         public int EventID { get; set; }
 
+        public string CartId { get; set; }
+
+        public int TotalChairsOrdered { get; set; }
+
         public DateTime OrderDate { get; set; }
 
-        [ForeignKey("TimeScreeningID")]
-        public virtual TimeScreening TimeScreening { get; set; }
+      
+        //public virtual TimeScreening TimeScreening { get; set; }
+
         [ForeignKey("EventID")]
         public virtual Event Event { get; set; }
    

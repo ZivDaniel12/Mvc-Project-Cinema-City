@@ -26,9 +26,11 @@ namespace CimenaCityProject.Controllers
 
         // POST: /TimeScreening/
         [HttpPost]
-        public ActionResult Index(string searchByMovie, string searchByHomeCinema)
+        public ActionResult Index(string searchByMovie, string searchByHomeCinema,string sortingOrder)
         {
             TimeScreeningData timeScreening;
+
+            //search by movie or homeCinema
             if (!string.IsNullOrEmpty(searchByMovie) && !string.IsNullOrEmpty(searchByHomeCinema))
             {
                 timeScreening = new TimeScreeningData(searchByMovie, searchByHomeCinema);
@@ -45,6 +47,8 @@ namespace CimenaCityProject.Controllers
             {
                 timeScreening = new TimeScreeningData(null, null);
             }
+
+          
             return View(timeScreening);
         }
         
@@ -63,12 +67,6 @@ namespace CimenaCityProject.Controllers
             return View(timescreening);
         }
 
-        // GET: /TimeScreening/AskQuestion
-        public PartialViewResult AskQuestion()
-        {
-            return PartialView("AskQuestion");
-        }
-
         // GET: /TimeScreening/Create
         public ActionResult Create(int? number)
         {
@@ -81,8 +79,12 @@ namespace CimenaCityProject.Controllers
 
         // GET: /TimeScreening/Create
 
-        public PartialViewResult CreateOneTimeScreen()
+        public PartialViewResult CreateOneTimeScreen(string Error)
         {
+            if (!string.IsNullOrEmpty(Error))
+            {
+                ViewBag.Error = Error;
+            }
             ViewBag.HomeCinemaID = new SelectList(db.HomeCinemas, "HomeCinemaID", "CinemaName");
             ViewBag.MovieID = new SelectList(db.Movies, "MovieID", "MovieName");
             return PartialView("CreateOneTimeScreen");
@@ -91,11 +93,14 @@ namespace CimenaCityProject.Controllers
         // POST: /TimeScreening/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "TimeScreeningID,MovieShowTimeID,TheatresID,Date,Price,IsDisplayed")] TimeScreening Timescreening)
+        public ActionResult Create([Bind(Include = "TimeScreeningID,MovieShowTimeID,TheatresID,Date,Price,IsDisplayed")] TimeScreening Timescreening, int MovieTheatersID)
         {
-
+            if ( Timescreening.MovieTheatersID == 0)
+            {
+                Timescreening.MovieTheatersID = MovieTheatersID;
+            }
             MovieShowTime movieshowtime = db.MovieShowTimes.Find(Timescreening.MovieShowTimeID);
-            HomeCinema homecinema = db.HomeCinemas.Where(x => x.HomeCinemaID == db.Theaters.Where(y=>y.MovieTheatersID == Timescreening.TheatresID).FirstOrDefault().HomeCinemaID).FirstOrDefault();
+            HomeCinema homecinema = db.HomeCinemas.Where(x => x.HomeCinemaID == db.Theaters.Where(y=>y.MovieTheatersID == Timescreening.MovieTheatersID).FirstOrDefault().HomeCinemaID).FirstOrDefault();
             homecinema.Showing = true;
             movieshowtime.IsDisplay = true;
             
@@ -107,7 +112,7 @@ namespace CimenaCityProject.Controllers
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
-               return View("Create", Timescreening);
+                return RedirectToAction("Index", new { Error = "You Cant add a Contract now. try again later. " });
         }
 
         // GET: /TimeScreening/Edit/5
@@ -188,7 +193,6 @@ namespace CimenaCityProject.Controllers
        // get the theatres for CreatePage via cinema id 
         public ActionResult GetTheatres(int? CinemaID)
         {
-            
             var data = (from d in db.Theaters
                         where d.HomeCinemaID == CinemaID
                         select new
@@ -215,7 +219,46 @@ namespace CimenaCityProject.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        
+        // getting the table view after sorting
+        public PartialViewResult SortingIndexResult(TimeScreeningData timeScreening, string sortingOrder)
+        {
+            List<TimeScreening> ts = new List<TimeScreening>();
+            switch (sortingOrder)
+            {
+                case "MovieName":
+                    timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.MovieShowTime.Movie.MovieName).ToList();
+                    break;
+                case "Time":
+                    timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.MovieShowTime.ShowTime.TimeOfDay).ToList();
+                    break;
+                case "HomeCinema":
+                    timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.MovieTheaters.HomeCinema.CinemaName).ToList();
+                    break;
+                case "Theaters":
+                    timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.MovieTheaters.TheatersName).ToList();
+                    break;
+                case "Date":
+                    timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.Date).ToList();
+                    break;
+                case "Price":
+                    timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.Price).ToList();
+                    break;
+                case "IsDisplayed":
+                    timeScreening.TimeScreening = timeScreening.TimeScreening.OrderByDescending(x => x.IsDisplayed).ToList();
+                    break;
+                default:
+                    break;
+            }
+
+            return PartialView("SortingIndexResult", timeScreening);
+        }
+
+        // GET: /TimeScreening/AskQuestion
+        public PartialViewResult AskQuestion()
+        {
+            return PartialView("AskQuestion");
+        }
+
 
         protected override void Dispose(bool disposing)
         {

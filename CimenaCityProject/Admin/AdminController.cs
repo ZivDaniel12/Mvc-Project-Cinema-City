@@ -26,6 +26,18 @@ namespace CimenaCityProject.Admin
             return View();
         }
 
+        public PartialViewResult Statistic()
+        {
+            var model = db.CheckOut.ToList();
+
+            // table show the statistic how many people buy tickets
+            // show graph about the incrase the income 
+            // show to 
+
+            return PartialView("Statistic",model);
+        }
+
+
         // GET: /Admin/Details/5
         public ActionResult Details(int? id)
         {

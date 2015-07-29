@@ -28,6 +28,6 @@ namespace CimenaCityProject.Models
        
         public virtual HomeCinema HomeCinema { get; set; }
         public virtual ICollection<Rows> Rows { get; set; }
-
+        public virtual ICollection<TimeScreening> TimeScreening { get; set; }
     }
 }

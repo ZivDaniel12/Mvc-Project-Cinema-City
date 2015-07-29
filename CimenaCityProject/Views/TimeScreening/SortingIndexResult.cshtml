@@ -1,0 +1,152 @@
+﻿@using CimenaCityProject.Models
+@model CimenaCityProject.ViewModels.TimeScreeningData
+
+@{
+    HomeCinemaContext db = new HomeCinemaContext();
+}
+
+<div>
+    <table class="table">
+        <tr>
+            <th>
+                @Ajax.ActionLink("Movie", "SortingIndexResult", new { sortingOrder = "MovieName" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divSortingResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+            </th>
+            <th>
+                @Ajax.ActionLink("Time", "SortingIndexResult", new { sortingOrder = "Time" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divSortingResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+
+            </th>
+            <th>
+                @Ajax.ActionLink("Home Cinema", "SortingIndexResult", new { sortingOrder = "HomeCinema" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divSortingResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+
+            </th>
+            <th>
+                @Ajax.ActionLink("Theaters", "SortingIndexResult", new { sortingOrder = "Theaters" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divSortingResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+
+            </th>
+            <th>
+                @Ajax.ActionLink("Date", "SortingIndexResult", new { sortingOrder = "Date" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divSortingResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+
+            </th>
+            <th>
+                @Ajax.ActionLink("Price", "SortingIndexResult", new { sortingOrder = "Price" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divSortingResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+
+            </th>
+            <th>
+                @Ajax.ActionLink("Is Displayed?", "SortingIndexResult", new { sortingOrder = "IsDisplayed" }, new AjaxOptions()
+                                                                    {
+                                                                        HttpMethod = "GET",
+                                                                        UpdateTargetId = "divSortingResult",
+                                                                        InsertionMode = InsertionMode.Replace,
+                                                                        LoadingElementId = "divLoading"
+                                                                    })
+
+            </th>
+            <th></th>
+        </tr>
+
+
+        @foreach (var item in Model.TimeScreening)
+        {
+            <tr>
+                <td>
+                    @foreach (var movie in Model.Movies)
+                    {
+                        if (movie.MovieID == Model.ShowsTime.Where(x => x.MovieShowTimeID == item.MovieShowTimeID).FirstOrDefault().MovieID)
+                        {
+                            @Html.ActionLink(movie.MovieName, "Details", "Movie", new { id = movie.MovieID }, null)
+                            break;
+                        }
+                    }
+                </td>
+                <td>
+                    @foreach (var showTime in Model.ShowsTime)
+                    {
+                        if (showTime.MovieShowTimeID == item.MovieShowTimeID)
+                        {
+                            @Html.DisplayFor(modelItem => showTime.ShowTime.TimeOfDay)
+                            break;
+                        }
+                    }
+                </td>
+
+                <td>
+                    @foreach (var cinema in Model.HomeCinemas)
+                    {
+                        if (cinema.HomeCinemaID == Model.Theatres.Where(x => x.MovieTheatersID == item.MovieTheatersID).FirstOrDefault().HomeCinemaID)
+                        {
+                            string cityName = db.CityList.Where(x => x.CityID == cinema.CityID).FirstOrDefault().EnglishName;
+                            @Html.ActionLink(cinema.CinemaName, "Details", "HomeCinema", new { id = cinema.HomeCinemaID }, null) <span>| &nbsp;</span> @Html.DisplayFor(modelItem => cityName)
+                            break;
+                        }
+                    }
+                </td>
+                <td>
+                    @foreach (var theater in Model.Theatres)
+                    {
+                        if (theater.MovieTheatersID == item.MovieTheatersID)
+                        {
+                            @Html.DisplayFor(modelItem => theater.TheatersName)
+                            <span>,</span>
+                            @Html.DisplayFor(modelItem => theater.NumberHall)
+                            break;
+                        }
+                    }
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsDisplayed)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.TimeScreeningID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.TimeScreeningID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.TimeScreeningID })
+                </td>
+            </tr>
+        }
+
+    </table>
+
+</div>
+

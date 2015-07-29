@@ -28,6 +28,7 @@ namespace CimenaCityProject.Models
 
         public bool Showing { get; set; }
 
+        public virtual CityList CityList { get; set; }
      //   public virtual ICollection<MovieTheaters> MovieTheaters { get; set; }
     }
 }

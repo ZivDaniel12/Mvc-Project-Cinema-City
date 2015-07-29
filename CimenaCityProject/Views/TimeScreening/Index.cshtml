@@ -6,7 +6,59 @@
     HomeCinemaContext db = new HomeCinemaContext();
 }
 
-<h2>Contracts</h2>
+    <h2>Contracts</h2>
+
+
+    <p>
+
+        @Ajax.ActionLink("Create", "CreateOneTimeScreen", new AjaxOptions()
+{
+    HttpMethod = "GET",
+    UpdateTargetId = "divResult",
+    InsertionMode = InsertionMode.Replace,
+    LoadingElementId = "divLoading"
+}) <span>&nbsp;| &nbsp;</span>
+        @Html.ActionLink(" Return Control Panel", "ControlPanel", "Admin")
+
+        <div id="divResult">
+            @{
+                if (!string.IsNullOrEmpty(ViewBag.Error))
+                {
+                    @ViewBag.Error
+                }
+            }
+        </div>
+        <hr />
+    </p>
+
+
+    @using (Html.BeginForm())
+    {
+        <div style="position: relative;width:500px; left: 30%; margin-left: -50px; margin-top: 25px; margin-bottom: 25px;">
+            <div id="divLoading" style="display:none">
+                <img src="~/Image/Elements/ajax-loader.gif" />
+            </div>
+            <div>
+                <div>
+                    <h4>Search</h4>
+                    <label><b>Movie   </b></label>
+                    @Html.TextBox("searchByMovie", null, new { id = "searchByMovie" })
+                    <span>&nbsp;</span>
+                    <label><b>Home Cinema </b></label>
+                    @Html.TextBox("searchByHomeCinema", null, new { id = "searchByHomeCinema" })
+
+                    <input type="submit" value="Search " />
+                </div>
+            </div>
+            <hr />
+        </div>
+    }
+
+<div id="divSortingResult">
+    @Html.Partial("SortingIndexResult",Model)
+</div>
+
+
 <link href="~/Content/jquery-ui.css" rel="stylesheet" />
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script src="~/Scripts/jquery.sigmacape.unobtrusive-1.1.2.js"></script>
@@ -25,138 +77,3 @@
     });
 
 </script>
-
-<p>
-    @Html.ActionLink(" Return Control Panel", "ControlPanel", "Admin") <br />
-    @Ajax.ActionLink("Create", "CreateOneTimeScreen", new AjaxOptions()
-{
-    HttpMethod = "GET",
-    UpdateTargetId = "divResult",
-    InsertionMode = InsertionMode.Replace,
-    LoadingElementId = "divLoading"
-})
-    <div id="divLoading" style="display:none">
-        <img src="~/Image/Elements/ajax-loader.gif" />
-    </div>
-    <div id="divResult">
-    </div>
-
-</p>
-
-
-@using (Html.BeginForm())
-{
-    <div class="active">
-        <div>
-            <div>
-                <label><b>Search by Movie   </b></label>
-                @Html.TextBox("searchByMovie", null, new { id = "searchByMovie" })
-
-                <label><b>Search by Home Cinema </b></label>
-                @Html.TextBox("searchByHomeCinema", null, new { id = "searchByHomeCinema" })
-
-                <input type="submit" value="Search " />
-            </div>
-        </div>
-    </div>
-}
-
-
-
-<div id=divResult>
-    <table class="table">
-        <tr>
-            <th>
-                Movie
-            </th>
-            <th>
-                Time
-            </th>
-            <th>
-                Home Cinema
-            </th>
-            <th>
-                Theaters
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.timeScreening.Single().Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.timeScreening.Single().Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.timeScreening.Single().IsDisplayed)
-            </th>
-            <th></th>
-        </tr>
-
-
-        @foreach (var item in Model.timeScreening)
-        {
-            <tr>
-                <td>
-                    @foreach (var movie in Model.movies)
-                    {
-                        if (movie.MovieID == Model.ShowsTime.Where(x => x.MovieShowTimeID == item.MovieShowTimeID).FirstOrDefault().MovieID)
-                        {
-                            @Html.ActionLink(movie.MovieName, "Details", "Movie", new { id = movie.MovieID }, null)
-                            break;
-                        }
-                    }
-                </td>
-                <td>
-                    @foreach (var showTime in Model.ShowsTime)
-                    {
-                        if (showTime.MovieShowTimeID == item.MovieShowTimeID)
-                        {
-                            @Html.DisplayFor(modelItem => showTime.ShowTime.TimeOfDay)
-                            break;
-                        }
-                    }
-                </td>
-
-                <td>
-                    @foreach (var cinema in Model.HomeCinemas)
-                    {
-                        if (cinema.HomeCinemaID == Model.Theatres.Where(x => x.MovieTheatersID == item.TheatresID).FirstOrDefault().HomeCinemaID)
-                        {
-                            string cityName = db.CityList.Where(x=>x.CityID == cinema.CityID).FirstOrDefault().EnglishName;
-                            @Html.ActionLink(cinema.CinemaName, "Details", "HomeCinema", new { id = cinema.HomeCinemaID }, null) <span>| &nbsp;</span> @Html.DisplayFor(modelItem=>cityName)
-                            break;
-                        }
-                    }
-                </td>
-                <td>
-                    @foreach (var theater in Model.Theatres)
-                    {
-                        if (theater.MovieTheatersID == item.TheatresID)
-                        {
-                            @Html.DisplayFor(modelItem => theater.TheatersName)
-                            <span>,</span>
-                            @Html.DisplayFor(modelItem => theater.NumberHall)
-                            break;
-                        }
-                    }
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsDisplayed)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.TimeScreeningID }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.TimeScreeningID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.TimeScreeningID })
-                </td>
-            </tr>
-        }
-
-    </table>
-
-
-</div>
