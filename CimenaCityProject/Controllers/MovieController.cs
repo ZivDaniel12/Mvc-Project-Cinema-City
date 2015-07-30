@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Threading;
+using System.Threading.Tasks;
 
 using CimenaCityProject.Models;
 using CimenaCityProject.CustomHtmlHelper;
@@ -21,12 +23,12 @@ namespace CimenaCityProject.Controllers
     public class MovieController : Controller
     {
         private HomeCinemaContext db = new HomeCinemaContext();
-        
+
         // GET: /Movie/
-        public ActionResult Index(int? id, int? MovieShowTimeID,string sortingOrder)
+        public ActionResult Index(int? id, int? MovieShowTimeID, string sortingOrder)
         {
             var viewMovieQry = new MovieData();
-            
+
             if (id != null)
             {
                 ViewBag.MovieDataID = id.Value;
@@ -80,83 +82,9 @@ namespace CimenaCityProject.Controllers
                 return HttpNotFound();
             }
             return View(movie);
-
-            //// this if mmber come form the SelectChair and was error overther.. 
-            //if (error != null)
-            //{
-            //    switch (error)
-            //    {
-            //        // the first case i think can be. 
-            //        case 1:
-            //            TempData["msg"] = "<script>alert('All Chair for this Time Selected..');</script>";
-            //            break;
-            //        default:
-            //            break;
-            //    }
-            //}           
-            ////I need to add the geoLocation system.devices.location?
-            //// find the movie by the ID 
-            //var viewMovieQry = new MovieData(id);
-          
-            ////DropDownList. 
-            //ViewBag.HomeCinemaCity = new SelectList(db.HomeCinemas.Where(x => x.Showing == true).ToList(), "HomeCinemaID", "CinemaName");
-            //ViewBag.ShowTimeList = new SelectList(db.MovieShowTimes.Where(mst => mst.MovieID == id && mst.IsDisplay == true)
-            //.OrderBy(x=>x.ShowTime.CompareTo(DateTime.Now)).ToArray(), "MovieShowTimeID", "ShowTime");
-
-            //// check if have any result in null go to ERR 400 
-            //if (viewMovieQry.Movie == null)
-            //{
-            //    return HttpNotFound();
-            //}
-            //return View(viewMovieQry);
         }
 
-        ////POST: /Movie/Details/5
-        //[HttpPost]
-        //public ActionResult Details(string ShowTimeList, string HomeCinemaCity, int? MovieID)
-        //{
-        //    //if (string.IsNullOrEmpty(ShowTimeList) || string.IsNullOrEmpty(HomeCinemaCity) || !MovieID.HasValue)
-        //    //{
-        //    //    return RedirectToAction("Index","Home");
-        //    //}
-
-        //    //int showtimeID = int.Parse(ShowTimeList);
-        //    //int homeCinemaID = int.Parse(HomeCinemaCity);
-
-        //    //List<TimeScreening> tsID = db.TimeScreening.Where(ts => ts.MovieShowTimeID == showtimeID).ToList();
-        //    //List<MovieTheaters> mtID = db.Theaters.Where(mth => mth.HomeCinemaID == homeCinemaID).ToList();
-
-        //    //int theatresID = 1;
-        //    //int timescreenid = 1; 
-        //    //bool flag = false;
-        //    //foreach (var theatres in mtID)
-        //    //{
-
-        //    //    // if flag is true break; 
-        //    //    if (!flag)
-        //    //    {
-        //    //        foreach (var tScreening in tsID)
-        //    //        {
-        //    //            if (theatres.MovieTheatersID == tScreening.TheatresID && tScreening.MovieShowTimeID == showtimeID)
-        //    //            {
-        //    //                timescreenid = tScreening.TimeScreeningID;
-        //    //                theatresID = theatres.MovieTheatersID;
-        //    //                flag = true;
-        //    //                break;
-        //    //            }
-        //    //        }
-        //    //    }
-        //    //    else
-        //    //        break;
-        //    //}
-
-        //    //return RedirectToAction("SelectChair", "Chairs", new { id = showtimeID, theatresID = theatresID, timescreenID=timescreenid});
-        //    return View();
-        //}
-
         // GET: /Movie/Create
-
-
         public ActionResult Create()
         {
             ViewData.Add("Genre", new SelectList(db.Genre.ToArray(), "GenreID", "EnglishName"));
@@ -206,15 +134,15 @@ namespace CimenaCityProject.Controllers
                     ImageConverter imgCon = new ImageConverter();
 
                     Image imgSmall = Image.FromFile(VersionResizings[0]);
-                  //  imgSmall.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    //  imgSmall.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                     byte[] small = (byte[])imgCon.ConvertTo(imgSmall, typeof(byte[]));
 
                     Image imgMedume = Image.FromFile(VersionResizings[1]);
-                //    imgMedume.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    //    imgMedume.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                     byte[] mediume = (byte[])imgCon.ConvertTo(imgMedume, typeof(byte[]));
 
                     Image imgLarge = Image.FromFile(VersionResizings[2]);
-              //      imgLarge.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    //      imgLarge.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                     byte[] large = (byte[])imgCon.ConvertTo(imgLarge, typeof(byte[]));
 
                     if (VersionResizings.Count == 3)
@@ -241,11 +169,11 @@ namespace CimenaCityProject.Controllers
                         return RedirectToAction("Index", "Movie");
                     }
                 }
-              
+
             }
             if (ModelState.IsValid)
             {
-                
+
                 db.Movies.Add(movie);
                 db.SaveChanges();
                 return RedirectToAction("Create", "MovieShowTime", new { id = movie.MovieID });
@@ -267,7 +195,7 @@ namespace CimenaCityProject.Controllers
             MovieData md = new MovieData(id);
 
             ViewData.Add("Genre", new SelectList(db.Genre.ToArray(), "GenreID", "EnglishName", md.Movie.Where(x => x.MovieID == id).Select(y => y.GenreID)));
-            ViewData.Add("showTimeQry",md);
+            ViewData.Add("showTimeQry", md);
 
             Movie movie = db.Movies.Find(id);
 
@@ -285,7 +213,7 @@ namespace CimenaCityProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(string ReleaseDate, int Genre, [Bind(Include = "MovieID,ReleaseDate,MovieName,Rate,Director,MovieDescrption,Picture")]Movie movie, HttpPostedFileBase file)
         {
-        
+
             ViewData.Add("Genre", new SelectList(db.Genre.ToArray(), "GenreID", "EnglishName"));
 
             movie.GenreID = Genre;
@@ -293,8 +221,8 @@ namespace CimenaCityProject.Controllers
             if (file != null)
             {
                 string pic = System.IO.Path.GetFileName(file.FileName);
-                string path = System.IO.Path.Combine(
-                                       Server.MapPath("~/Image/" + pic));
+                string path = System.IO.Path.Combine(Server.MapPath("~/Image/" + pic));
+
                 try
                 {
                     // file is uploaded
@@ -341,18 +269,17 @@ namespace CimenaCityProject.Controllers
                         movie.PictureMedium = mediume;
                         movie.PicturePathLarge = VersionResizings[2];
                         movie.PictureLarge = large;
-                        
 
-                         if (ModelState.IsValid)
-                            {
-                                db.Entry(movie).State = EntityState.Modified;
-                                db.SaveChanges();
-                                ViewBag.exeptionMessage = "true";
-                                // after successfully uploading redirect the user
-                                return RedirectToAction("Index");                            
-                            }
-                             ViewBag.exeptionMessage = "false";
-                             return View(movie);
+                        if (ModelState.IsValid)
+                        {
+                            db.Entry(movie).State = EntityState.Modified;
+                            db.SaveChanges();
+                            ViewBag.exeptionMessage = "true";
+                            // after successfully uploading redirect the user
+                            return RedirectToAction("Index");
+                        }
+                        ViewBag.exeptionMessage = "false";
+                        return View(movie);
                     }
                     else
                     {
@@ -417,7 +344,7 @@ namespace CimenaCityProject.Controllers
 
         // POST: /Movie/FileUpload/1
         [HttpPost, ActionName("FileUpload")]
-        public ActionResult FileUploadPost(HttpPostedFileBase file 
+        public ActionResult FileUploadPost(HttpPostedFileBase file
             , [Bind(Include = "MovieID,ReleaseDate,MovieName,Rate,Director,MovieDescrption,Picture")]Movie movie)
         {
 
@@ -499,27 +426,33 @@ namespace CimenaCityProject.Controllers
         {
 
             Dictionary<string, string> versions = new Dictionary<string, string>();
-
-            //Define the versions to generate and their filename suffixes.
-            versions.Add("_Thumb", "width=100&height=120&format=png"); //Crop to square thumbnail
-            versions.Add("_Medium", "maxwidth=250&maxheight=3500&format=png"); //Fit inside 400x400 area, png
-            versions.Add("_Large", "maxwidth=850&maxheight=950&format=png"); //Fit inside 1900x1200 area
-
-            string basePath = ImageResizer.Util.PathUtils.RemoveExtension(original);
-            ICollection<string> gFiles = new List<string>();
-
             //To store the list of generated paths
-            var generatedFiles= new List<string>();
-            
-          
+            var generatedFiles = new List<string>();
 
-            //Generate each version
-            foreach (string PathFix in versions.Keys)
+            try
             {
-                //Let the image builder add the correct extension based on the output file type
-                generatedFiles.Add(ImageBuilder.Current.Build(original, basePath + PathFix, new ResizeSettings(
-                    versions[PathFix]), false, true));
 
+                //Define the versions to generate and their filename suffixes.
+                versions.Add("_Thumb", "width=100&height=120&format=png"); //Crop to square thumbnail
+                versions.Add("_Medium", "maxwidth=250&maxheight=3500&format=png"); //Fit inside 400x400 area, png
+                versions.Add("_Large", "maxwidth=850&maxheight=950&format=png"); //Fit inside 1900x1200 area
+
+                string basePath = ImageResizer.Util.PathUtils.RemoveExtension(original);
+                ICollection<string> gFiles = new List<string>();
+
+                //Generate each version
+                foreach (string PathFix in versions.Keys)
+                {
+                    //Let the image builder add the correct extension based on the output file type
+                    generatedFiles.Add(ImageBuilder.Current.Build(original, basePath + PathFix, new ResizeSettings(
+                        versions[PathFix]), false, true));
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+               
             }
 
             return generatedFiles;
@@ -530,7 +463,7 @@ namespace CimenaCityProject.Controllers
             if (disposing)
             {
                 db.Dispose();
-                
+
             }
             base.Dispose(disposing);
         }

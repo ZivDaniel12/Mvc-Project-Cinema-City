@@ -212,11 +212,27 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\jquery-ui.structure.css" />
+    <Content Include="Content\jquery-ui.theme.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Image\Elements\ajax-loader.gif" />
+    <Content Include="Image\jquery\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Image\jquery\ui-bg_flat_0_eeeeee_40x100.png" />
+    <Content Include="Image\jquery\ui-bg_flat_55_c0402a_40x100.png" />
+    <Content Include="Image\jquery\ui-bg_flat_55_eeeeee_40x100.png" />
+    <Content Include="Image\jquery\ui-bg_glass_100_f8f8f8_1x400.png" />
+    <Content Include="Image\jquery\ui-bg_glass_35_fcfeff_1x400.png" />
+    <Content Include="Image\jquery\ui-bg_glass_60_eeeeee_1x400.png" />
+    <Content Include="Image\jquery\ui-bg_inset-hard_50_fefdfd_1x100.png" />
+    <Content Include="Image\jquery\ui-bg_inset-soft_50_f6f1f1_1x100.png" />
+    <Content Include="Image\jquery\ui-icons_3383bb_256x240.png" />
+    <Content Include="Image\jquery\ui-icons_454545_256x240.png" />
+    <Content Include="Image\jquery\ui-icons_70b2e1_256x240.png" />
+    <Content Include="Image\jquery\ui-icons_999999_256x240.png" />
+    <Content Include="Image\jquery\ui-icons_fbc856_256x240.png" />
     <Content Include="Image\Rate\star-black32.png" />
     <Content Include="Image\Rate\star-gold32.png" />
     <Content Include="Image\Rate\star-red32.png" />
@@ -233,6 +249,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.sigmacape.unobtrusive-1.1.2.js" />
     <Content Include="Views\Ecom\CheckoutReview.cshtml" />
     <Content Include="Views\Ecom\CheckoutCancel.cshtml">
@@ -271,7 +288,6 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />

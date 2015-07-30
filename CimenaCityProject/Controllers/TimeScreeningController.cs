@@ -33,19 +33,19 @@ namespace CimenaCityProject.Controllers
             //search by movie or homeCinema
             if (!string.IsNullOrEmpty(searchByMovie) && !string.IsNullOrEmpty(searchByHomeCinema))
             {
-                timeScreening = new TimeScreeningData(searchByMovie, searchByHomeCinema);
+                timeScreening = new TimeScreeningData(null, searchByMovie, searchByHomeCinema);
             }
             else if (!string.IsNullOrEmpty(searchByMovie))
             {
-                 timeScreening = new TimeScreeningData(searchByMovie, null);
+                timeScreening = new TimeScreeningData(null, searchByMovie, null);
             }
             else if (!string.IsNullOrEmpty(searchByHomeCinema))
             {
-                timeScreening = new TimeScreeningData(null, searchByHomeCinema);
+                timeScreening = new TimeScreeningData(null, null, searchByHomeCinema);
             }
             else
             {
-                timeScreening = new TimeScreeningData(null, null);
+                timeScreening = new TimeScreeningData(null, null, null);
             }
 
           
@@ -122,19 +122,27 @@ namespace CimenaCityProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TimeScreening timescreening = db.TimeScreening.Find(id);
+
+            TimeScreening timescreening = db.TimeScreening.Find(id); 
+            
+       //     TimeScreening timescreening = db.TimeScreening.Find();
             if (timescreening == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.HomeCinemaID = new SelectList(db.HomeCinemas, "HomeCinemaID", "CinemaName",timescreening.MovieTheaters.HomeCinema.CinemaName);
+            ViewBag.MovieID = new SelectList(db.Movies, "MovieID", "MovieName",timescreening.MovieShowTime.Movie.MovieName);
             return View(timescreening);
         }
 
         // POST: /TimeScreening/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="TimeScreeningID,MovieShowTimeID,TheatresID,Date,Price,IsDisplayed")] TimeScreening timescreening)
+        public ActionResult Edit([Bind(Include = "TimeScreeningID,MovieShowTimeID,TheatresID,Date,Price,IsDisplayed")] TimeScreening timescreening, int? MovieTheatersID)
         {
+            timescreening.MovieTheatersID = MovieTheatersID.Value;
+
+
             if (ModelState.IsValid)
             {
                 db.Entry(timescreening).State = EntityState.Modified;

@@ -49,6 +49,7 @@ namespace CimenaCityProject.Controllers
             // check if row capicity is null. 
             if (rwcpcty == null)
             {
+                rwcpcty = new List<int?>();
                 rwcpcty.Add(1);
                 TempData.Add("RowAmount", rwcpcty);
                 ViewBag.last = 1;

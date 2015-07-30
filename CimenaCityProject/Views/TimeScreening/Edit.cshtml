@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Edit";
+    var SelectMovieID = (SelectList)ViewBag.MovieID;
+    var SelectHomeCinemaID = (SelectList)ViewBag.HomeCinemaID;
 }
 
 <h2>Edit</h2>
@@ -10,33 +12,53 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>TimeScreening</h4>
         <hr />
+
+
         @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.TimeScreeningID)
+        @Html.HiddenFor(model => model.TimeScreeningID, new { id = "TimeScreeningID", })
 
         <div class="form-group">
-            @Html.LabelFor(model => model.MovieShowTimeID, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.MovieShowTime.Movie.MovieName, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.MovieShowTimeID)
-                @Html.ValidationMessageFor(model => model.MovieShowTimeID)
+ 
+                @Html.DropDownList("MovieID", SelectMovieID,"Movie", new { id = "MovieID", name = "MovieID" })
+                @Html.ValidationMessageFor(model => model.MovieShowTime.Movie.MovieID)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("ShowTime" ,new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("MovieShowTimeID", Enumerable.Empty<SelectListItem>(), Model.MovieShowTime.ShowTime.TimeOfDay.ToString()
+                                                                                , new { id = "MovieShowTimeID", name = "MovieShowTimeID" })
+                @Html.ValidationMessageFor(model => model.MovieShowTime.MovieShowTimeID)
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MovieTheaters.HomeCinema.HomeCinemaID, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("HomeCinemaID", SelectHomeCinemaID, " Home Cinema", new { id = "HomeCinemaID", name = "HomeCinemaID" })
+                @Html.ValidationMessageFor(model => model.MovieTheaters.HomeCinema.HomeCinemaID)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.MovieTheatersID, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.MovieTheaters.TheatersName, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.MovieTheatersID)
-                @Html.ValidationMessageFor(model => model.MovieTheatersID)
+                @Html.DropDownList("MovieTheatersID", Enumerable.Empty<SelectListItem>(), Model.MovieTheaters.TheatersName, new { id = "MovieTheatersID", name = "MovieTheatersID" })
+                @Html.ValidationMessageFor(model => model.MovieTheaters.MovieTheatersID)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Date, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Date, new { htmlAttributes = new { value = @Model.Date.ToString("yyyy/MM/DD"),@class = "customclass"  } })
+                @Html.TextBoxFor(model => model.Date, new { id = "Date", value = Model.Date.ToString("DD/mm/yyyy"), @class = "customclass" })
                 @Html.ValidationMessageFor(model => model.Date)
             </div>
         </div>
@@ -44,7 +66,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Price, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Price)
+                @Html.EditorFor(model => model.Price, new { id = "Price" })
                 @Html.ValidationMessageFor(model => model.Price)
             </div>
         </div>
@@ -52,7 +74,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.IsDisplayed, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.IsDisplayed)
+                @Html.EditorFor(model => model.IsDisplayed, new { id = "IsDisplayed" })
                 @Html.ValidationMessageFor(model => model.IsDisplayed)
             </div>
         </div>
@@ -62,6 +84,8 @@
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
+
+
     </div>
 }
 
@@ -72,3 +96,113 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#Date').datepicker({ dateFormat: 'dd/MM/yy'});
+    });
+
+
+    $(function () {
+        $('#MovieID').change(function () {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetShowTime", "TimeScreening")',
+                data: { MovieID: $('#MovieID').val() },
+                dataType: 'json',
+                success: function (data) {
+                    $('#MovieShowTimeID').html('');
+                    $.each(data, function (id, option) {
+                        var name = DatetimeConverter(option.name)
+                        $('#MovieShowTimeID').append($('<option></option>').val(option.id).html(name));
+                    });
+
+                },
+                error: function (xhr, ajaxOptions, thrownEror) {
+                    alert("False" + xhr + "..." + ajaxOptions + "... " + thrownEror);
+                }
+            });
+        });
+    });
+
+
+    $(function () {
+        $('#HomeCinemaID').change(function () {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetTheatres","TimeScreening")',
+                data: { CinemaID: $('#HomeCinemaID').val() },
+                success: function (data) {
+                    $('#MovieTheatersID').html('');
+                    $.each(data, function (id, option) {
+                        $('#MovieTheatersID').append($('<option></option>').val(option.id).html(option.name));
+                    });
+                },
+                error: function (xhr, ajaxOptions, thrownEror) {
+                    alert("Error by loading the Theatres");
+                }
+            });
+        });
+    });
+
+
+    // START Datetime Converters
+    function DateConverter(date) {
+        var aux = null;
+        if (date != null) {
+            aux = date.substring(6);
+            aux = aux.substring(0, aux.indexOf(')'));
+        }
+
+        return aux != null ? getISODate(new Date(parseInt(aux))) : "";
+    }
+
+    function DatetimeConverter(date) {
+        var aux = null;
+        if (date != null) {
+            aux = date.substring(6);
+            aux = aux.substring(0, aux.indexOf(')'));
+        }
+        return aux != null ? getISODateTime(new Date(parseInt(aux))) : "";
+    }
+
+    function getISODate(d) {
+        // padding function
+        var s = function (a, b) { return (1e15 + a + "").slice(-b) };
+
+        // default date parameter
+        if (typeof d === 'undefined') {
+            d = new Date();
+        };
+
+        // return ISO datetime
+        return zeroPad(d.getDate(), 2) + '/' +
+        zeroPad(s(d.getMonth() + 1, 2), 2) + '/' +
+        zeroPad(d.getFullYear(), 4);
+    }
+
+    function getISODateTime(d) {
+        // padding function
+        var s = function (a, b) { return (1e15 + a + "").slice(-b) };
+
+        // default date parameter
+        if (typeof d === 'undefined') {
+            d = new Date();
+        };
+
+        // return ISO datetime
+        return zeroPad(d.getHours(), 2) + ":" +
+        zeroPad(d.getMinutes(), 2) + ":" +
+        zeroPad(d.getSeconds(), 2);
+    }
+
+    function zeroPad(num, places) {
+        var zero = places - num.toString().length + 1;
+        return Array(+(zero > 0 && zero)).join("0") + num;
+    }
+    // END Datetime Converters
+
+
+</script>

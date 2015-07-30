@@ -27,7 +27,7 @@ namespace CimenaCityProject.ViewModels
         }
 
         //ctor(terms)
-        public TimeScreeningData(string termMovie = null , string termHomeCinema = null)
+        public TimeScreeningData(int? TimeScreenID,string termMovie = null , string termHomeCinema = null)
         {
             db = new HomeCinemaContext();
             ShowsTime = new List<MovieShowTime>();
@@ -98,6 +98,18 @@ namespace CimenaCityProject.ViewModels
                 {
                     Movies.AddRange(db.Movies.Where(m => m.MovieID == showtime.MovieID).GroupBy(x=>x.MovieName).SelectMany(x=>x).ToList());
                 }
+            }
+            else if (TimeScreenID.HasValue)
+            {
+                TimeScreening.Add(db.TimeScreening.Find((int)TimeScreenID));
+                foreach (var tmeScreening in TimeScreening)
+                {
+                    ShowsTime.Add(tmeScreening.MovieShowTime);
+                    Theatres.Add(tmeScreening.MovieTheaters);
+                    HomeCinemas.Add(tmeScreening.MovieTheaters.HomeCinema);
+                    Movies.Add(tmeScreening.MovieShowTime.Movie);
+                }
+                
             }
             else
             {

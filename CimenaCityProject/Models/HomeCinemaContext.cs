@@ -42,5 +42,10 @@ namespace CimenaCityProject.Models
                 <PluralizingTableNameConvention>();
         }
 
+
+        internal EntityState Entry<T1, T2, T3>(TimeScreening timeScreening, MovieShowTime movieShowTime, MovieTheaters movieTheaters)
+        {
+            return EntityState.Modified;
+        }
     }
 }
