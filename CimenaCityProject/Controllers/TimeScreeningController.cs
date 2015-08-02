@@ -6,9 +6,10 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+
 using CimenaCityProject.Models;
 using CimenaCityProject.ViewModels;
-
+using CimenaCityProject.Logic;
 
 namespace CimenaCityProject.Controllers
 {
@@ -125,7 +126,6 @@ namespace CimenaCityProject.Controllers
 
             TimeScreening timescreening = db.TimeScreening.Find(id); 
             
-       //     TimeScreening timescreening = db.TimeScreening.Find();
             if (timescreening == null)
             {
                 return HttpNotFound();
@@ -226,6 +226,16 @@ namespace CimenaCityProject.Controllers
                 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
+
+        // get the showtime for CreatePage via movie id
+        public JsonResult CheckIfContractExist(int TheatresID , int ShowTimeID)
+        {
+            var ecom = new EcomLogic();
+            var data = ecom.CheckIfTheContractExist(TheatresID, ShowTimeID);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
 
         // getting the table view after sorting
         public PartialViewResult SortingIndexResult(TimeScreeningData timeScreening, string sortingOrder)

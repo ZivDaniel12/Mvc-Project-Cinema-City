@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Index";
+    decimal price = 0;
+    decimal totalIncome = 0;
 }
 
 <h2>Index</h2>
@@ -11,40 +13,53 @@
 </p>
 <table class="table">
     <tr>
-        @*<th>
-            @Html.DisplayNameFor(model => model.PersonID)
-        </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.CartId)
         </th>
-        @*<th>
-            @Html.DisplayNameFor(model => model.ChairsOrderdID)
-        </th>*@
+     
         <th>
             @Html.DisplayNameFor(model => model.TimeScreeningID)
         </th>
+      
         <th>
-            @Html.DisplayNameFor(model => model.OrderDate)
+             Chairs Ordered
+        </th>
+        <th>
+             Income
         </th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
-        @*<td>
-            @Html.DisplayFor(modelItem => item.PersonID)
-        </td>*@
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderDate)
+        </td>
         <td>
             @Html.DisplayFor(modelItem => item.CartId)
         </td>
-        @*<td>
-            @Html.DisplayFor(modelItem => item.ChairsOrderdID)
-        </td>*@
+     
         <td>
-            @Html.DisplayFor(modelItem => item.TimeScreeningID)
+            @foreach (var Time in item.Event.MovieShowTime.TimeScreening)
+            {
+                if (item.TimeScreeningID == Time.TimeScreeningID)
+                {
+                    @Html.DisplayFor(time => Time.MovieShowTime.Movie.MovieName) <br />
+                    @Html.DisplayFor(time => Time.MovieTheaters.TheatersName) <br />
+                    @Html.DisplayFor(time => Time.MovieShowTime.ShowTime) <br />
+                    price = Time.Price;
+                    totalIncome += (item.TotalChairsOrdered * price);
+                }
+            }
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.OrderDate)
+            @Html.DisplayFor(modelItem => item.TotalChairsOrdered)
+        </td>
+        <td>
+          @((item.TotalChairsOrdered*price).ToString())&#8362;
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.OrderID }) |
@@ -53,5 +68,13 @@
         </td>
     </tr>
 }
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>Total income</td>
+        <td> @totalIncome &#8362; </td>
+        <td></td>
+    </tr>
 
 </table>

@@ -20,7 +20,7 @@ namespace CimenaCityProject.Controllers
         // GET: /CheckOut/
         public ActionResult Index()
         {
-            return View(db.Orders.ToList());
+            return View(db.Orders.OrderByDescending(x=>x.OrderDate).ToList());
         }
 
         // GET: /CheckOut/Details/1

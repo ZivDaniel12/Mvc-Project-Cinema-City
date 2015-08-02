@@ -6,9 +6,10 @@
 }
 
 
-
-
 <h2 style="align-content:center">Check Out Your <br /> Order</h2>
+
+@using (Html.BeginForm("CheckoutReview","Ecom",FormMethod.Post))
+{
 
 <div>
 
@@ -109,12 +110,15 @@
     </dl>
     <div style="position:relative;top:10px;left:180px">
         <div class="btn-group-lg">
-            <p style="font-size:x-large">
-                @Html.ActionLink("Confirm Your Order Now", "CheckoutComplete", new { id = Model.Event.EventID })
-            </p>
+           
+                <input style="font-size:x-large" type="submit" id="@Model.Event.EventID" name="@Model.Event.EventID" value="Confirm Your Order Now " />
+
+              @*  @Html.ActionLink("Confirm Your Order Now", "CheckoutComplete", new { id = Model.Event.EventID })*@
+        
         </div>
     </div>
 </div>
+}
 <p>
 
     @Html.ActionLink("Back to List", "Index")

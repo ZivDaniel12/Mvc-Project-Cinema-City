@@ -6,7 +6,6 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
 namespace CimenaCityProject.Models
 {
     public class CheckOut
@@ -20,7 +19,9 @@ namespace CimenaCityProject.Models
 
         public int PersonID { get; set; }
 
-        public int TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
+
+        public bool ISOrderComplete { get; set; }
 
         [ForeignKey("OrderID")]
         public virtual Order Order { get; set; }

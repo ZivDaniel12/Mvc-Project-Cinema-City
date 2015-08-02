@@ -28,7 +28,7 @@ namespace CimenaCityProject.Models
 
         [ForeignKey("EventID")]
         public virtual Event Event { get; set; }
-   
+        public virtual ICollection<TimeScreening> TimeScreening { get; set; }
 
 
         

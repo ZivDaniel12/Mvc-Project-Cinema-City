@@ -242,7 +242,23 @@ namespace CimenaCityProject.Controllers
             }
         }
 
-      
+        [HttpPost]
+        public ActionResult CheckoutReview(TimeScreeningDetails tsd , int? id)
+        {
+            // i have bug here. need to pass the all data.. 
+            CheckOut checkOut = new CheckOut();
+            checkOut.CartId = tsd.cartID;
+            checkOut.ISOrderComplete = false;
+            checkOut.OrderID = tsd.Order.OrderID;
+            checkOut.TotalPrice = (tsd.TimeScreening.Price * tsd.TotalChairOrdered);
+
+            if (ModelState.IsValid)
+            {
+                db.CheckOut.Add(checkOut);
+                db.SaveChanges();
+            }
+            return RedirectToAction("CheckoutComplete", id);
+        }
 
         //Complete Order
         //GET: /Ecom/CheckOutComplete/cartID
@@ -254,6 +270,19 @@ namespace CimenaCityProject.Controllers
             }
             Event evnt = db.Events.Find(id);
             var orderComplete = new TimeScreeningDetails(evnt);
+            var checkout = db.CheckOut.Where(x => x.CartId == evnt.cartID).First();
+
+            if (orderComplete.Event == null)
+            {
+                return View("CheckoutError");
+            }
+            
+            if (ModelState.IsValid)
+            {
+                checkout.ISOrderComplete = true;
+                db.Entry<CheckOut>(checkout).State = EntityState.Modified;
+                db.SaveChanges();
+            }
 
             return View(orderComplete);
         }

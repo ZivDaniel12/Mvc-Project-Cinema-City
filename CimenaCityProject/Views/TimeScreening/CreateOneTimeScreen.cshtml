@@ -6,8 +6,8 @@
 }
 
 @using (Html.BeginForm("Create", "TimeScreening", FormMethod.Post, new { id = "CreateOne", name = "CreateOne" }))
-{ 
-     @Html.AntiForgeryToken()
+{
+    @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
 
@@ -15,11 +15,12 @@
         <table>
             <tr>
                 <th>
-                    @Html.Label("ShowTime", new { @class = "control-label col-md-2" })
-                </th>
-                <th>
                     @Html.Label("Theatres", new { @class = "control-label col-md-2" })
                 </th>
+                <th>
+                    @Html.Label("ShowTime", new { @class = "control-label col-md-2" })
+                </th>
+
                 <th>
                     @Html.Label("Date", new { @class = "control-label col-md-2" })
                 </th>
@@ -36,49 +37,52 @@
                 </th>
             </tr>
 
-                <tr>
-                    <td>
-                        <div class="col-sm-8">
-                            <br />
-                            @Html.DropDownList("MovieID", SelectMovieID,"Select Movie", new { id = "MovieID", name = "MovieID" })
-                            <br /><br />
-                            @Html.DropDownListFor(model => model.MovieShowTimeID, Enumerable.Empty<SelectListItem>(), "--Loading Value--", new { id = "ShowTime",name = "ShowTime" })
-                            @Html.ValidationMessageFor(model => model.MovieShowTimeID)
-                        </div>
-                    </td>
-                    <td>
-                        <div class="col-sm-8">
-                            <br />
-                            @Html.DropDownList("HomeCinemaID", SelectHomeCinemaID, "Select Home Cinema", new { id = "HomeCinemaID", name = "HomeCinemaID" })
-                            <br /><br />
-                            @Html.DropDownListFor(model => model.MovieTheatersID, Enumerable.Empty<SelectListItem>(), "--Loading Value--", new { id = "TheatresName", name = "TheatresName" })
-                            @Html.ValidationMessageFor(model => model.MovieTheatersID)
-                        </div>
-                    </td>
-                    <td>
-                        <div class="col-sm-8">
-                            <br />
-                            @Html.TextBoxFor(model => model.Date,new { @class = "datepicker" })
-                            @Html.ValidationMessageFor(model => model.Date)
-                        </div>
-                    </td>
-                    <td>
-                        <div class="col-sm-8">
-                            <br />
-                            @Html.EditorFor(model => model.Price)
-                            @Html.ValidationMessageFor(model => model.Price)
-                        </div>
-                    </td>
-                    <td>
-                        <div class="col-sm-8">
-                            <br />
-                            @Html.EditorFor(model => model.IsDisplayed)
-                            @Html.ValidationMessageFor(model => model.IsDisplayed)
-                        </div>
-                    </td>
-                    <td></td>
-                </tr>
-            
+            <tr>
+                <td>
+                    <div class="col-sm-8">
+                        <br />
+                        @Html.DropDownList("HomeCinemaID", SelectHomeCinemaID, "Select Home Cinema", new { id = "HomeCinemaID", name = "HomeCinemaID" })
+                        <br /><br />
+                        @Html.DropDownListFor(model => model.MovieTheatersID, Enumerable.Empty<SelectListItem>()
+                                                   , "--Loading Value--", new { id = "TheatresName", name = "TheatresName" })
+                        @Html.ValidationMessageFor(model => model.MovieTheatersID)
+                    </div>
+                </td>
+                <td>
+                    <div class="col-sm-8">
+                        <br />
+                        @Html.DropDownList("MovieID", SelectMovieID, "Select Movie", new { id = "MovieID", name = "MovieID" })
+                        <br /><br />
+                        @Html.DropDownListFor(model => model.MovieShowTimeID, Enumerable.Empty<SelectListItem>()
+                                                  , "--Loading Value--", new { id = "ShowTime", name = "ShowTime" })
+                        @Html.ValidationMessageFor(model => model.MovieShowTimeID)
+                    </div>
+                </td>
+
+                <td>
+                    <div class="col-sm-8">
+                        <br />
+                        @Html.TextBoxFor(model => model.Date, new { @class = "datepicker" })
+                        @Html.ValidationMessageFor(model => model.Date)
+                    </div>
+                </td>
+                <td>
+                    <div class="col-sm-8">
+                        <br />
+                        @Html.EditorFor(model => model.Price)
+                        @Html.ValidationMessageFor(model => model.Price)
+                    </div>
+                </td>
+                <td>
+                    <div class="col-sm-8">
+                        <br />
+                        @Html.EditorFor(model => model.IsDisplayed)
+                        @Html.ValidationMessageFor(model => model.IsDisplayed)
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+
         </table>
     </div>
 }
@@ -88,11 +92,15 @@
 
 <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script type="text/javascript" >
-    $(function () {
-        $('#Date').datepicker({ dateFormat: 'dd/MM/yy'});
-    });
 
+<script type="text/javascript">
+    $(function () {
+        $('#Date').datepicker({ dateFormat: 'dd/MM/yy' });
+    });
+</script>
+
+
+<script type="text/javascript">
 
     $(function () {
         $('#HomeCinemaID').change(function () {
@@ -102,6 +110,7 @@
                 data: { CinemaID: $('#HomeCinemaID').val() },
                 success: function (data) {
                     $('#TheatresName').html('');
+                    $('#TheatresName').append($('<option></option>').val(0).html("Pick a Theatr"));
                     $.each(data, function (id, option) {
                         $('#TheatresName').append($('<option></option>').val(option.id).html(option.name));
                     });
@@ -113,6 +122,8 @@
         });
     });
 
+
+
     $(function () {
         $('#MovieID').change(function () {
             $.ajax({
@@ -122,6 +133,7 @@
                 dataType: 'json',
                 success: function (data) {
                     $('#ShowTime').html('');
+                    $('#ShowTime').append($('<option></option>').val(0).html("Pick a time"));
                     $.each(data, function (id, option) {
                         var name = DatetimeConverter(option.name)
                         $('#ShowTime').append($('<option></option>').val(option.id).html(name));
@@ -132,6 +144,55 @@
                     alert("False" + xhr + "..." + ajaxOptions + "... " + thrownEror);
                 }
             });
+        });
+    });
+
+
+    $(function () {
+        $('#ShowTime').change(function () {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("CheckIfContractExist", "TimeScreening")',
+                data: {
+                    TheatresID: $('#TheatresName').val(),
+                    ShowTimeID: $('#ShowTime').val()
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data == true) {
+                        alert("This Theatr Alredy exist in another contact /n Please Chosee another Theatre or another time.")
+                        $('#ShowTime').html('')
+                        $('#TheatresName').html('')
+                        $('#ShowTime').append($('<option></option>').val(0).html("Pick a Movie"));
+                        $('#TheatresName').append($('<option></option>').val(0).html("Pick a HomeCinema"));
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownEror) {
+                    alert("False" + xhr + "..." + ajaxOptions + "... " + thrownEror);
+                }
+            });
+        });
+    });
+
+
+    // Get the Price For each type of movie
+    $(function () {
+        $('#TheatresName').change(function () {
+            var ParamName = $('#TheatresName').text();
+            if (/MAX/.test(ParamName) || /Max/.test(ParamName) || /MAx/.test(ParamName) || /max/.test(ParamName)
+                || /mAx/.test(ParamName) || /maX/.test(ParamName) || /mAX/.test(ParamName))
+            {
+                document.getElementById('Price').value = 43
+            }
+            else if (/VIP/.test(ParamName) || /VIp/.test(ParamName)
+            || /vIP/.test(ParamName) )
+            {
+               document.getElementById('Price').value = 38
+            }
+            else
+            {
+                document.getElementById('Price').value = 35
+            }
         });
     });
 
