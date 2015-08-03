@@ -25,17 +25,17 @@ namespace CimenaCityProject.Models
 
             var movie = new List<Movie>
             {
-                new Movie{  Director= "Robert Schwentke", Rate=3,MovieName="Insurgent", ReleaseDate=DateTime.Parse("31/01/2015") ,
+                new Movie{  Director= "Robert Schwentke", Rate=3,MovieName="Insurgent", ReleaseDate=Convert.ToDateTime("05/05/15") ,
                     MovieDescrption= "Beatrice Prior must confront her inner demons and continue her fight against a powerful alliance which threatens to tear her society apart with the help from others on her side."
                ,  PicturePathSmall= "~/Image/Thumbs/Insurgent.png", PicturePathLarge ="~/Image/Insurgent.png",GenreID=genre[0].GenreID 
                 },
 
-                new Movie{  Director=" Glenn Ficarra", Rate=4, MovieName="Focus", ReleaseDate= DateTime.Parse("19/01/2015"),
+                new Movie{  Director=" Glenn Ficarra", Rate=4, MovieName="Focus", ReleaseDate=Convert.ToDateTime("10/01/15"),
                      MovieDescrption="In the midst of veteran con man Nicky's latest scheme, a woman from his past - now an accomplished femme fatale - shows up and throws his plans for a loop."
                      , PicturePathSmall= "~/Image/Thumbs/Focus.png", PicturePathLarge ="~/Image/Focus.png",GenreID=genre[2].GenreID
                 },
 
-                new Movie{ Director=" Chris Kyle", Rate=4, MovieName="American Sniper", ReleaseDate= DateTime.Parse("03/02/2015"),
+                new Movie{ Director=" Chris Kyle", Rate=4, MovieName="American Sniper", ReleaseDate= Convert.ToDateTime("03/02/15"),
                      MovieDescrption="Navy SEAL sniper Chris Kyle's pinpoint accuracy saves countless lives on the battlefield and turns him into a legend. Back home to his wife and kids after four tours of duty, however, Chris finds that it is the war he can't leave behind."
                      , PicturePathSmall= "~/Image/Thumbs/American Sniper.png", PicturePathLarge ="~/Image/American Sniper.png", GenreID=genre[0].GenreID
                 }

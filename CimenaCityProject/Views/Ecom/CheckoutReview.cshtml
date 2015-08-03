@@ -2,124 +2,119 @@
 
 @{
     ViewBag.Title = "Details";
-
+    decimal TotalPrice = Model.TotalChairOrdered * Model.TimeScreening.Price;
+    int orderID = Model.Order.OrderID;
+    int EventID = Model.Event.EventID;
 }
 
 
 <h2 style="align-content:center">Check Out Your <br /> Order</h2>
-
-@using (Html.BeginForm("CheckoutReview","Ecom",FormMethod.Post))
+<hr />
+@using (Html.BeginForm())
 {
+    @Html.HiddenFor(model => EventID, new { @id = "id", @name = "id" })
+    @Html.HiddenFor(model => model.cartID)
+    @Html.HiddenFor(model => orderID, new { @id = "orderID", @name = "orderID" })
+    @Html.HiddenFor(model => (TotalPrice), new { @id = "TotalPrice", @name = "TotalPrice" })
 
-<div>
-
-    <hr />
     <div>
-        @if (!@Model.ifEror.IsEmpty())
-        {
-            @Model.ifEror.ToString()
-        }
-    </div>
-
-    <dl class="dl-horizontal" style="text-align:match-parent">
-
-        <dt>
-
-        </dt>
-
-        <dd style="text-align:inherit">
-            @{
-                if (Model.Movie.PictureLarge != null)
-                {
-                    var base64 = Convert.ToBase64String(Model.Movie.PictureLarge);
-                    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-
-                    <img src="@imgSrc" alt="Unable to display" />
-                    <br />
-                }
+        <div>
+            @if (!@Model.ifEror.IsEmpty())
+            {
+                @Model.ifEror.ToString()
             }
-        </dd>
-
-        <dt></dt>
-        <dd><span style="font-size:large">..............</span></dd>
-
-        <dt>
-            Order Date
-            <br /> <br />
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Order.OrderDate)
-        </dd>
-
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Movie.MovieName)
-            <br /><br />
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Movie.MovieName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.MovieShowTime.ShowTime)
-            <br /><br />
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.MovieShowTime.ShowTime.TimeOfDay)
-        </dd>
-        <dt>
-            Screening Date
-            <br /><br />
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TimeScreening.Date)
-        </dd>
-
-        <dt>
-            Ticket Price
-            <br /> <br />
-        </dt>
-
-        <dd>
-            @((Model.TimeScreening.Price).ToString()) &#8362;
-        </dd>
-
-        @*chairs need to be here..*@
-        <dt>
-            ChairsOrdered
-            <br /><br />
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TotalChairOrdered)
-        </dd>
-
-        <dt>
-            Total Price
-            <br /><br />
-        </dt>
-
-        <dd>
-            @((Model.TimeScreening.Price * Model.TotalChairOrdered).ToString()) &#8362;
-        </dd>
-
-    </dl>
-    <div style="position:relative;top:10px;left:180px">
-        <div class="btn-group-lg">
-           
-                <input style="font-size:x-large" type="submit" id="@Model.Event.EventID" name="@Model.Event.EventID" value="Confirm Your Order Now " />
-
-              @*  @Html.ActionLink("Confirm Your Order Now", "CheckoutComplete", new { id = Model.Event.EventID })*@
-        
         </div>
+        <table class="dl-horizontal" style="text-align:match-parent">
+            <tr>
+                <th></th>
+                <td style="text-align:inherit">
+                    @{
+                        if (Model.Movie.PictureLarge != null)
+                        {
+                            var base64 = Convert.ToBase64String(Model.Movie.PictureLarge);
+                            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+                            <img src="@imgSrc" alt="Unable to display" />
+                                            <br />
+                        }
+                    }
+                </td>
+            </tr>
+            <tr>
+                <th></th>
+                <td><span style="font-size:large">..............</span></td>
+            </tr>
+            <tr>
+                <th>Order Date</th>
+                <td>@Html.DisplayFor(model => model.Order.OrderDate)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Movie.MovieName)</th>
+                <td>@Html.DisplayFor(model => model.Movie.MovieName)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.MovieShowTime.ShowTime)</th>
+                <td>@Html.DisplayFor(model => model.MovieShowTime.ShowTime.TimeOfDay)</td>
+            </tr>
+            <tr>
+                <th> Screening Date</th>
+                <td>@Html.DisplayFor(model => model.TimeScreening.Date)</td>
+            </tr>
+            <tr>
+                <th>Ticket Price</th>
+                <td>@((Model.TimeScreening.Price).ToString()) &#8362;</td>
+            </tr>
+            <tr>
+                <th>ChairsOrdered</th>
+                <td>@Html.DisplayFor(model => model.TotalChairOrdered)</td>
+            </tr>
+            <tr>
+                <th>  Total Price</th>
+                <td>
+                    @Html.DisplayFor(model => TotalPrice, new { name = "TotalPrice", id = "Totalprice" }) &#8362;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="form-group" style="position:relative;top:10px;left:180px">
+                        <div class="col-md-offset-2">
+                            <input type="submit" id="Confirm" value="Confirm Your Order Now" class="btn btn-default" style="font-size:large" onclick="Post()" />
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
     </div>
-</div>
 }
 <p>
 
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Home", "Index", "Home")
 </p>
+
+<script src="~/Scripts/jquery-ui.js"></script>
+<script src="~/Scripts/jquery-1.10.2.intellisense.js"></script>
+
+@*<script type="text/javascript">
+
+    $('#Confirm').click(function () {
+        $.ajax({
+            url: '@Url.Action("CheckoutReview")',
+            type: 'POST',
+            data: JSON.stringify({
+                orderID: $('#orderID').val(),
+                TotalPrice: $('#TotalPrice').val(),
+                cartID: $('#cartID').val(),
+                EventID: $('#id').val()
+            }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                alert("ok")
+            },
+            error: function (result) {
+                alert(result.responseText + "no now ziv")
+            }
+        });
+    });
+   
+</script>*@

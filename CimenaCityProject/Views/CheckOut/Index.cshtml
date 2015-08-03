@@ -1,9 +1,12 @@
-﻿@model IEnumerable<CimenaCityProject.Models.Order>
+﻿@using CimenaCityProject.Models;
+@model IEnumerable<CimenaCityProject.Models.Order>
 
 @{
     ViewBag.Title = "Index";
     decimal price = 0;
     decimal totalIncome = 0;
+    HomeCinemaContext db = new HomeCinemaContext();
+    bool OrderComplete = false;
 }
 
 <h2>Index</h2>
@@ -26,6 +29,9 @@
       
         <th>
              Chairs Ordered
+        </th>
+        <th>
+            Order Complete?
         </th>
         <th>
              Income
@@ -51,7 +57,11 @@
                     @Html.DisplayFor(time => Time.MovieTheaters.TheatersName) <br />
                     @Html.DisplayFor(time => Time.MovieShowTime.ShowTime) <br />
                     price = Time.Price;
-                    totalIncome += (item.TotalChairsOrdered * price);
+                    OrderComplete = db.CheckOut.Where(x => x.OrderID == item.OrderID).Select(x => x.ISOrderComplete).SingleOrDefault();
+                    if (OrderComplete == true)
+                    {
+                        totalIncome += (item.TotalChairsOrdered * price);
+                    }
                 }
             }
         </td>
@@ -59,8 +69,14 @@
             @Html.DisplayFor(modelItem => item.TotalChairsOrdered)
         </td>
         <td>
-          @((item.TotalChairsOrdered*price).ToString())&#8362;
+
+            @Html.DisplayFor(modelItem => OrderComplete)
         </td>
+
+        <td>
+          @( (item.TotalChairsOrdered*price).ToString())&#8362;
+        </td>
+        
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.OrderID }) |
             @Html.ActionLink("Details", "Details", new { id=item.OrderID }) |
@@ -69,6 +85,7 @@
     </tr>
 }
     <tr>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>

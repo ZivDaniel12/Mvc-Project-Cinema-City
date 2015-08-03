@@ -203,61 +203,75 @@ namespace CimenaCityProject.Controllers
         // GET: /Ecom/CheckoutReview/_cartID
         public ActionResult CheckoutReview(string _cartID)
         {
-
             if (string.IsNullOrEmpty(_cartID))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             string cartID = _cartID;
-
-            Event eventOrder = db.Events.Single(c => c.cartID == cartID);
-            var quryEventInfo = new TimeScreeningDetails(eventOrder);
-
-            if (quryEventInfo.Order == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
 
-            if (string.IsNullOrEmpty(quryEventInfo.ifEror))
-            {
-                if (ModelState.IsValid)
+                Event eventOrder = db.Events.Single(c => c.cartID == cartID);
+                var quryEventInfo = new TimeScreeningDetails(eventOrder);
+
+                if (quryEventInfo.Order == null)
                 {
-                    db.Orders.Add(quryEventInfo.Order);
-                    db.SaveChanges();
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                if (string.IsNullOrEmpty(quryEventInfo.ifEror))
+                {
+                    if (ModelState.IsValid)
+                    {
+                        db.Orders.Add(quryEventInfo.Order);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        quryEventInfo.ifEror = "Error by adding order.";
+                    }
+
+                    if (quryEventInfo.Event == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    return View(quryEventInfo);
                 }
                 else
                 {
-                    quryEventInfo.ifEror = "Error by adding order.";
+                    return View(quryEventInfo);
                 }
-
-                if (quryEventInfo.Event == null)
-                {
-                    return HttpNotFound();
-                }
-                return View(quryEventInfo);
             }
-            else
+            catch (Exception ex)
             {
-                return View(quryEventInfo);
+                TempData.Add("ExeptionMessage", ex.InnerException.Message);
+                return RedirectToAction("CheckoutError", cartID);
             }
         }
 
         [HttpPost]
-        public ActionResult CheckoutReview(TimeScreeningDetails tsd , int? id)
+        public ActionResult CheckoutReview(int? orderID, decimal TotalPrice, string cartID, int? EventID)
         {
+            if (!EventID.HasValue || TotalPrice <= 0 || !orderID.HasValue || string.IsNullOrEmpty(cartID))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var theEvent = db.Events.Where(evnt => evnt.cartID == cartID).First();
+
             // i have bug here. need to pass the all data.. 
             CheckOut checkOut = new CheckOut();
-            checkOut.CartId = tsd.cartID;
+            checkOut.CartId = cartID;
             checkOut.ISOrderComplete = false;
-            checkOut.OrderID = tsd.Order.OrderID;
-            checkOut.TotalPrice = (tsd.TimeScreening.Price * tsd.TotalChairOrdered);
+            checkOut.OrderID = orderID.Value;
+            checkOut.TotalPrice = TotalPrice;
 
             if (ModelState.IsValid)
             {
                 db.CheckOut.Add(checkOut);
                 db.SaveChanges();
             }
-            return RedirectToAction("CheckoutComplete", id);
+            return RedirectToAction("CheckoutComplete", new { id = EventID });
         }
 
         //Complete Order
@@ -276,7 +290,7 @@ namespace CimenaCityProject.Controllers
             {
                 return View("CheckoutError");
             }
-            
+
             if (ModelState.IsValid)
             {
                 checkout.ISOrderComplete = true;
@@ -287,8 +301,15 @@ namespace CimenaCityProject.Controllers
             return View(orderComplete);
         }
 
-
-
+        //GET: //Ecom/CheckoutError/cartID
+        public ActionResult CheckoutError(string cartID)
+        {
+            if (string.IsNullOrEmpty(cartID))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            return View(cartID);
+        }
 
 
         //Ajax Addon

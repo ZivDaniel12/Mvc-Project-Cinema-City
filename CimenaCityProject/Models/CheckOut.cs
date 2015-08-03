@@ -25,9 +25,6 @@ namespace CimenaCityProject.Models
 
         [ForeignKey("OrderID")]
         public virtual Order Order { get; set; }
-        [ForeignKey("PersonID")]
-        public virtual Person Person { get; set; }
-
 
 
     }

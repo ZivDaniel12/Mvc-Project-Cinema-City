@@ -24,5 +24,7 @@ namespace CimenaCityProject.Models
 
         [DataType(DataType.Date)]
         public DateTime BirthDate { get; set; }
+
+        public virtual IEnumerable<CheckOut> CheckOut { get; set; }
     }
 }

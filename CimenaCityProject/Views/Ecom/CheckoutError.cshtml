@@ -1,5 +1,22 @@
-﻿@{
+﻿@model string
+
+
+
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
+<div class="warning">
+    <div>
+        <table>
+            <tr>
+                <td><span> There is and Eror by adding your Ticket's . </span> <br />
+                <span> try again later or contact with us and identify your self with </span></td>
+                <td>
+                    @Html.Display(Model)
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

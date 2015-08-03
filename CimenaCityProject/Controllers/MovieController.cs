@@ -452,7 +452,7 @@ namespace CimenaCityProject.Controllers
             catch (Exception ex)
             {
 
-               
+                ViewBag.ExeptionMessage = ex.Message + ex.InnerException.Message;
             }
 
             return generatedFiles;

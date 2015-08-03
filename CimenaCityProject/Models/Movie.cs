@@ -22,27 +22,21 @@ namespace CimenaCityProject.Models
 
 
         [Display(Name = "Release Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode=true,DataFormatString="{0:dd/MM/yyy}")]
         public DateTime ReleaseDate { get; set; }
 
         [Display(Name = "Genre")]
         public int GenreID { get; set; }
 
 
-        // do i need to put here "[range(0,5)]" attribute? 
-        //      [MaxLength(5, ErrorMessage = "You can enter just 5 point")]
-        //[DisplayFormat(NullDisplayText = "No rate")]
         public int Rate { get; set; }
 
-        //      [Required]
-        //      [StringLength(15, ErrorMessage = "You can enter up to 15 characters ")]
-        //      [Display(Name = "Movie Director")]
-        //    [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
+
+    //    [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
         public string Director { get; set; }
 
         //       [Required]
         [Display(Name = "Movie Descrption")]
-        //       [StringLength(250, ErrorMessage = "You can enter up to 250 characters ")]
         public string MovieDescrption { get; set; }
 
 
@@ -53,7 +47,6 @@ namespace CimenaCityProject.Models
         public byte[] PictureLarge { get; set; }
         public string PicturePathLarge { get; set; }
 
-   //     [ForeignKey("GenreID")]
         public virtual Genre Genre  { get; set; }
 
         public virtual  ICollection<MovieShowTime> MovieShowTimes { get; set; }
