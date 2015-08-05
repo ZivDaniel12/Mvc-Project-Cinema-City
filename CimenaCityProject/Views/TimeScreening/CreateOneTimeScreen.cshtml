@@ -95,7 +95,11 @@
 
 <script type="text/javascript">
     $(function () {
-        $('#Date').datepicker({ dateFormat: 'mm/dd/yy' });
+        $('#Date').datepicker({
+            dateFormat: 'dd/MM/yy',
+            showOtherMonths: true,
+            selectOtherMonths: true
+        });
     });
 </script>
 

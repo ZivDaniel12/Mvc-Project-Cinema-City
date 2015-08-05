@@ -15,7 +15,6 @@ namespace CimenaCityProject.Models
         {
             this.CheckOuts = new HashSet<CheckOut>();
             this.TimeScreening = new HashSet<TimeScreening>();
-
         }
 
         public int OrderID { get; set; }

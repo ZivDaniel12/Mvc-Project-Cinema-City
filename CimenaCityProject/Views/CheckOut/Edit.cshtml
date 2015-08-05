@@ -2,6 +2,9 @@
 
 @{
     ViewBag.Title = "Edit";
+
+    var TimeScreening = (SelectList)ViewBag.TimeScreeningList;
+    
 }
 
 <h2>Edit</h2>
@@ -16,35 +19,18 @@
         <hr />
         @Html.ValidationSummary(true)
         @Html.HiddenFor(model => model.OrderID)
+        @Html.HiddenFor(model => model.EventID)
+        @Html.HiddenFor(model => model.CartId)
+        @Html.HiddenFor(model => model.TimeScreeningID)
 
-        @*<div class="form-group">
-            @Html.LabelFor(model => model.PersonID, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PersonID)
-                @Html.ValidationMessageFor(model => model.PersonID)
-            </div>
-        </div>*@
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CartId, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CartId)
-                @Html.ValidationMessageFor(model => model.CartId)
-            </div>
-        </div>
-
-        @*<div class="form-group">
-            @Html.LabelFor(model => model.ChairsOrderdID, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ChairsOrderdID)
-                @Html.ValidationMessageFor(model => model.ChairsOrderdID)
-            </div>
-        </div>*@
 
         <div class="form-group">
             @Html.LabelFor(model => model.TimeScreeningID, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.TimeScreeningID)
+                @Html.DropDownList("TimeScreeningList",TimeScreening,new{id=Model.TimeScreeningID, name=Model.TimeScreeningID})
+
+
+                @*@Html.EditorFor(model => model.TimeScreeningID)*@
                 @Html.ValidationMessageFor(model => model.TimeScreeningID)
             </div>
         </div>

@@ -46,7 +46,7 @@
             @Html.LabelFor(model => model.ReleaseDate, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.TextBoxFor(model => model.ReleaseDate, new { @class = "datepicker"})<br />
-                @Html.ValidationMessageFor(model => model.ReleaseDate.Date)
+                @Html.ValidationMessageFor(model => model.ReleaseDate.Date,"You can enter this fomat :"+Model.ReleaseDate.Date.GetDateTimeFormats())
             </div>
             @ViewBag.exeptionMessage
         </div>
@@ -114,7 +114,12 @@
 
 <script>
     $(function () {
-        $('#ReleaseDate').datepicker({ dateFormat: 'mm/dd/yy' });
+        $('#ReleaseDate').datepicker({
+            dateFormat: 'dd/MM/yy',
+            showOtherMonths: true,
+            selectOtherMonths: true
+        });
+
     });
 </script>
 

@@ -37,32 +37,32 @@ namespace CimenaCityProject.Controllers
         // GET: /CheckOut/Create
         public ActionResult Create()
         {
-            return View();
-        }
 
-        // POST: /CheckOut/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="OrderID,PersonID,CartId,ChairsOrderdID,TimeScreeningID,OrderDate")] Order order)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Orders.Add(order);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(order);
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: /CheckOut/Edit/5
         public ActionResult Edit(int? id)
         {
+
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Order order = db.Orders.Find(id);
+
+            var data = db.TimeScreening
+                .ToList().Select(s=>new 
+                                          {
+                                              TimeScreeningID = s.TimeScreeningID,
+                                              Description = string.Format("{0} - {1}, {2}",s.MovieShowTime.Movie.MovieName,s.MovieShowTime.ShowTime.TimeOfDay,s.MovieTheaters.TheatersName)
+
+                                           });
+
+
+            ViewBag.TimeScreeningList = new SelectList(data, "TimeScreeningID", "Description", order.TimeScreeningID);
+
             if (order == null)
             {
                 return HttpNotFound();
@@ -75,8 +75,14 @@ namespace CimenaCityProject.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="OrderID,PersonID,CartId,ChairsOrderdID,TimeScreeningID,OrderDate")] Order order)
+        public ActionResult Edit(int? TimeScreeningList, [Bind(Include="OrderID,PersonID,CartId,ChairsOrderdID,TimeScreeningID,OrderDate")] Order order)
         {
+            // i have bug here. 
+            if (!TimeScreeningList.HasValue)
+            {
+                return View(order);
+            }
+            order.TimeScreeningID = TimeScreeningList.Value;
             if (ModelState.IsValid)
             {
                 db.Entry(order).State = EntityState.Modified;

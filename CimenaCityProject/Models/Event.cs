@@ -14,7 +14,6 @@ namespace CimenaCityProject.Models
         public Event()
         {
             this.ChairsOrderds = new HashSet<ChairsOrderd>();
-            this.Orders = new HashSet<Order>();
         }
 
         public int EventID { get; set; }
@@ -24,8 +23,6 @@ namespace CimenaCityProject.Models
 
         public virtual ICollection<ChairsOrderd> ChairsOrderds { get; set; }
         public virtual MovieShowTime MovieShowTime { get; set; }
-        public virtual ICollection<Order> Orders { get; set; }
-       
-
+        //public virtual Order Order { get; set; }
     }
 }

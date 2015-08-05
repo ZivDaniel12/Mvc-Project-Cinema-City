@@ -107,57 +107,23 @@ namespace CimenaCityProject.Controllers
                 string pic = System.IO.Path.GetFileName(file.FileName);
                 string path = System.IO.Path.Combine(
                                        Server.MapPath("~/Image/" + pic));
-                try
-                {
-                    // file is saved on fisical path
-                    file.SaveAs(path);
-                }
-                catch (Exception ex)
-                {
-
-                    ViewBag.ExeptionMessage = ex.Message;
-                }
-
-                Dictionary<string, string> Versions = new Dictionary<string, string>();
-
-
-                // save the image path path to the database or you can send image
-                // directly to database
-                // in-case if you want to store byte[] ie. for DB
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    file.InputStream.CopyTo(ms);
-                    byte[] array = ms.GetBuffer();
-
-                    IList<string> VersionResizings = GenerateVersions(path);
-
-                    ImageConverter imgCon = new ImageConverter();
-
-                    Image imgSmall = Image.FromFile(VersionResizings[0]);
-                    //  imgSmall.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    byte[] small = (byte[])imgCon.ConvertTo(imgSmall, typeof(byte[]));
-
-                    Image imgMedume = Image.FromFile(VersionResizings[1]);
-                    //    imgMedume.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    byte[] mediume = (byte[])imgCon.ConvertTo(imgMedume, typeof(byte[]));
-
-                    Image imgLarge = Image.FromFile(VersionResizings[2]);
-                    //      imgLarge.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    byte[] large = (byte[])imgCon.ConvertTo(imgLarge, typeof(byte[]));
-
+                IList<string> VersionResizings = GenerateVersions(path);
+                List<byte[]> bytes = CreateImagesToDB(file, path);
                     if (VersionResizings.Count == 3)
                     {
                         movie.PicturePathSmall = VersionResizings[0];
-                        movie.PictureSmall = small;
+                        movie.PictureSmall = bytes[0];
                         movie.PicturePathMedium = VersionResizings[1];
-                        movie.PictureMedium = mediume;
+                        movie.PictureMedium = bytes[0];
                         movie.PicturePathLarge = VersionResizings[2];
-                        movie.PictureLarge = large;
+                        movie.PictureLarge = bytes[0];
 
 
-                        db.Movies.Add(movie);
-                        db.SaveChanges();
-
+                        if (ModelState.IsValid)
+                        {
+                            db.Movies.Add(movie);
+                            db.SaveChanges();
+                        }
                         // after successfully uploading redirect the user
 
                         return RedirectToAction("Create", "MovieShowTime", new { id = movie.MovieID });
@@ -169,9 +135,7 @@ namespace CimenaCityProject.Controllers
                         return RedirectToAction("Index", "Movie");
                     }
                 }
-
-            }
-            if (ModelState.IsValid)
+             if (ModelState.IsValid)
             {
 
                 db.Movies.Add(movie);
@@ -179,7 +143,7 @@ namespace CimenaCityProject.Controllers
                 return RedirectToAction("Create", "MovieShowTime", new { id = movie.MovieID });
             }
             return View(movie);
-        }
+            }
 
         // GET: /Movie/Edit/5
         public ActionResult Edit(int? id)
@@ -217,82 +181,47 @@ namespace CimenaCityProject.Controllers
             ViewData.Add("Genre", new SelectList(db.Genre.ToArray(), "GenreID", "EnglishName"));
 
             movie.GenreID = Genre;
+            movie.ReleaseDate = Convert.ToDateTime(ReleaseDate) ;
             //upload file. 
             if (file != null)
             {
                 string pic = System.IO.Path.GetFileName(file.FileName);
                 string path = System.IO.Path.Combine(Server.MapPath("~/Image/" + pic));
 
-                try
+                IList<string> VersionResizings = GenerateVersions(path);
+                IList<byte[]> bytes = CreateImagesToDB(file, path);
+                //check for the .3 versions 
+                if (VersionResizings.Count == 3)
                 {
-                    // file is uploaded
-                    file.SaveAs(path);
-                }
-                catch (Exception ex)
-                {
+                    movie.PicturePathSmall = VersionResizings[0];
+                    movie.PictureSmall = bytes[0];
+                    movie.PicturePathMedium = VersionResizings[1];
+                    movie.PictureMedium = bytes[1];
+                    movie.PicturePathLarge = VersionResizings[2];
+                    movie.PictureLarge = bytes[2];
 
-                    ViewBag.ExeptionMessage = ex.Message;
-                }
-
-                Dictionary<string, string> Versions = new Dictionary<string, string>();
-
-                // save the image path path to the database or you can send image
-                // directly to database
-                // in-case if you want to store byte[] ie. for DB
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    file.InputStream.CopyTo(ms);
-                    byte[] array = ms.GetBuffer();
-
-                    IList<string> VersionResizings = GenerateVersions(path);
-
-                    ImageConverter imgCon = new ImageConverter();
-
-                    Image imgSmall = Image.FromFile(VersionResizings[0]);
-                    imgSmall.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    byte[] small = (byte[])imgCon.ConvertTo(imgSmall, typeof(byte[]));
-
-                    Image imgMedume = Image.FromFile(VersionResizings[1]);
-                    imgMedume.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    byte[] mediume = (byte[])imgCon.ConvertTo(imgMedume, typeof(byte[]));
-
-                    Image imgLarge = Image.FromFile(VersionResizings[2]);
-                    imgLarge.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    byte[] large = (byte[])imgCon.ConvertTo(imgLarge, typeof(byte[]));
-
-                    //check for the .3 versions 
-                    if (VersionResizings.Count == 3)
+                    if (ModelState.IsValid)
                     {
-                        movie.PicturePathSmall = VersionResizings[0];
-                        movie.PictureSmall = small;
-                        movie.PicturePathMedium = VersionResizings[1];
-                        movie.PictureMedium = mediume;
-                        movie.PicturePathLarge = VersionResizings[2];
-                        movie.PictureLarge = large;
-
-                        if (ModelState.IsValid)
-                        {
-                            db.Entry(movie).State = EntityState.Modified;
-                            db.SaveChanges();
-                            ViewBag.exeptionMessage = "true";
-                            // after successfully uploading redirect the user
-                            return RedirectToAction("Index");
-                        }
-                        ViewBag.exeptionMessage = "false";
-                        return View(movie);
+                        db.Entry(movie).State = EntityState.Modified;
+                        db.SaveChanges();
+                        ViewBag.exeptionMessage = "true";
+                        // after successfully uploading redirect the user
+                        return RedirectToAction("Index");
                     }
-                    else
+                    ViewBag.exeptionMessage = "false";
+                    return View(movie);
+                }
+                else
+                {
+                    if (ModelState.IsValid)
                     {
-                        if (ModelState.IsValid)
-                        {
-                            db.Entry(movie).State = EntityState.Modified;
-                            db.SaveChanges();
-                            ViewBag.exeptionMessage = "false";
-                            return RedirectToAction("Index");
-                        }
+                        db.Entry(movie).State = EntityState.Modified;
+                        db.SaveChanges();
                         ViewBag.exeptionMessage = "false";
-                        return View(movie);
+                        return RedirectToAction("Index");
                     }
+                    ViewBag.exeptionMessage = "false";
+                    return View(movie);
                 }
             }
             return View(movie);
@@ -324,6 +253,88 @@ namespace CimenaCityProject.Controllers
             return RedirectToAction("Index");
         }
 
+
+        //change the size of the pic XL L S .
+        public IList<string> GenerateVersions(string original)
+        {
+            Dictionary<string, string> versions = new Dictionary<string, string>();
+            //To store the list of generated paths
+            var generatedFiles = new List<string>();
+            
+            try
+            {
+
+                //Define the versions to generate and their filename suffixes.
+                versions.Add("_Thumb", "width=100&height=120&format=png"); //Crop to square thumbnail
+                versions.Add("_Medium", "maxwidth=250&maxheight=3500&format=png"); //Fit inside 400x400 area, png
+                versions.Add("_Large", "maxwidth=850&maxheight=950&format=png"); //Fit inside 1900x1200 area
+
+                string basePath = ImageResizer.Util.PathUtils.RemoveExtension(original);
+                ICollection<string> gFiles = new List<string>();
+
+                //Generate each version
+                foreach (string PathFix in versions.Keys)
+                {
+                    string fixPath = basePath +  PathFix;
+                    //Let the image builder add the correct extension based on the output file type
+                    generatedFiles.Add(ImageBuilder.Current.Build(original, basePath + PathFix, new ResizeSettings(
+                                       versions[PathFix]), false, true));
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                ViewBag.ExeptionMessage = ex.Message + ex.InnerException.Message;
+                versions = new Dictionary<string, string>();
+                
+            }
+
+            return generatedFiles;
+        }
+
+        public List<byte[]> CreateImagesToDB(HttpPostedFileBase file, string path)
+        {
+            try
+            {
+                // file is uploaded
+                file.SaveAs(path);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ExeptionMessage = ex.Message;
+            }
+
+            Dictionary<string, string> Versions = new Dictionary<string, string>();
+
+            IList<string> VersionResizings = GenerateVersions(path);
+            List<byte[]> Genareted = new List<byte[]>();
+            // save the image path path to the database or you can send image
+            // directly to database
+            // in-case if you want to store byte[] ie. for DB
+            using (MemoryStream ms = new MemoryStream())
+            {
+                file.InputStream.CopyTo(ms);
+                byte[] array = ms.GetBuffer();
+
+                ImageConverter imgCon = new ImageConverter();
+
+                Image imgSmall = Image.FromFile(VersionResizings[0]);
+                //imgSmall.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                Genareted.Add((byte[])imgCon.ConvertTo(imgSmall, typeof(byte[])));
+
+                Image imgMedume = Image.FromFile(VersionResizings[1]);
+                //imgMedume.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                Genareted.Add((byte[])imgCon.ConvertTo(imgMedume, typeof(byte[])));
+
+                Image imgLarge = Image.FromFile(VersionResizings[2]);
+                //imgLarge.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                Genareted.Add((byte[])imgCon.ConvertTo(imgLarge, typeof(byte[])));
+            }
+
+            return Genareted;
+        }
+
         //GET: /Movie/FileUpload/1
         [HttpGet]
         public ActionResult FileUpload(int? id)
@@ -341,6 +352,7 @@ namespace CimenaCityProject.Controllers
             return View(movie);
 
         }
+
 
         // POST: /Movie/FileUpload/1
         [HttpPost, ActionName("FileUpload")]
@@ -421,45 +433,7 @@ namespace CimenaCityProject.Controllers
 
         }
 
-        //change the size of the pic XL L S .
-        public IList<string> GenerateVersions(string original)
-        {
-            
-            Dictionary<string, string> versions = new Dictionary<string, string>();
-            //To store the list of generated paths
-            var generatedFiles = new List<string>();
-            
-            try
-            {
 
-                //Define the versions to generate and their filename suffixes.
-                versions.Add("_Thumb", "width=100&height=120&format=png"); //Crop to square thumbnail
-                versions.Add("_Medium", "maxwidth=250&maxheight=3500&format=png"); //Fit inside 400x400 area, png
-                versions.Add("_Large", "maxwidth=850&maxheight=950&format=png"); //Fit inside 1900x1200 area
-
-                string basePath = ImageResizer.Util.PathUtils.RemoveExtension(original);
-                ICollection<string> gFiles = new List<string>();
-
-                //Generate each version
-                foreach (string PathFix in versions.Keys)
-                {
-                    string fixPath = basePath +  PathFix;
-                    //Let the image builder add the correct extension based on the output file type
-                    generatedFiles.Add(ImageBuilder.Current.Build(original, basePath + PathFix, new ResizeSettings(
-                                       versions[PathFix]), false, true));
-
-                }
-            }
-            catch (Exception ex)
-            {
-
-                ViewBag.ExeptionMessage = ex.Message + ex.InnerException.Message;
-                versions = new Dictionary<string, string>();
-                
-            }
-
-            return generatedFiles;
-        }
 
         protected override void Dispose(bool disposing)
         {
