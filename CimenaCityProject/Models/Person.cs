@@ -11,20 +11,19 @@ namespace CimenaCityProject.Models
     public class Person
     {
 
-        //PK
-        public int PersonID { get; set; }
+        public Person()
+        {
+            this.CheckOuts = new HashSet<CheckOut>();
+        }
 
+        public int PersonID { get; set; }
         public int PersonalID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Address { get; set; }
+        public Nullable<int> PhoneNumber { get; set; }
+        public System.DateTime BirthDate { get; set; }
 
-        [DataType(DataType.PhoneNumber)]
-        public string PhoneNumber { get; set; }
-
-        [DataType(DataType.Date)]
-        public DateTime BirthDate { get; set; }
-
-        public virtual IEnumerable<CheckOut> CheckOut { get; set; }
+        public virtual ICollection<CheckOut> CheckOuts { get; set; }
     }
 }

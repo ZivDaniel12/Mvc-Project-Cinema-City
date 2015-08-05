@@ -13,15 +13,11 @@ namespace CimenaCityProject.Models
     {
         [Key]
         public int ChairsOrderdiD { get; set; }
-
         public int HallChairID { get; set; }
-
         public int EventID { get; set; }
 
-       
-        public virtual ICollection<HallChairs> HallChairs { get; set; }
-        
-        public virtual ICollection<Event> Event { get; set; }
+        public virtual Event Event { get; set; }
+        public virtual HallChairs HallChairs { get; set; }
         
     }
 }

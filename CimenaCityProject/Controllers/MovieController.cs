@@ -424,11 +424,11 @@ namespace CimenaCityProject.Controllers
         //change the size of the pic XL L S .
         public IList<string> GenerateVersions(string original)
         {
-
+            
             Dictionary<string, string> versions = new Dictionary<string, string>();
             //To store the list of generated paths
             var generatedFiles = new List<string>();
-
+            
             try
             {
 
@@ -443,9 +443,10 @@ namespace CimenaCityProject.Controllers
                 //Generate each version
                 foreach (string PathFix in versions.Keys)
                 {
+                    string fixPath = basePath +  PathFix;
                     //Let the image builder add the correct extension based on the output file type
                     generatedFiles.Add(ImageBuilder.Current.Build(original, basePath + PathFix, new ResizeSettings(
-                        versions[PathFix]), false, true));
+                                       versions[PathFix]), false, true));
 
                 }
             }
@@ -453,6 +454,8 @@ namespace CimenaCityProject.Controllers
             {
 
                 ViewBag.ExeptionMessage = ex.Message + ex.InnerException.Message;
+                versions = new Dictionary<string, string>();
+                
             }
 
             return generatedFiles;
@@ -463,7 +466,6 @@ namespace CimenaCityProject.Controllers
             if (disposing)
             {
                 db.Dispose();
-
             }
             base.Dispose(disposing);
         }

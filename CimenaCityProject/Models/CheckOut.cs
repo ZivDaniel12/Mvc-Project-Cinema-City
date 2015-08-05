@@ -12,19 +12,14 @@ namespace CimenaCityProject.Models
     {
         [Key]
         public int CheckOutID { get; set; }
-
         public string CartId { get; set; }
-
         public int OrderID { get; set; }
-
-        public int PersonID { get; set; }
-
+        public Nullable<int> PersonID { get; set; }
         public decimal TotalPrice { get; set; }
+        public bool  ISOrderComplete { get; set; }
 
-        public bool ISOrderComplete { get; set; }
-
-        [ForeignKey("OrderID")]
         public virtual Order Order { get; set; }
+        public virtual Person Person { get; set; }
 
 
     }

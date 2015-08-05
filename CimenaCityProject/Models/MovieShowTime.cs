@@ -14,17 +14,18 @@ namespace CimenaCityProject.Models
     /// </summary>
     public class MovieShowTime
     {
-        [Key]
+        public MovieShowTime()
+        {
+            this.Events = new HashSet<Event>();
+            this.TimeScreening = new HashSet<TimeScreening>();
+        }
+
         public int MovieShowTimeID { get; set; }
-
         public int MovieID { get; set; }
-
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm:ss}")]
-        public DateTime ShowTime { get; set; }
-
+        public System.DateTime ShowTime { get; set; }
         public bool IsDisplay { get; set; }
 
-        [ForeignKey("MovieID")]
+        public virtual ICollection<Event> Events { get; set; }
         public virtual Movie Movie { get; set; }
         public virtual ICollection<TimeScreening> TimeScreening { get; set; }
     }

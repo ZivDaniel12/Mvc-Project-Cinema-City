@@ -10,15 +10,18 @@ namespace CimenaCityProject.Models
 {
     public class CityList
     {
+        
+        public CityList()
+        {
+            this.HomeCinemas = new HashSet<HomeCinema>();
+        }
         [Key]
         public int CityID { get; set; }
-        [Display(Name = "English Name")]
         public string EnglishName { get; set; }
-        [Display(Name = "Hebrew Name")]
         public string HebrewName { get; set; }
-        [Display(Name = "Arabic Name")]
         public string ArabicName { get; set; }
         public string District { get; set; }
-
+    
+        public virtual ICollection<HomeCinema> HomeCinemas { get; set; }
     }
 }

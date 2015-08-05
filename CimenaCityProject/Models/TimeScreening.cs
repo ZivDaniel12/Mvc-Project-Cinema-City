@@ -10,28 +10,20 @@ namespace CimenaCityProject.Models
     public class TimeScreening
     {
 
-        [Key]
+        public TimeScreening()
+        {
+        }
+
         public int TimeScreeningID { get; set; }
-
         public int MovieShowTimeID { get; set; }
-
         public int MovieTheatersID { get; set; }
-
-        [DataType(DataType.Date)]
-        public DateTime Date { get; set; }
-
-        [DataType(DataType.Currency)]
+        public System.DateTime Date { get; set; }
         public decimal Price { get; set; }
-
         public bool IsDisplayed { get; set; }
 
-      //  [ForeignKey("MovieShowTimeID")]
         public virtual MovieShowTime MovieShowTime { get; set; }
-
-     //   [ForeignKey("MovieTheatersID")]
         public virtual MovieTheaters MovieTheaters { get; set; }
+        public virtual Order Order { get; set; }
 
-        //[ForeignKey("TimeScreeningID")]
-        //public virtual Order Order { get; set; }
     }
 }

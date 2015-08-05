@@ -11,13 +11,20 @@ namespace CimenaCityProject.Models
 {
     public class Event
     {
+        public Event()
+        {
+            this.ChairsOrderds = new HashSet<ChairsOrderd>();
+            this.Orders = new HashSet<Order>();
+        }
 
         public int EventID { get; set; }
         public int MovieShowTimeID { get; set; }
         public string cartID { get; set; }
+        public int ChairsOrderedID { get; set; }
 
-        [ForeignKey("MovieShowTimeID")]
+        public virtual ICollection<ChairsOrderd> ChairsOrderds { get; set; }
         public virtual MovieShowTime MovieShowTime { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
        
 
     }

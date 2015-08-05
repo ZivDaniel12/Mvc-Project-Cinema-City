@@ -14,20 +14,21 @@ namespace CimenaCityProject.Models
 
     public class MovieTheaters
     {
-        [Key]
-        public int MovieTheatersID { get; set; }
-   
-        public int HomeCinemaID { get; set; }
+        public MovieTheaters()
+        {
+            this.Rows = new HashSet<Rows>();
+            this.TimeScreenings = new HashSet<TimeScreening>();
+        }
 
+        public int MovieTheatersID { get; set; }
+        public int HomeCinemaID { get; set; }
         public string TheatersName { get; set; }
         public int NumberHall { get; set; }
-
         public int RowAmount { get; set; }
-        
-        //FK .
-       
+        public Nullable<bool> IsActive { get; set; }
+    
         public virtual HomeCinema HomeCinema { get; set; }
         public virtual ICollection<Rows> Rows { get; set; }
-        public virtual ICollection<TimeScreening> TimeScreening { get; set; }
+        public virtual ICollection<TimeScreening> TimeScreenings { get; set; }
     }
 }

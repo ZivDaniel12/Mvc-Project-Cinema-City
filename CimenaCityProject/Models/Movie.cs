@@ -11,31 +11,28 @@ namespace CimenaCityProject.Models
 {
     public class Movie
     {
-        //PK.
-        [Key]
+        public Movie()
+        {
+            this.MovieShowTimes = new HashSet<MovieShowTime>();
+        }
+
         public int MovieID { get; set; }
 
-        //     [Required]
         [Display(Name = "Movie Name")]
-        //       [StringLength(30, ErrorMessage = "You can enter up to 30 characters ")]
         public string MovieName { get; set; }
-
-
-        [Display(Name = "Release Date")]
-        [DisplayFormat(ApplyFormatInEditMode=true,DataFormatString="{0:dd/MM/yyy}")]
-        public DateTime ReleaseDate { get; set; }
 
         [Display(Name = "Genre")]
         public int GenreID { get; set; }
 
 
+        [Display(Name = "Release Date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyy}")]
+        public System.DateTime ReleaseDate { get; set; }
+
+
         public int Rate { get; set; }
-
-
-    //    [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
         public string Director { get; set; }
 
-        //       [Required]
         [Display(Name = "Movie Descrption")]
         public string MovieDescrption { get; set; }
 
@@ -47,8 +44,7 @@ namespace CimenaCityProject.Models
         public byte[] PictureLarge { get; set; }
         public string PicturePathLarge { get; set; }
 
-        public virtual Genre Genre  { get; set; }
-
-        public virtual  ICollection<MovieShowTime> MovieShowTimes { get; set; }
+        public virtual Genre Genre { get; set; }
+        public virtual ICollection<MovieShowTime> MovieShowTimes { get; set; }
     }
 }

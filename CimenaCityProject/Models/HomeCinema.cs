@@ -15,20 +15,19 @@ namespace CimenaCityProject.Models
     public class HomeCinema
     {
 
-        //PK
-        [Key]
+        public HomeCinema()
+        {
+            this.MovieTheaters = new HashSet<MovieTheaters>();
+        }
+
         public int HomeCinemaID { get; set; }
         public string CinemaName { get; set; }
-
         public int CityID { get; set; }
         public string Address { get; set; }
-
-        [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
-
-        public bool Showing { get; set; }
+        public Nullable<bool> Showing { get; set; }
 
         public virtual CityList CityList { get; set; }
-     //   public virtual ICollection<MovieTheaters> MovieTheaters { get; set; }
+        public virtual ICollection<MovieTheaters> MovieTheaters { get; set; }
     }
 }

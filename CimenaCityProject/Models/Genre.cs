@@ -10,14 +10,16 @@ namespace CimenaCityProject.Models
 {
     public class Genre
     {
-        [Key]
+        public Genre()
+        {
+            this.Movies = new HashSet<Movie>();
+        }
+
         public int GenreID { get; set; }
-        [Display(Name = "English Name")]
         public string EnglishName { get; set; }
-        [Display(Name = "Hebrew Name")]
         public string HebrewName { get; set; }
-        [Display(Name = "Arabic Name")]
         public string ArabicName { get; set; }
 
+        public virtual ICollection<Movie> Movies { get; set; }
     }
 }
