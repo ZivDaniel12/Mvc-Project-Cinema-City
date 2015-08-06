@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using CimenaCityProject.Models;
 using CimenaCityProject.CustomHtmlHelper;
 using CimenaCityProject.ViewModels;
+using CimenaCityProject.Logic;
 
 
 namespace CimenaCityProject.Controllers
@@ -45,9 +46,14 @@ namespace CimenaCityProject.Controllers
             // find the movie by the ID 
             var viewMovieQry = new MovieData(id);
 
+            var theatres = viewMovieQry.TimeScreening.Where(x => x.MovieShowTime.MovieID == id).Select(y => y.MovieTheaters.IsActive).ToList();
+
             //DropDownList. 
-            ViewBag.HomeCinemaCity = new SelectList(db.HomeCinemas.Where(x => x.Showing == true).ToList(), "HomeCinemaID", "CinemaName");
-            ViewBag.ShowTimeList = new SelectList(db.MovieShowTimes.Where(mst => mst.MovieID == id && mst.IsDisplay == true).OrderBy(x => x.ShowTime.CompareTo(DateTime.Now)).ToArray(), "MovieShowTimeID", "ShowTime");
+
+            ViewBag.HomeCinemaCity = new SelectList(db.HomeCinemas.Where(x=>x.Showing == true), "HomeCinemaID", "CinemaName");
+
+            ViewBag.ShowTimeList = new SelectList(db.MovieShowTimes.Where(mst => mst.MovieID == id && mst.IsDisplay == true)
+                .OrderBy(x => x.ShowTime.CompareTo(DateTime.Now)).ToArray(), "MovieShowTimeID", "ShowTime");
 
             // check if have any result in null go to ERR 400 
             if (viewMovieQry.Movie == null)
@@ -100,7 +106,6 @@ namespace CimenaCityProject.Controllers
             return RedirectToAction("Chair", new { id = showtimeID, theatresID = theatresID, timescreenID = timescreenid });
         }
 
-        //
         //Chair
         // GET: /Chairs/SelectChair/showTimeID
         public ActionResult Chair(int? id, int? theatresID, int? timescreenID)
@@ -119,162 +124,177 @@ namespace CimenaCityProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Chair(string[] SelectedChair, TheatersChairs theatersChairs)
         {
-            // here  start to close the Event with the cartID
-            string cartID = Guid.NewGuid().ToString();
-            foreach (var item in db.Orders)
+
+            if (SelectedChair != null)
             {
-                if (item.CartId == cartID)
-                {
-                    cartID = Guid.NewGuid().ToString();
-                }
-            }
-            bool flag = false;
+                // here  start to close the Event with the cartID
+                string cartID = Guid.NewGuid().ToString();
 
-            var theatresChair = new TheatersChairs(
-                                                    theatersChairs.TimeScreening.MovieShowTimeID
-                                                    , theatersChairs.TimeScreening.MovieTheatersID
-                                                     , theatersChairs.TimeScreening.TimeScreeningID);
+                theatersChairs = new TheatersChairs(theatersChairs.TimeScreening.MovieShowTimeID,
+                                                    theatersChairs.TimeScreening.MovieTheatersID,
+                                                    theatersChairs.TimeScreening.TimeScreeningID);
 
-            int MovieID = db.MovieShowTimes.Where(mID => mID.MovieShowTimeID == theatersChairs.TimeScreening.MovieShowTimeID).SingleOrDefault().MovieID;
-
-            Event newEvent = new Event();
-            newEvent.cartID = cartID;
-            newEvent.MovieShowTimeID = theatersChairs.TimeScreening.MovieShowTimeID;
-            if (ModelState.IsValid)
-            {
-                db.Events.Add(newEvent);
-                db.SaveChanges();
-                flag = true;
-            }
-            else
-            {
-                flag = false;
-                cartID = "Eror";
-            }
-
-            for (int i = 0; i < SelectedChair.Length; i++)
-            {
-                HallChairs hallChairSelected = db.HallChairs.Find(Convert.ToInt16(SelectedChair[i]));
-                hallChairSelected.IsSelected = true;
-
-                ChairsOrderd newChairOrder = new ChairsOrderd();
-                newChairOrder.EventID = newEvent.EventID;
-                newChairOrder.HallChairID = hallChairSelected.HallChairsID;
-
+                theatersChairs.cartID = cartID;
                 try
                 {
-                    if (ModelState.IsValid)
-                    {
-
-                        db.Entry<HallChairs>(hallChairSelected).State = EntityState.Modified;
-                        db.ChairsOrderd.Add(newChairOrder);
-                        db.SaveChanges();
-                        flag = true;
-                    }
-                    else
-                    {
-                        flag = false;
-                        cartID = "Eror";
-                        break;
-                    }
+                    TempData.Clear();
+                    TempData.Add("SelectedChair", SelectedChair);
+                    TempData.Add("MovieShowTimeID", theatersChairs.TimeScreening.MovieShowTimeID);
+                    TempData.Add("theatersChairs", theatersChairs);
                 }
-                catch (Exception)
+                catch (Exception )
                 {
-                    flag = false;
-                    cartID = "Eror";
-                    break;
                 }
-            }
+            
 
-            if (flag == true)
-            {
                 //continue to check out. 
                 return RedirectToAction("CheckoutReview", new { _cartID = cartID });
             }
+
             else
             {
                 //get back to movie via MovieID and error massage 
-                return RedirectToAction("Movie", "Ecom", new { id = MovieID, error = "Cant add you chair to ticket, try again. " });
+                return RedirectToAction("Movie", "Ecom", new { id = theatersChairs.movieID, error = "Cant add you chair to ticket, try again. " });
             }
-
         }
 
-        //Order Review 
+        //checkout Review get
         // GET: /Ecom/CheckoutReview/_cartID
         public ActionResult CheckoutReview(string _cartID)
         {
-            if (string.IsNullOrEmpty(_cartID))
+            bool flag = false;
+            string errorMessage = string.Empty;
+            int? MovieShowTimeID = (int)TempData["MovieShowTimeID"];
+            string[] SelectedChair = (string[])TempData["SelectedChair"];
+
+            if (string.IsNullOrEmpty(_cartID) || !MovieShowTimeID.HasValue || SelectedChair == null || SelectedChair.Length == 0)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            string cartID = _cartID;
+
             try
             {
+                Event evnt = new Event();
+                evnt.cartID = _cartID;
+                evnt.MovieShowTimeID = MovieShowTimeID.Value;
 
-                Event eventOrder = db.Events.Single(c => c.cartID == cartID);
-                var quryEventInfo = new TimeScreeningDetails(eventOrder);
-
-                if (quryEventInfo.Order == null)
+                if (ModelState.IsValid)
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
-
-                if (string.IsNullOrEmpty(quryEventInfo.ifEror))
-                {
-                    if (ModelState.IsValid)
-                    {
-                        db.Orders.Add(quryEventInfo.Order);
-                        db.SaveChanges();
-                    }
-                    else
-                    {
-                        quryEventInfo.ifEror = "Error by adding order.";
-                    }
-
-                    if (quryEventInfo.Event == null)
-                    {
-                        return HttpNotFound();
-                    }
-                    return View(quryEventInfo);
+                    db.Events.Add(evnt);
+                    db.SaveChanges();
+                    flag = true;
                 }
                 else
                 {
-                    return View(quryEventInfo);
+                    flag = false;
                 }
+
+                for (int i = 0; i < SelectedChair.Length; i++)
+                {
+                    HallChairs hallChairSelected = db.HallChairs.Find(Convert.ToInt16(SelectedChair[i]));
+                    hallChairSelected.IsSelected = true;
+
+                    ChairsOrderd newChairOrder = new ChairsOrderd();
+                    newChairOrder.EventID = evnt.EventID;
+                    newChairOrder.HallChairID = hallChairSelected.HallChairsID;
+                    newChairOrder.HallChairs = hallChairSelected;
+
+                    try
+                    {
+
+                        if (ModelState.IsValid)
+                        {
+                            db.Entry<HallChairs>(hallChairSelected).State = EntityState.Modified;
+                            db.ChairsOrderd.Add(newChairOrder);
+                            db.SaveChanges();
+                            flag = true;
+                        }
+                        else
+                        {
+                            flag = false;
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        errorMessage= ex.Message;
+                        flag = false;
+                    }
+                }
+                if (flag == true)
+                {
+                    var quryEventInfo = new EventsData(evnt, false);
+                    TempData.Add("OrderDate", quryEventInfo.OrderDate);
+                    TempData.Add("TotalChairOrdered", quryEventInfo.TotalChairOrdered);
+
+                    if (string.IsNullOrEmpty(quryEventInfo.ifEror))
+                    {
+                        if (quryEventInfo.Event == null)
+                        {
+                            return HttpNotFound();
+                        }
+                        return View(quryEventInfo);
+                    }
+                    else
+                    {
+                        //was an error.redirect to checkout error
+                        return RedirectToAction("CheckoutError", new { cartID = _cartID, message = errorMessage });
+                    }
+                }
+                else
+                {
+                    //was an error.redirect to checkout error
+                    return RedirectToAction("CheckoutError", new { cartID = _cartID, message = errorMessage });
+                }
+                
             }
             catch (Exception ex)
             {
                 TempData.Add("ExeptionMessage", ex.InnerException.Message);
-                return RedirectToAction("CheckoutError", cartID);
+                //was an error.redirect to checkout error
+                return RedirectToAction("CheckoutError", new { cartID = _cartID, message = errorMessage });
             }
         }
 
         [HttpPost]
-        public ActionResult CheckoutReview(int? orderID, decimal TotalPrice, string cartID, int? EventID)
+        public ActionResult CheckoutReview(decimal TotalPrice, string cartID, int? EventID)
         {
-            if (!EventID.HasValue || TotalPrice <= 0 || !orderID.HasValue || string.IsNullOrEmpty(cartID))
+            TheatersChairs theatersChairs = (TheatersChairs)TempData["theatersChairs"];
+            DateTime OrderDate = (DateTime)TempData["OrderDate"];
+            int? TotalChairOrdered = (int)TempData["TotalChairOrdered"];
+
+            if (!EventID.HasValue || TotalPrice <= 0 || string.IsNullOrEmpty(cartID) || theatersChairs == null || OrderDate == null || !TotalChairOrdered.HasValue)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var theEvent = db.Events.Where(evnt => evnt.cartID == cartID).First();
+            Order order = EcomLogic.AddNewOrder(theatersChairs, EventID.Value, OrderDate, TotalChairOrdered.Value);
 
-            // i have bug here. need to pass the all data.. 
             CheckOut checkOut = new CheckOut();
             checkOut.CartId = cartID;
             checkOut.ISOrderComplete = false;
-            checkOut.OrderID = orderID.Value;
+            checkOut.OrderID = order.OrderID;
             checkOut.TotalPrice = TotalPrice;
-
-            if (ModelState.IsValid)
+            order.IsComplete = true;
+            
+            try
             {
-                db.CheckOut.Add(checkOut);
-                db.SaveChanges();
+                if (ModelState.IsValid)
+                {
+                    db.Orders.Add(order);
+                    db.CheckOut.Add(checkOut);
+                    db.SaveChanges();
+                }
+                return RedirectToAction("CheckoutComplete", new { id = EventID });
             }
-            return RedirectToAction("CheckoutComplete", new { id = EventID });
+            catch (Exception ex)
+            {
+                //was an error.redirect to checkout error
+                return RedirectToAction("CheckoutError", new { cartID = cartID, message = ex.Message });
+            }
         }
 
-        //Complete Order
+        //Complete Order GET
         //GET: /Ecom/CheckOutComplete/cartID
         public ActionResult CheckoutComplete(int? id)
         {
@@ -282,8 +302,9 @@ namespace CimenaCityProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Event evnt = db.Events.Find(id);
-            var orderComplete = new TimeScreeningDetails(evnt);
+            var orderComplete = new EventsData(evnt, true);
             var checkout = db.CheckOut.Where(x => x.CartId == evnt.cartID).First();
 
             if (orderComplete.Event == null)
@@ -311,8 +332,6 @@ namespace CimenaCityProject.Controllers
             return View(cartID);
         }
 
-
-        //Ajax Addon
 
         // get the ShowTime when the mmber pick a homecinema. 
         public JsonResult GetShowTime(int HomeCinemaID, int MovieID)
@@ -380,6 +399,17 @@ namespace CimenaCityProject.Controllers
             }
             return Json(data, JsonRequestBehavior.AllowGet);
 
+        }
+
+
+        private bool AddTheDitals(List<ChairsOrderd> newChairOrder, Event newEvent)
+        {
+            bool flag = false;
+            List<HallChairs> items = new List<HallChairs>();
+
+
+
+            return flag;
         }
     }
 }

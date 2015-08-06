@@ -1,43 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
 using System.Linq;
-using System.Net;
 using System.Web;
-using System.Web.Mvc;
 
 using CimenaCityProject.Models;
-using CimenaCityProject.ViewModels;
+using CimenaCityProject.Logic;
 
 namespace CimenaCityProject.ViewModels
 {
-    public class TimeScreeningDetails
+    public class EventsData
     {
-
+        
         private HomeCinemaContext db = new HomeCinemaContext();
 
         private Event evnt;
         private Movie movie;
         private MovieShowTime movieShowTime;
-        private ChairsOrderd chairsOrderd;
+        //private ChairsOrderd chairsOrderd;
         private Order order;
         private MovieTheaters theaters;
         private TimeScreening timeScreening;
 
         public int TotalChairOrdered { get; set; }
-        public List<int> ChairNumbers { get; set; }
-        public List<int> RowNumber { get; set; }
+        public List<string> ChairsNumber { get; set; }
 
         public string cartID { get; set; }
-
+        public DateTime OrderDate { get; set; }
         public string ifEror { get; set; }
 
-        public ChairsOrderd ChairsOrderd
-        {
-            get { return chairsOrderd; }
-            set { chairsOrderd = value; }
-        }
+        //public ChairsOrderd ChairsOrderd
+        //{
+        //    get { return chairsOrderd; }
+        //    set { chairsOrderd = value; }
+        //}
 
         public Order Order
         {
@@ -72,13 +67,13 @@ namespace CimenaCityProject.ViewModels
 
 
         //ctor()
-        public TimeScreeningDetails()
+        public EventsData()
         {
 
         }
 
         //ctor(order)
-        public TimeScreeningDetails(Event _Event)
+        public EventsData(Event _Event, bool OrderExist)
         {
 
             if (_Event != null)
@@ -89,18 +84,12 @@ namespace CimenaCityProject.ViewModels
                     evnt = _Event;
                     cartID = evnt.cartID;
 
-                    // get the movieShowTime via timeScreeningID 
-                    movieShowTime = (from mst in db.MovieShowTimes
-                                     where
-                                         (evnt.MovieShowTimeID) == mst.MovieShowTimeID
-                                     select mst).SingleOrDefault();
+                    // get the movieShowTime via Event.MovieShowTimeID 
+                    movieShowTime = db.MovieShowTimes.Find(Event.MovieShowTimeID); 
 
-                    // get the movie item. via the TimeScreeningID via MovieShowTimeID 
-                    movie = (from mv in db.Movies
-                             where mv.MovieID == movieShowTime.MovieID
-                             select mv).SingleOrDefault();
+                    movie = MovieShowTime.Movie;
 
-                    // get the theatres item via timeScreeningID. 
+                    // get the theatres item 
                     theaters = (from theat in db.Theaters
                                 where theat.MovieTheatersID ==
                                 (from rw in db.Rows
@@ -119,70 +108,52 @@ namespace CimenaCityProject.ViewModels
                                      where _Event.MovieShowTimeID == ts.MovieShowTimeID && ts.MovieTheatersID == theaters.MovieTheatersID
                                      select ts).SingleOrDefault();
 
-                    ChairNumbers = new List<int>();
-                    RowNumber = new List<int>();
+                    ChairsNumber = new List<string>();
+                    int[] ChairOrderID = Event.ChairsOrderds.Where(x=>x.EventID== Event.EventID).Select(x=>x.ChairsOrderdiD).ToArray();
 
-                  
-
+                    ChairsNumber.AddRange(EcomLogic.GetChairNumbers(ChairOrderID,Event.ChairsOrderds));
                     getTotalChairsOrdered();
 
-                    
+                    OrderDate = DateTime.Now;
 
                     // if there is a order all fine.. if no , go to catch and make one. 
                     try
                     {
-                        order = (from odr in db.Orders
-                                 where odr.EventID == evnt.EventID && odr.CartId == cartID
-                                 select odr).SingleOrDefault();
-
-                        if (order == null)
+                        if (OrderExist == true)
                         {
-                            order = new Order();
-                            order.TimeScreeningID = timeScreening.TimeScreeningID;
-                            order.CartId = cartID;
-                            order.TotalChairsOrdered = TotalChairOrdered;
-                            order.EventID = evnt.EventID;
-                            order.OrderDate = DateTime.Now;
+                            order = (from odr in db.Orders
+                                     where odr.EventID == evnt.EventID && odr.CartId == cartID
+                                     select odr).SingleOrDefault();
                         }
+
                     }
                     catch (Exception)
                     {
-                        
-                        order = new Order();
-                        order.TimeScreeningID = timeScreening.TimeScreeningID;
-                        order.CartId = cartID;
-                        order.TotalChairsOrdered = TotalChairOrdered;
-                        order.EventID = evnt.EventID;
-                        order.OrderDate = DateTime.Now;
+
+                        ifEror = "Error by adding the Order.";
                     }
 
                     ifEror = null;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    ifEror = "Cannot load Order Details";
+                    ifEror = "There is an error while adding detial's."+ex.Message;
                 }
             }
         }
 
         private void getTotalChairsOrdered()
         {
-            //get how many chaires ordered... 
-            //what is the chairs number
-            //what is row number
-            
+
             foreach (var item in db.ChairsOrderd)
             {
                 if (item.EventID == evnt.EventID)
                 {
                     TotalChairOrdered++;
-
-
                 }
             }
         }
 
 
- 
     }
 }

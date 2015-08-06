@@ -19,6 +19,9 @@
         @Html.HiddenFor(mstID => mstID.TimeScreening.MovieShowTimeID)
         @Html.HiddenFor(theatres => theatres.TimeScreening.MovieTheatersID)
         @Html.HiddenFor(TimescreeningID => TimescreeningID.TimeScreening.TimeScreeningID)
+        @Html.HiddenFor(movieID => Model.movieID)
+
+
 
         <hr />
         @Html.ValidationSummary(true)

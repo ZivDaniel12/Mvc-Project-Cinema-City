@@ -22,6 +22,16 @@ namespace CimenaCityProject
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                
+               
+            }
+
             //create user idemtity interaction 
             //for custom role and identity
             //ActionRole actionRole = new ActionRole();

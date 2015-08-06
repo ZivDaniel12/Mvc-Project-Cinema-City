@@ -1,8 +1,8 @@
 ﻿@using CimenaCityProject.CustomHtmlHelper
-@model CimenaCityProject.ViewModels.TimeScreeningDetails
+@model CimenaCityProject.ViewModels.EventsData
 
 @{
-    ViewBag.Title = "Check Out Complete".ToString();
+    ViewBag.Title = "Check Out Complete";
 
 }
 
@@ -61,14 +61,6 @@
         <dd>
             @Html.DisplayFor(model => model.MovieShowTime.ShowTime.TimeOfDay)
         </dd>
-        <dt>
-            Screening Date
-            <br /><br />
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TimeScreening.Date)
-        </dd>
 
         <dt>
             Ticket Price
@@ -87,6 +79,15 @@
 
         <dd>
             @Html.DisplayFor(model => model.TotalChairOrdered)
+            <ul>
+                @foreach (var item in Model.ChairsNumber)
+                {
+                    <li style="">
+                        @item
+                    </li>
+                }
+            </ul>
+
         </dd>
 
         <dt>

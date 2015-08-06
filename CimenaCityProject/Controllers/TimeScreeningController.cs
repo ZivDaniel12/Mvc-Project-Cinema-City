@@ -18,9 +18,14 @@ namespace CimenaCityProject.Controllers
         private HomeCinemaContext db = new HomeCinemaContext();
 
         // GET: /TimeScreening/
-        public ActionResult Index()
+        public ActionResult Index(string Error)
         {
             TimeScreeningData timeScreening = new TimeScreeningData();
+
+            if (!string.IsNullOrEmpty(Error))
+            {
+                TempData["msg"] = "<script>alert('" + Error + "');</script>";
+            }
 
             return View(timeScreening);
         }
@@ -101,14 +106,20 @@ namespace CimenaCityProject.Controllers
                 Timescreening.MovieTheatersID = MovieTheatersID;
             }
             MovieShowTime movieshowtime = db.MovieShowTimes.Find(Timescreening.MovieShowTimeID);
-            HomeCinema homecinema = db.HomeCinemas.Where(x => x.HomeCinemaID == db.Theaters.Where(y=>y.MovieTheatersID == Timescreening.MovieTheatersID).FirstOrDefault().HomeCinemaID).FirstOrDefault();
-            homecinema.Showing = true;
-            movieshowtime.IsDisplay = true;
+            HomeCinema homecinema = db.HomeCinemas.Where(x => x.HomeCinemaID == db.Theaters.Where(y => y.MovieTheatersID == Timescreening.MovieTheatersID).FirstOrDefault().HomeCinemaID).FirstOrDefault();
+            MovieTheaters theatres = db.Theaters.Find(MovieTheatersID);
+            if (Timescreening.IsDisplayed == true)
+            {
+                theatres.IsActive = true;
+                movieshowtime.IsDisplay = true;
+                homecinema.Showing = true;
+            }
             
                 if (ModelState.IsValid)
                 {
                     db.TimeScreening.Add(Timescreening);
                     db.Entry(movieshowtime).State = EntityState.Modified;
+                    db.Entry(theatres).State = EntityState.Modified;
                     db.Entry(homecinema).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Index");
@@ -230,8 +241,7 @@ namespace CimenaCityProject.Controllers
         // get the showtime for CreatePage via movie id
         public JsonResult CheckIfContractExist(int TheatresID , int ShowTimeID)
         {
-            var ecom = new EcomLogic();
-            var data = ecom.CheckIfTheContractExist(TheatresID, ShowTimeID);
+            var data = EcomLogic.CheckIfTheContractExist(TheatresID, ShowTimeID);
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }

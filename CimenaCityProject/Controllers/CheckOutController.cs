@@ -82,7 +82,12 @@ namespace CimenaCityProject.Controllers
             {
                 return View(order);
             }
+            ICollection<TimeScreening> ts = db.TimeScreening.Where(x => x.TimeScreeningID == TimeScreeningList.Value).ToList();
+
+            order = db.Orders.Find(order.OrderID);
             order.TimeScreeningID = TimeScreeningList.Value;
+            order.TimeScreening = ts;
+
             if (ModelState.IsValid)
             {
                 db.Entry(order).State = EntityState.Modified;

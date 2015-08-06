@@ -1,9 +1,8 @@
-﻿@model CimenaCityProject.ViewModels.TimeScreeningDetails
+﻿@model CimenaCityProject.ViewModels.EventsData
 
 @{
     ViewBag.Title = "Details";
     decimal TotalPrice = Model.TotalChairOrdered * Model.TimeScreening.Price;
-    int orderID = Model.Order.OrderID;
     int EventID = Model.Event.EventID;
 }
 
@@ -14,7 +13,6 @@
 {
     @Html.HiddenFor(model => EventID, new { @id = "id", @name = "id" })
     @Html.HiddenFor(model => model.cartID)
-    @Html.HiddenFor(model => orderID, new { @id = "orderID", @name = "orderID" })
     @Html.HiddenFor(model => (TotalPrice), new { @id = "TotalPrice", @name = "TotalPrice" })
 
     <div>
@@ -29,14 +27,14 @@
                 <th></th>
                 <td style="text-align:inherit">
                     @{
-                        if (Model.Movie.PictureLarge != null)
-                        {
-                            var base64 = Convert.ToBase64String(Model.Movie.PictureLarge);
-                            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+    if (Model.Movie.PictureLarge != null)
+    {
+        var base64 = Convert.ToBase64String(Model.Movie.PictureLarge);
+        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
 
-                            <img src="@imgSrc" alt="Unable to display" />
-                                            <br />
-                        }
+        <img src="@imgSrc" alt="Unable to display" />
+                        <br />
+    }
                     }
                 </td>
             </tr>
@@ -46,7 +44,7 @@
             </tr>
             <tr>
                 <th>Order Date</th>
-                <td>@Html.DisplayFor(model => model.Order.OrderDate)</td>
+                <td>@Html.DisplayFor(model => model.OrderDate)</td>
             </tr>
             <tr>
                 <th>@Html.DisplayNameFor(model => model.Movie.MovieName)</th>
@@ -66,7 +64,17 @@
             </tr>
             <tr>
                 <th>ChairsOrdered</th>
-                <td>@Html.DisplayFor(model => model.TotalChairOrdered)</td>
+                <td> <b>@Html.DisplayFor(model => model.TotalChairOrdered)</b>
+                    <ul>
+                        @foreach (var item in Model.ChairsNumber)
+                        {
+                            <li style="">
+                                @item
+                            </li>
+                        }
+                    </ul>
+                </td>
+             
             </tr>
             <tr>
                 <th>  Total Price</th>
@@ -97,24 +105,24 @@
 
 @*<script type="text/javascript">
 
-    $('#Confirm').click(function () {
-        $.ajax({
-            url: '@Url.Action("CheckoutReview")',
-            type: 'POST',
-            data: JSON.stringify({
-                orderID: $('#orderID').val(),
-                TotalPrice: $('#TotalPrice').val(),
-                cartID: $('#cartID').val(),
-                EventID: $('#id').val()
-            }),
-            contentType: 'application/json; charset=utf-8',
-            success: function (result) {
-                alert("ok")
-            },
-            error: function (result) {
-                alert(result.responseText + "no now ziv")
-            }
+        $('#Confirm').click(function () {
+            $.ajax({
+                url: '@Url.Action("CheckoutReview")',
+                type: 'POST',
+                data: JSON.stringify({
+                    orderID: $('#orderID').val(),
+                    TotalPrice: $('#TotalPrice').val(),
+                    cartID: $('#cartID').val(),
+                    EventID: $('#id').val()
+                }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) {
+                    alert("ok")
+                },
+                error: function (result) {
+                    alert(result.responseText + "no now ziv")
+                }
+            });
         });
-    });
-   
-</script>*@
+
+    </script>*@

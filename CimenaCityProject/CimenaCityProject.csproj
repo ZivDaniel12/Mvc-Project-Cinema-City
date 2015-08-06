@@ -202,12 +202,12 @@
     <Compile Include="Models\TimeScreening.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\EventsData.cs" />
     <Compile Include="ViewModels\HomeCinemaDetails.cs" />
     <Compile Include="ViewModels\MovieData.cs" />
     <Compile Include="ViewModels\OrderDetails.cs" />
     <Compile Include="ViewModels\TheatersChairs.cs" />
     <Compile Include="ViewModels\TimeScreeningData.cs" />
-    <Compile Include="ViewModels\TimeScreeningDetails.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />

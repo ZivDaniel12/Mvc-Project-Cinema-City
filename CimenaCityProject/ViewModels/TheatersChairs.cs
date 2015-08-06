@@ -17,13 +17,13 @@ namespace CimenaCityProject.ViewModels
 
         private HomeCinemaContext db;
 
-        private HomeCinema homeCinema;
         private MovieTheaters theaters;
         private TimeScreening timeScreening;
         private ChairsOrderd chairsOrderd;
         private List<Rows> rows;
         private List<HallChairs> hallChairs;
         public int movieID { get; set; }
+        public string cartID { get; set; }
 
         // read only.
         public ChairsOrderd ChairsOrderd
@@ -44,11 +44,11 @@ namespace CimenaCityProject.ViewModels
             set { theaters = value; }
         }
 
-        public HomeCinema HomeCinema
-        {
-            get { return homeCinema; }
-            set { homeCinema = value; }
-        }
+        //public HomeCinema HomeCinema
+        //{
+        //    get { return homeCinema; }
+        //    set { homeCinema = value; }
+        //}
 
         public List<Rows> Rows
         {
@@ -85,11 +85,9 @@ namespace CimenaCityProject.ViewModels
                         where mt.MovieTheatersID == _theatresID
                         select mt).SingleOrDefault();
 
-            homeCinema = (from hc in db.HomeCinemas
-                          where hc.HomeCinemaID == theaters.HomeCinemaID
-                          select hc).SingleOrDefault();
+            theaters.HomeCinema = db.HomeCinemas.Find(theaters.HomeCinemaID);
 
-            timeScreening = db.TimeScreening.Where(x=>x.TimeScreeningID == timescreenID).First();
+            timeScreening = db.TimeScreening.Find(timescreenID);
 
             rows = (from rws in db.Rows
                     where rws.TheatersID == theaters.MovieTheatersID
