@@ -46,11 +46,14 @@ namespace CimenaCityProject.Controllers
             // find the movie by the ID 
             var viewMovieQry = new MovieData(id);
 
-            var theatres = viewMovieQry.TimeScreening.Where(x => x.MovieShowTime.MovieID == id).Select(y => y.MovieTheaters.IsActive).ToList();
+            var theatres = viewMovieQry.TimeScreening.Where(x => x.MovieShowTime.MovieID == id)
+                .GroupBy(x=>x.MovieTheaters.HomeCinemaID).Select(y => y.Where(a=>a.MovieTheaters.IsActive == true)).ToList();
+
 
             //DropDownList. 
 
-            ViewBag.HomeCinemaCity = new SelectList(db.HomeCinemas.Where(x=>x.Showing == true), "HomeCinemaID", "CinemaName");
+            //ViewBag.HomeCinemaCity = new SelectList(db.HomeCinemas.Where(x=>x.Showing == true), "HomeCinemaID", "CinemaName");
+            ViewBag.HomeCinemaCity = new SelectList(theatres, "HomeCinemaID", "CinemaName");
 
             ViewBag.ShowTimeList = new SelectList(db.MovieShowTimes.Where(mst => mst.MovieID == id && mst.IsDisplay == true)
                 .OrderBy(x => x.ShowTime.CompareTo(DateTime.Now)).ToArray(), "MovieShowTimeID", "ShowTime");
