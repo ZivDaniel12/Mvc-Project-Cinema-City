@@ -43,20 +43,23 @@ namespace CimenaCityProject.Controllers
 
             }
             //I need to add the geoLocation system.devices.location?
-            // find the movie by the ID 
+            // find the movie by the ID  => y.Where(a=>a.MovieTheaters.IsActive == true)
             var viewMovieQry = new MovieData(id);
 
-            var theatres = viewMovieQry.TimeScreening.Where(x => x.MovieShowTime.MovieID == id)
-                .GroupBy(x=>x.MovieTheaters.HomeCinemaID).Select(y => y.Where(a=>a.MovieTheaters.IsActive == true)).ToList();
 
+            var theatres = viewMovieQry.TimeScreening.Where(x => x.IsDisplayed == true).Distinct(new DisinctItemComparer()).Select(s => new
+                {
+                    HomeCinemaID = s.MovieTheaters.HomeCinemaID,
+                    CinemaName = s.MovieTheaters.HomeCinema.CinemaName
+                }).ToList();
 
             //DropDownList. 
-
-            //ViewBag.HomeCinemaCity = new SelectList(db.HomeCinemas.Where(x=>x.Showing == true), "HomeCinemaID", "CinemaName");
+            TimeSpan time = DateTime.Now.TimeOfDay;
+                //ViewBag.HomeCinemaCity = new SelectList(db.HomeCinemas.Where(x=>x.Showing == true), "HomeCinemaID", "CinemaName");
             ViewBag.HomeCinemaCity = new SelectList(theatres, "HomeCinemaID", "CinemaName");
 
             ViewBag.ShowTimeList = new SelectList(db.MovieShowTimes.Where(mst => mst.MovieID == id && mst.IsDisplay == true)
-                .OrderBy(x => x.ShowTime.CompareTo(DateTime.Now)).ToArray(), "MovieShowTimeID", "ShowTime");
+                .OrderBy(x => time).ToArray(), "MovieShowTimeID", "ShowTime");
 
             // check if have any result in null go to ERR 400 
             if (viewMovieQry.Movie == null)
@@ -374,6 +377,8 @@ namespace CimenaCityProject.Controllers
                     }
                 }
             }
+            TimeSpan timespan= DateTime.Now.TimeOfDay;
+            data = data.OrderBy(x => timespan).ToList();
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
@@ -390,7 +395,7 @@ namespace CimenaCityProject.Controllers
                     {
                         if (timescreen.MovieShowTimeID == ShowTimeID && theatres.MovieTheatersID == timescreen.MovieTheatersID)
                         {
-                            data = theatres.TheatersName + "  Room Number: " + theatres.NumberHall;
+                            data = theatres.TheatersName + "  Theater Number: " + theatres.NumberHall;
                             flag = true;
                             break;
                         }
@@ -414,5 +419,23 @@ namespace CimenaCityProject.Controllers
 
             return flag;
         }
+
+
+        class DisinctItemComparer : IEqualityComparer<TimeScreening> 
+        {
+
+            public bool Equals(TimeScreening x, TimeScreening y)
+            {
+                return x.MovieTheaters.HomeCinemaID == y.MovieTheaters.HomeCinemaID &&
+                x.MovieTheaters.HomeCinema.CinemaName == y.MovieTheaters.HomeCinema.CinemaName;
+            }
+
+            public int GetHashCode(TimeScreening obj)
+            {
+                return obj.MovieTheaters.HomeCinema.CinemaName.GetHashCode() ^
+                    obj.MovieTheaters.HomeCinemaID;
+            }
+        }
     }
+
 }

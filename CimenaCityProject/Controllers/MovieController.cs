@@ -265,9 +265,9 @@ namespace CimenaCityProject.Controllers
             {
 
                 //Define the versions to generate and their filename suffixes.
-                versions.Add("_Thumb", "width=100&height=120&format=png"); //Crop to square thumbnail
-                versions.Add("_Medium", "maxwidth=250&maxheight=3500&format=png"); //Fit inside 400x400 area, png
-                versions.Add("_Large", "maxwidth=850&maxheight=950&format=png"); //Fit inside 1900x1200 area
+                versions.Add("_Thumb", "width=100px&height=120px&format=png"); //Crop to square thumbnail
+                versions.Add("_Medium", "maxwidth=250px&maxheight=3500px&format=png"); //Fit inside 400x400 area, png
+                versions.Add("_Large", "maxwidth=850px&maxheight=950px&format=png"); //Fit inside 1900x1200 area
 
                 string basePath = ImageResizer.Util.PathUtils.RemoveExtension(original);
                 ICollection<string> gFiles = new List<string>();
@@ -284,7 +284,7 @@ namespace CimenaCityProject.Controllers
             }
             catch (Exception ex)
             {
-
+                
                 ViewBag.ExeptionMessage = ex.Message + ex.InnerException.Message;
                 versions = new Dictionary<string, string>();
                 
@@ -314,24 +314,26 @@ namespace CimenaCityProject.Controllers
             // in-case if you want to store byte[] ie. for DB
             using (MemoryStream ms = new MemoryStream())
             {
-                file.InputStream.CopyTo(ms);
-                byte[] array = ms.GetBuffer();
 
-                ImageConverter imgCon = new ImageConverter();
+                    file.InputStream.CopyTo(ms);
+                    byte[] array = ms.GetBuffer();
 
-                Image imgSmall = Image.FromFile(VersionResizings[0]);
-                //imgSmall.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                Genareted.Add((byte[])imgCon.ConvertTo(imgSmall, typeof(byte[])));
+                    ImageConverter imgCon = new ImageConverter();
 
-                Image imgMedume = Image.FromFile(VersionResizings[1]);
-                //imgMedume.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                Genareted.Add((byte[])imgCon.ConvertTo(imgMedume, typeof(byte[])));
+                    Image imgSmall = Image.FromFile(VersionResizings[0]);
+                    //imgSmall.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    Genareted.Add((byte[])imgCon.ConvertTo(imgSmall, typeof(byte[])));
 
-                Image imgLarge = Image.FromFile(VersionResizings[2]);
-                //imgLarge.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                Genareted.Add((byte[])imgCon.ConvertTo(imgLarge, typeof(byte[])));
+                    Image imgMedume = Image.FromFile(VersionResizings[1]);
+                    //imgMedume.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    Genareted.Add((byte[])imgCon.ConvertTo(imgMedume, typeof(byte[])));
+
+                    Image imgLarge = Image.FromFile(VersionResizings[2]);
+                    //imgLarge.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    Genareted.Add((byte[])imgCon.ConvertTo(imgLarge, typeof(byte[])));
+
             }
-
+            
             return Genareted;
         }
 

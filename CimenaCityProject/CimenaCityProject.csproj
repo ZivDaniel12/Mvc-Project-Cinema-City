@@ -172,6 +172,7 @@
     <Compile Include="Controllers\MovieController.cs" />
     <Compile Include="Controllers\MovieShowTimeController.cs" />
     <Compile Include="Controllers\RowsController.cs" />
+    <Compile Include="Controllers\StatisticController.cs" />
     <Compile Include="Controllers\TheatresController.cs" />
     <Compile Include="Controllers\TimeScreeningController.cs" />
     <Compile Include="CustomHtmlHelper\CustomHtmlHelpers.cs" />
@@ -212,6 +213,8 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\jqplot\jquery.jqplot.css" />
+    <Content Include="Content\jqplot\jquery.jqplot.min.css" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.structure.css" />
     <Content Include="Content\jquery-ui.theme.css" />
@@ -249,6 +252,68 @@
     <Content Include="Admin\Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Scripts\jqplot\jquery.jqplot.js" />
+    <Content Include="Scripts\jqplot\jquery.jqplot.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.barRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.barRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.BezierCurveRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.BezierCurveRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.blockRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.blockRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.bubbleRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.bubbleRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.canvasAxisLabelRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.canvasAxisLabelRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.canvasAxisTickRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.canvasAxisTickRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.canvasOverlay.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.canvasOverlay.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.canvasTextRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.canvasTextRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.categoryAxisRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.categoryAxisRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.ciParser.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.ciParser.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.cursor.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.cursor.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.dateAxisRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.dateAxisRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.donutRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.donutRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.dragable.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.dragable.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.enhancedLegendRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.enhancedLegendRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.funnelRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.funnelRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.highlighter.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.highlighter.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.json2.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.json2.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.logAxisRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.logAxisRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.mekkoAxisRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.mekkoAxisRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.mekkoRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.mekkoRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.meterGaugeRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.meterGaugeRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.mobile.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.mobile.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.ohlcRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.ohlcRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.pieRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.pieRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.pointLabels.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.pointLabels.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.pyramidAxisRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.pyramidAxisRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.pyramidGridRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.pyramidGridRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.pyramidRenderer.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.pyramidRenderer.min.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.trendline.js" />
+    <Content Include="Scripts\jqplot\Plugins\jqplot.trendline.min.js" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.sigmacape.unobtrusive-1.1.2.js" />
@@ -359,6 +424,7 @@
     <Content Include="Views\Ecom\Chair.cshtml" />
     <Content Include="Views\TimeScreening\SortingIndexResult.cshtml" />
     <Content Include="Views\Admin\Statistic.cshtml" />
+    <Content Include="Views\Statistic\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -20,6 +20,16 @@ namespace CimenaCityProject.Controllers
         // GET: /TimeScreening/
         public ActionResult Index(string Error)
         {
+            TempData.Clear();
+            bool flag = false;
+            TempData.Add("flagDisplay", flag);
+            TempData.Add("flagMovieName", flag);
+            TempData.Add("flagTime", flag);
+            TempData.Add("flagHomeCinema", flag);
+            TempData.Add("flagTheaters", flag);
+            TempData.Add("flagDate", flag);
+            TempData.Add("flagPrice", flag);
+
             TimeScreeningData timeScreening = new TimeScreeningData();
 
             if (!string.IsNullOrEmpty(Error))
@@ -250,33 +260,120 @@ namespace CimenaCityProject.Controllers
         // getting the table view after sorting
         public PartialViewResult SortingIndexResult(TimeScreeningData timeScreening, string sortingOrder)
         {
+            bool flagDisplay = false, flagMovieName = false, flagTime = false, flagHomeCinema = false, flagTheaters = false, flagDate = false, flagPrice = false;
+
+            if (TempData["flagDisplay"] != null ||TempData["flagMovieName"] != null ||TempData["flagTime"] != null ||TempData["flagHomeCinema"] != null ||
+                TempData["flagTheaters"] != null ||TempData["flagDate"] != null ||TempData["flagPrice"] != null  )
+            {
+                 flagDisplay = (bool)TempData["flagDisplay"];
+                 flagMovieName = (bool)TempData["flagMovieName"];
+                 flagTime = (bool)TempData["flagTime"];
+                 flagHomeCinema = (bool)TempData["flagHomeCinema"];
+                 flagTheaters = (bool)TempData["flagTheaters"];
+                 flagDate = (bool)TempData["flagDate"];
+                 flagPrice = (bool)TempData["flagPrice"];
+            }
+
             List<TimeScreening> ts = new List<TimeScreening>();
             switch (sortingOrder)
             {
                 case "MovieName":
-                    timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.MovieShowTime.Movie.MovieName).ToList();
+                    if (flagMovieName == true)
+                    {
+                        timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.MovieShowTime.Movie.MovieName).ToList();
+                        flagMovieName = !flagMovieName;
+                    }
+                    else
+                    {
+                        timeScreening.TimeScreening = timeScreening.TimeScreening.OrderByDescending(x => x.MovieShowTime.Movie.MovieName).ToList();
+                        flagMovieName = !flagMovieName;
+                    }
                     break;
                 case "Time":
-                    timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.MovieShowTime.ShowTime.TimeOfDay).ToList();
+                    if (flagTime == true)
+                    {
+                        timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.MovieShowTime.ShowTime.TimeOfDay).ToList();
+                        flagTime = !flagTime;
+                    }
+                    else
+                    {
+                        timeScreening.TimeScreening = timeScreening.TimeScreening.OrderByDescending(x => x.MovieShowTime.ShowTime.TimeOfDay).ToList();
+                        flagTime = !flagTime;
+                    }
                     break;
                 case "HomeCinema":
-                    timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.MovieTheaters.HomeCinema.CinemaName).ToList();
+                    if (flagHomeCinema == true)
+                    {
+                        timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.MovieTheaters.HomeCinema.CinemaName).ToList();
+                        flagHomeCinema = !flagHomeCinema;
+                    }
+                    else
+                    {
+                        timeScreening.TimeScreening = timeScreening.TimeScreening.OrderByDescending(x => x.MovieTheaters.HomeCinema.CinemaName).ToList();
+                        flagHomeCinema = !flagHomeCinema;
+                    }
                     break;
                 case "Theaters":
-                    timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.MovieTheaters.TheatersName).ToList();
+                    if (flagTheaters == true)
+                    {
+                        timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.MovieTheaters.TheatersName).ToList();
+                        flagTheaters = !flagTheaters;
+                    }
+                    else
+                    {
+                        timeScreening.TimeScreening = timeScreening.TimeScreening.OrderByDescending(x => x.MovieTheaters.TheatersName).ToList();
+                        flagTheaters = !flagTheaters;
+                    }
                     break;
                 case "Date":
-                    timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.Date).ToList();
+                    if (flagDate == true)
+                    {
+                        timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.Date).ToList();
+                        flagDate = !flagDate;
+                    }
+                    else
+                    {
+                        timeScreening.TimeScreening = timeScreening.TimeScreening.OrderByDescending(x => x.Date).ToList();
+                        flagDate = !flagDate;
+                    }
                     break;
                 case "Price":
-                    timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.Price).ToList();
+                    if (flagPrice == true)
+                    {
+                        timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.Price).ToList();
+                        flagPrice = !flagPrice;
+                    }
+                    else
+                    {
+                        timeScreening.TimeScreening = timeScreening.TimeScreening.OrderByDescending(x => x.Price).ToList();
+                        flagPrice = !flagPrice;
+                    }
                     break;
                 case "IsDisplayed":
-                    timeScreening.TimeScreening = timeScreening.TimeScreening.OrderByDescending(x => x.IsDisplayed).ToList();
+                    if (flagDisplay == true)
+                    {
+                        timeScreening.TimeScreening = timeScreening.TimeScreening.OrderByDescending(x => x.IsDisplayed).ToList();
+                        flagDisplay = !flagDisplay;
+                    }
+                    else
+                    {
+                        timeScreening.TimeScreening = timeScreening.TimeScreening.OrderBy(x => x.IsDisplayed).ToList();
+                        flagDisplay = !flagDisplay;
+
+                    }
                     break;
                 default:
                     break;
             }
+
+            TempData["flagDisplay"] = flagDisplay;
+            TempData["flagMovieName"] = flagMovieName;
+            TempData["flagTime"]=flagTime;
+            TempData["flagHomeCinema"]= flagHomeCinema;
+            TempData["flagTheaters"]=flagTheaters;
+            TempData["flagDate"]=flagDate;
+            TempData["flagPrice"]= flagPrice;
+
 
             return PartialView("SortingIndexResult", timeScreening);
         }
