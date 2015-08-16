@@ -1,0 +1,115 @@
+﻿@model IEnumerable<CimenaCityProject.Models.CheckOut>
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery-ui.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>  
+
+    <script type="text/javascript">
+        google.load("visualization", "1", { packages: ["corechart"] });
+        
+        $('#curve_chart').ready(function () {
+            google.setOnLoadCallback(function () {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("TotalIncomeJson")',
+                    data:'{}',
+                    dataType: 'json',
+                    success: function (data) {
+                        
+                        var dataTable = new google.visualization.DataTable();
+
+                        dataTable.addColumn('string', 'Order Date');
+                        dataTable.addColumn('number', 'Total Price');
+                        
+                        for (var i = 0; i < data.length; i++) {
+                            var name = DateConverter(data[i].Order.OrderDate).toString();
+                            var PRICE = data[i].TotalPrice;
+
+                            dataTable.addRow([name, PRICE]);
+                        }
+
+                          var options = {
+                            title: '',
+                            curveType: 'function',
+                            legend: { position: 'bottom' }
+                        };
+
+                        var chart = new google.visualization.ComboChart(document.getElementById('curve_chart'));
+
+                        //var formatter = new google.visualization.DateFormat({ pattern: 'yyyy/MM/dd' }).format(dataTable, 0);
+                        //dataTable.toJSON();
+                        chart.draw(dataTable, options);
+                        alert("ajax d e");
+
+                    },
+                    error: function (xhr, ajaxOptions, thrownEror) {
+                        alert("False" + xhr + "..." + ajaxOptions + "... " + thrownEror);
+                    }
+
+                });
+
+            });
+        })
+      
+
+        // START Datetime Converters
+        function DateConverter(date) {
+            var aux = null;
+            if (date != null) {
+                aux = date.substring(6);
+                aux = aux.substring(0, aux.indexOf(')'));
+            }
+
+            return aux != null ? getISODate(new Date(parseInt(aux))) : "";
+        }
+
+        function DatetimeConverter(date) {
+            var aux = null;
+            if (date != null) {
+                aux = date.substring(6);
+                aux = aux.substring(0, aux.indexOf(')'));
+            }
+            return aux != null ? getISODateTime(new Date(parseInt(aux))) : "";
+        }
+
+        function getISODate(d) {
+            // padding function
+            var s = function (a, b) { return (1e15 + a + "").slice(-b) };
+
+            // default date parameter
+            if (typeof d === 'undefined') {
+                d = new Date();
+            };
+
+            // return ISO datetime
+            return zeroPad(d.getDate(), 2) + '/' +
+            zeroPad(s(d.getMonth() + 1, 2), 2) + '/' +
+            zeroPad(d.getFullYear(), 4);
+        }
+
+        function getISODateTime(d) {
+            // padding function
+            var s = function (a, b) { return (1e15 + a + "").slice(-b) };
+
+            // default date parameter
+            if (typeof d === 'undefined') {
+                d = new Date();
+            };
+
+            // return ISO datetime
+            return zeroPad(d.getHours(), 2) + ":" +
+            zeroPad(d.getMinutes(), 2) + ":" +
+            zeroPad(d.getSeconds(), 2);
+        }
+
+        function zeroPad(num, places) {
+            var zero = places - num.toString().length + 1;
+            return Array(+(zero > 0 && zero)).join("0") + num;
+        }
+        // END Datetime Converters
+
+
+    </script>
+
+    <div id="curve_chart" style="width: 700px; height: 300px"></div>

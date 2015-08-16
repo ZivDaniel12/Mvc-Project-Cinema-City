@@ -16,10 +16,25 @@ namespace CimenaCityProject.Controllers
         private HomeCinemaContext db = new HomeCinemaContext();
 
         // GET: /Statistic/
-        public async Task<ActionResult> Index()
+        public  ActionResult Index()
         {
-            var checkout = db.CheckOut.Include(c => c.Order).Include(c => c.Person);
-            return View(await checkout.ToListAsync());
+
+            return View( );
+        }
+
+
+        public PartialViewResult TotalIncome()
+        {
+            return PartialView();
+        }
+
+        public JsonResult TotalIncomeJson()
+        {
+
+            var data = db.CheckOut.Where(y => y.ISOrderComplete == true).ToArray().Distinct(new DisinctItemComparer())
+                .OrderBy(y => y.Order.OrderDate).ToList();
+ 
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -30,11 +45,6 @@ namespace CimenaCityProject.Controllers
             {
                 result.Add(new { date = i.ToString(), price = i * i + 10 });
             }
-            //var result = db.Orders.Distinct<Order>().Select(x => new
-            //            {
-            //                date = x.OrderDate,
-            //                price = x.CheckOuts.Where(d=>d.ISOrderComplete == true).Select(y=>y.TotalPrice)
-            //            }).ToList();
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -143,6 +153,10 @@ namespace CimenaCityProject.Controllers
             return RedirectToAction("Index");
         }
 
+
+     
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -152,4 +166,20 @@ namespace CimenaCityProject.Controllers
             base.Dispose(disposing);
         }
     }
+
+    class DisinctItemComparer : IEqualityComparer<CheckOut>
+    {
+
+        public bool Equals(CheckOut x, CheckOut y)
+        {
+            return x.TotalPrice == y.TotalPrice &&
+            x.Order.OrderDate == y.Order.OrderDate;
+        }
+
+        public int GetHashCode(CheckOut obj)
+        {
+            return obj.TotalPrice.GetHashCode();
+        }
+    }
+
 }
