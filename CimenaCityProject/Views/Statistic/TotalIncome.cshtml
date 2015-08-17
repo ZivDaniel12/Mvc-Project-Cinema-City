@@ -6,8 +6,9 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>  
 
     <script type="text/javascript">
+        google.load("visualization", "1", { packages: ["annotationchart"] });
         google.load("visualization", "1", { packages: ["corechart"] });
-        
+
         $('#curve_chart').ready(function () {
             google.setOnLoadCallback(function () {
                 $.ajax({
@@ -16,32 +17,30 @@
                     data:'{}',
                     dataType: 'json',
                     success: function (data) {
-                        
                         var dataTable = new google.visualization.DataTable();
-
-                        dataTable.addColumn('string', 'Order Date');
+                        dataTable.addColumn('datetime', 'Order Date');
                         dataTable.addColumn('number', 'Total Price');
-                        
                         for (var i = 0; i < data.length; i++) {
-                            var name = DateConverter(data[i].Order.OrderDate).toString();
+                            var name = new Date(DateConverter(data[i].OrderDate).toString());
                             var PRICE = data[i].TotalPrice;
-
                             dataTable.addRow([name, PRICE]);
                         }
-
-                          var options = {
+                        //var options = {
+                        // displayAnnotations:true
+                        //};
+                        var options = {
                             title: '',
                             curveType: 'function',
                             legend: { position: 'bottom' }
                         };
-
+                        //var options = {
+                        //    title: '',
+                        //    hAxis: { Title: 'OrderDate' },
+                        //    vAxis: {minValue:0}
+                        //};
                         var chart = new google.visualization.ComboChart(document.getElementById('curve_chart'));
 
-                        //var formatter = new google.visualization.DateFormat({ pattern: 'yyyy/MM/dd' }).format(dataTable, 0);
-                        //dataTable.toJSON();
                         chart.draw(dataTable, options);
-                        alert("ajax d e");
-
                     },
                     error: function (xhr, ajaxOptions, thrownEror) {
                         alert("False" + xhr + "..." + ajaxOptions + "... " + thrownEror);
@@ -70,6 +69,7 @@
                 aux = date.substring(6);
                 aux = aux.substring(0, aux.indexOf(')'));
             }
+
             return aux != null ? getISODateTime(new Date(parseInt(aux))) : "";
         }
 
@@ -83,9 +83,10 @@
             };
 
             // return ISO datetime
-            return zeroPad(d.getDate(), 2) + '/' +
-            zeroPad(s(d.getMonth() + 1, 2), 2) + '/' +
+            return zeroPad(s(d.getMonth() + 1, 2), 2) + '/' +
+            zeroPad(d.getDate(), 2) + '/' +
             zeroPad(d.getFullYear(), 4);
+
         }
 
         function getISODateTime(d) {
@@ -98,7 +99,10 @@
             };
 
             // return ISO datetime
-            return zeroPad(d.getHours(), 2) + ":" +
+            return zeroPad(d.getDate(), 2) + '/' +
+            zeroPad(s(d.getMonth() + 1, 2), 2) + '/' +
+            zeroPad(d.getFullYear(), 4) + " " +
+            zeroPad(d.getHours(), 2) + ":" +
             zeroPad(d.getMinutes(), 2) + ":" +
             zeroPad(d.getSeconds(), 2);
         }
@@ -112,4 +116,4 @@
 
     </script>
 
-    <div id="curve_chart" style="width: 700px; height: 300px"></div>
+    <div id="curve_chart" style="width: auto; height: auto"></div>

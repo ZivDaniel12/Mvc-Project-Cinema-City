@@ -11,6 +11,7 @@ using CimenaCityProject.Models;
 
 namespace CimenaCityProject.Controllers
 {
+
     public class StatisticController : Controller
     {
         private HomeCinemaContext db = new HomeCinemaContext();
@@ -31,9 +32,11 @@ namespace CimenaCityProject.Controllers
         public JsonResult TotalIncomeJson()
         {
 
-            var data = db.CheckOut.Where(y => y.ISOrderComplete == true).ToArray().Distinct(new DisinctItemComparer())
-                .OrderBy(y => y.Order.OrderDate).ToList();
- 
+            var data = db.CheckOut.Where(x => x.ISOrderComplete).OrderBy(c => c.Order.OrderDate)
+                                   .GroupBy(x => new { grop = x.Order.OrderDate })
+                                   .Select(a => new { OrderDate = a.Key.grop, TotalPrice = a.Sum(b => b.TotalPrice) })
+                                   .ToList();
+
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
@@ -153,10 +156,6 @@ namespace CimenaCityProject.Controllers
             return RedirectToAction("Index");
         }
 
-
-     
-
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -167,18 +166,27 @@ namespace CimenaCityProject.Controllers
         }
     }
 
-    class DisinctItemComparer : IEqualityComparer<CheckOut>
+    class DistinctItemComparer : IEqualityComparer<CheckOut>
     {
 
         public bool Equals(CheckOut x, CheckOut y)
         {
             return x.TotalPrice == y.TotalPrice &&
-            x.Order.OrderDate == y.Order.OrderDate;
+                x.Order == y.Order &&
+                x.ISOrderComplete == y.ISOrderComplete &&
+                x.CartId == y.CartId &&
+                x.CheckOutID == y.CheckOutID && 
+                x.OrderID == y.OrderID;
         }
 
         public int GetHashCode(CheckOut obj)
         {
-            return obj.TotalPrice.GetHashCode();
+            return obj.ISOrderComplete.GetHashCode() ^
+                obj.CartId.GetHashCode() ^
+                obj.CheckOutID.GetHashCode() ^
+                obj.TotalPrice.GetHashCode() ^
+                obj.Order.GetHashCode() ^
+                obj.OrderID.GetHashCode();
         }
     }
 
