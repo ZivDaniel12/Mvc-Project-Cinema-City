@@ -1,0 +1,75 @@
+﻿@{
+    Dictionary<string, decimal> list = (Dictionary<string, decimal>)TempData["Dictionary"];
+}
+@{
+    ViewBag.Title = "Control Panel";
+}
+<hr />
+<div class="form-group-lg">
+
+    <p style="text-align:center;font-size:large;font:bold">Genaral statistic  for the company </p>
+    <br />
+    <div >
+        <div>
+
+            <table style="align-self:center">
+                <tr >
+                    <td >
+                        <span><strong> Total Income : </strong> </span>
+                        
+                    </td>
+                    <td>
+                        &nbsp;  @list["TotalIncome"] &#8362;
+                    </td>
+
+                </tr>
+                <tr><td><br /></td></tr>
+                <tr>
+                    <td>
+                        <span><strong> Total Home Cinemas  : </strong> </span>
+
+                    </td>
+                    <td>
+                        &nbsp;  @list["TotalHomeCinemas"]
+                    </td>
+                </tr>
+                <tr><td><br /></td></tr>
+
+                <tr>
+                    <td>
+                        <span><strong> Total Theatres : </strong> </span>
+
+                    </td>
+                    <td>
+                        &nbsp;  @list["TotalTheatres"]
+                    </td>
+                </tr>
+                <tr><td><br /></td></tr>
+
+                <tr>
+                    <td>
+                        <span><strong> Total Orders  : </strong> </span>
+
+                    </td>
+                    <td>
+                        &nbsp;  @list["TotalOrders"]
+                    </td>
+                </tr>
+                <tr><td><br /></td></tr>
+
+                <tr>
+                    <td>
+                        <span><strong> Total movie's  : </strong> </span>
+
+                    </td>
+                    <td>
+                        &nbsp;  @list["TotalMovies"]
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+
+
+</div>

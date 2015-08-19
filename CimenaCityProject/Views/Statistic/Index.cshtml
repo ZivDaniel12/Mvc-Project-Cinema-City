@@ -8,27 +8,35 @@
 
    
 <h2>Statistic Index</h2>
-
+<br /><br /><br />
 
 <div>
 
-</div>
 
-<div class="form-control" style="height: auto; width: auto">
-    <span style="align-content:center"> Total Income </span>
-    @{
-        Html.RenderAction("TotalIncome");
-    }
-</div>
-<div class="form-control" style="height:450px;width:440px">
-    <span style="align-content:center"> The Intrest movies </span>
-    @{
-        Html.RenderPartial("~/Views/Statistic/IntrestPath.cshtml");
-    }
-</div>
-<div>
-    <div>
-        <div><span></span></div>
+    <div class="form-control" style="width: 550px; height: 389px; margin-left: 667px">
+        <p style="text-align:center;font-size:large;font-weight:bold"> The Intrest movies </p>
+        @{
+            Html.RenderAction("IntrestPath");
+        }
     </div>
+
+
+    <div class="form-control" style="width: 660px; height: 389px; position: relative; top: -389px; left: 0px">
+        <p style="text-align: center; font-size: large; font-weight: bold"> Total Income </p>
+        @{
+            Html.RenderAction("TotalIncome");
+        }
+    </div>
+
+    <div class="form-control" style="position: relative; top: -376px; left: 4px; height: 377px; width: 660px; ">
+        <p style="text-align: center; font-size: large; font-weight: bold"> Total Income Order by Movie </p>
+
+
+        @{
+            Html.RenderAction("graphTotalIncomSplitByMovie");
+        }
+    </div>
+
 </div>
+
 

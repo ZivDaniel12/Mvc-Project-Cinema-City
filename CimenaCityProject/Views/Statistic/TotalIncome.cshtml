@@ -1,11 +1,17 @@
-﻿@model IEnumerable<CimenaCityProject.Models.CheckOut>
+﻿
+<div id="dashboard_div" style="width: 620px; height: auto">
+
+    <div id="curve_chart"></div>
+
+</div>
+
 
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="~/Scripts/jquery-1.10.2.js"></script>
 <script src="~/Scripts/jquery-ui.js"></script>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>  
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-    <script type="text/javascript">
+<script type="text/javascript">
         google.load("visualization", "1", { packages: ["annotationchart"] });
         google.load("visualization", "1", { packages: ["corechart"] });
 
@@ -13,18 +19,22 @@
             google.setOnLoadCallback(function () {
                 $.ajax({
                     type: "POST",
-                    url: '@Url.Action("TotalIncomeJson")',
-                    data:'{}',
+                    url: '@Url.Action("TotalIncomeResult")',
+                    data: '{}',
                     dataType: 'json',
                     success: function (data) {
                         var dataTable = new google.visualization.DataTable();
-                        dataTable.addColumn('datetime', 'Order Date');
-                        dataTable.addColumn('number', 'Total Price');
+                        dataTable.addColumn('datetime', 'Date');
+                        dataTable.addColumn('number', 'Total Income');
                         for (var i = 0; i < data.length; i++) {
                             var name = new Date(DateConverter(data[i].OrderDate).toString());
                             var PRICE = data[i].TotalPrice;
                             dataTable.addRow([name, PRICE]);
                         }
+                        var today = new Date();
+                        var tomorrow = new Date(today);
+                        tomorrow.setDate(today.getDate() + 1);
+                        dataTable.addRow([tomorrow, 0]);
                         //var options = {
                         // displayAnnotations:true
                         //};
@@ -38,19 +48,21 @@
                         //    hAxis: { Title: 'OrderDate' },
                         //    vAxis: {minValue:0}
                         //};
+
+
                         var chart = new google.visualization.ComboChart(document.getElementById('curve_chart'));
 
                         chart.draw(dataTable, options);
                     },
                     error: function (xhr, ajaxOptions, thrownEror) {
-                        alert("False" + xhr + "..." + ajaxOptions + "... " + thrownEror);
+                        alert("False");
                     }
 
                 });
 
             });
         })
-      
+
 
         // START Datetime Converters
         function DateConverter(date) {
@@ -114,6 +126,4 @@
         // END Datetime Converters
 
 
-    </script>
-
-    <div id="curve_chart" style="width: auto; height: auto"></div>
+</script>

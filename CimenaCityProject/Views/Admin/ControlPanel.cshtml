@@ -3,9 +3,9 @@
     ViewBag.Title = "Control Panel";
 }
 
-<h2>Control Panel</h2>
+<h2 style="text-align:center">Control Panel</h2>
 
-
+<br /><br />
 <table class="table">
 
     <tr>
@@ -62,3 +62,13 @@
 </table>
 
 <div id="divResult"></div>
+
+<br />
+<div style="height:auto;width:700px">
+    @{
+        
+        Html.RenderAction("GeneralStatistic");
+    }
+</div>
+<br />
+<br />

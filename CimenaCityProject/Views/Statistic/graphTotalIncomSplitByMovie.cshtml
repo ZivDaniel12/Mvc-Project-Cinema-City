@@ -1,0 +1,116 @@
+﻿<div id="dashboardSplitMovie_div" style=" margin-top: 1em">
+    <table class="columns">
+        <tr>
+            <td>
+                <div id="sliderSplitMovie_div" style="padding-left: 15px"></div>
+            </td>
+            <td>
+                <div id="categoryPickerSplitMovie_div"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="chartSplitMovie_div" style="padding-top: 15px"></div>
+            </td>
+            <td>
+                <div id="tableSplitMovie_div" style="padding-top: 30px"></div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script type="text/javascript">
+    google.load('visualization', '1.0', { 'packages': ['corechart', 'table', 'gauge', 'controls'] });
+    google.setOnLoadCallback(drawMainDashboard);
+
+    function drawMainDashboard() {
+        var dashboard = new google.visualization.Dashboard(
+            document.getElementById('dashboardSplitMovie_div'));
+        var slider = new google.visualization.ControlWrapper({
+            'controlType': 'NumberRangeFilter',
+            'containerId': 'sliderSplitMovie_div',
+            'options': {
+                'filterColumnIndex': 2,
+                'ui': {
+                    'labelStacking': 'vertical',
+                    'label': 'Income Filter:'
+                }
+            }
+        });
+        var categoryPicker = new google.visualization.ControlWrapper({
+            'controlType': 'CategoryFilter',
+            'containerId': 'categoryPickerSplitMovie_div',
+            'options': {
+                'filterColumnIndex': 0,
+                'ui': {
+                    'labelStacking': 'vertical',
+                    'label': 'Movie Selection:',
+                    'allowTyping': true,
+                    'allowMultiple': true
+                }
+            }
+        });
+        var pie = new google.visualization.ChartWrapper({
+            'chartType': 'PieChart',
+            'containerId': 'chartSplitMovie_div',
+            'options': {
+                'width': 300,
+                'height': 300,
+                'legend': 'none',
+                'chartArea': { 'left': 15, 'top': 15, 'right': 0, 'bottom': 0 },
+                'pieSliceText': 'label'
+            },
+        });
+        var table = new google.visualization.ChartWrapper({
+            'chartType': 'Table',
+            'containerId': 'tableSplitMovie_div',
+            'options': {
+            }
+        });
+
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("graphTotalIncomSplitByMovieResult")',
+            data: '{}',
+            dataType: 'json',
+            success: function (data) {
+
+                // Create our data table.
+                var dataTable = new google.visualization.DataTable();
+
+                dataTable.addColumn('string', 'Movie');
+                dataTable.addColumn('number', 'Intrest');
+                dataTable.addColumn('number', 'Income');
+
+                for (var i = 0; i < data.length; i++) {
+                    var Movie = data[i].Movie
+                    var Intrest = data[i].Intrest;
+                    var Income = data[i].Income;
+
+                    dataTable.addRow([Movie, Intrest, Income]);
+                }
+        
+                dashboard.bind([slider, categoryPicker], [pie, table]);
+                dashboard.draw(dataTable);
+            },
+            error: function (xhr, ajaxOptions, thrownEror) {
+                alert("False");
+            }
+
+        });
+
+        //    google.visualization.arrayToDataTable([
+        //  ['Name', 'Gender', 'Age', 'Donuts eaten'],
+        //  ['Michael', 'Male', 12, 5],
+        //  ['Elisa', 'Female', 20, 7],
+        //  ['Robert', 'Male', 7, 3],
+        //  ['John', 'Male', 54, 2],
+        //  ['Jessica', 'Female', 22, 6],
+        //  ['Aaron', 'Male', 3, 1],
+        //  ['Margareth', 'Female', 42, 8],
+        //  ['Miranda', 'Female', 33, 6]
+        //]);
+       
+    }
+</script>

@@ -26,15 +26,25 @@ namespace CimenaCityProject.Admin
             return View();
         }
 
-        public PartialViewResult Statistic()
+        public PartialViewResult GeneralStatistic()
         {
-            var model = db.CheckOut.ToList();
+            if (TempData.Keys != null)
+            {
+                TempData.Remove("list");
+            }
+            Dictionary<string, decimal> model = new Dictionary<string, decimal>();
 
-            // table show the statistic how many people buy tickets
-            // show graph about the incrase the income 
-            // show to 
+            model.Add("TotalIncome",db.CheckOut.Where(x=>x.ISOrderComplete)
+                .Select(x=>x.TotalPrice)
+                .Sum());
 
-            return PartialView("Statistic",model);
+            model.Add("TotalMovies",db.Movies.Count());
+            model.Add("TotalHomeCinemas",db.HomeCinemas.Count());
+            model.Add("TotalTheatres", db.Theaters.Count());
+            model.Add("TotalOrders",db.Orders.Where(x=>x.IsComplete == true).Count());
+
+            TempData.Add("Dictionary", model);
+            return PartialView("GeneralStatistic");
         }
 
 

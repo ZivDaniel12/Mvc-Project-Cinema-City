@@ -1,28 +1,82 @@
-﻿<div>
-    <div class="active" id="piechart" style="height:390px;width:410px"></div>
+﻿    <!--Div that will hold the dashboard-->
+<div id="dashboardIntrest_div">
+    <!--Divs that will hold each control and chart-->
+    <div id="filterIntrest_div"></div>
+    <div id="chartIntrest_div"></div>
 </div>
 
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
-    google.load("visualization", "1", { packages: ["corechart"] });
-    google.setOnLoadCallback(drawChart);
-    function drawChart() {
 
-        var data = google.visualization.arrayToDataTable([
-          ['Task', 'Hours per Day'],
-          ['Price', 10],
-          ['Date', 14],
+    // Load the Visualization API and the controls package.
+    google.load('visualization', '1.0', { 'packages': ['controls'] });
 
-        ]);
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.setOnLoadCallback(drawDashboard);
 
-        var options = {
-            title: '',
+    // Callback that creates and populates a data table,
+    // instantiates a dashboard, a range slider and a pie chart,
+    // passes in the data and draws it.
+    function drawDashboard() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("IntrestPathResult")',
+            data: '{}',
+            dataType: 'json',
+            success: function (data) {
 
-        };
+                // Create our data table.
+                var dataTable = new google.visualization.DataTable();
 
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+                dataTable.addColumn('string', 'Movie');
+                dataTable.addColumn('number', 'Intrest');
+                for (var i = 0; i < data.length; i++) {
+                    var Movie = data[i].Movie
+                    var Intrest = data[i].Intrest;
+                    dataTable.addRow([Movie, Intrest]);
+                }
 
-        chart.draw(data, options);
+                // Create a dashboard.
+                var dashboard = new google.visualization.Dashboard(
+                    document.getElementById('dashboardIntrest_div'));
+
+                // Create a range slider, passing some options
+                var RangeSlider = new google.visualization.ControlWrapper({
+                    'controlType': 'NumberRangeFilter',
+                    'containerId': 'filterIntrest_div',
+                    'options': {
+                        'filterColumnLabel': 'Intrest'
+                    }
+                });
+
+                // Create a pie chart, passing some options
+                var pieChart = new google.visualization.ChartWrapper({
+                    'chartType': 'PieChart',
+                    'containerId': 'chartIntrest_div',
+                    'options': {
+                        'pieSliceText': 'value',
+                        'legend': 'right'
+                    }
+                });
+
+                // Establish dependencies, declaring that 'filter' drives 'pieChart',
+                // so that the pie chart will only display entries that are let through
+                // given the chosen slider range.
+                dashboard.bind(RangeSlider, pieChart);
+
+                // Draw the dashboard.
+                dashboard.draw(dataTable);
+            },
+            error: function (xhr, ajaxOptions, thrownEror) {
+                alert("False");
+            }
+
+        });
+
     }
 </script>
+
+
+
+

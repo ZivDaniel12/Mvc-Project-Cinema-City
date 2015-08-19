@@ -29,13 +29,46 @@ namespace CimenaCityProject.Controllers
             return PartialView();
         }
 
-        public JsonResult TotalIncomeJson()
+        public PartialViewResult IntrestPath()
+        {
+            return PartialView();
+        }
+
+        public PartialViewResult graphTotalIncomSplitByMovie()
+        {
+            return PartialView();
+        }
+
+        public JsonResult TotalIncomeResult()
         {
 
-            var data = db.CheckOut.Where(x => x.ISOrderComplete).OrderBy(c => c.Order.OrderDate)
-                                   .GroupBy(x => new { grop = x.Order.OrderDate })
-                                   .Select(a => new { OrderDate = a.Key.grop, TotalPrice = a.Sum(b => b.TotalPrice) })
-                                   .ToList();
+            var tempD = db.CheckOut.Where(x => x.ISOrderComplete && x.Order.OrderDate.Year >= DateTime.Now.Year).ToList();
+            var data = tempD.GroupBy(x => x.Order.OrderDate.Date).Select(y => new { OrderDate = y.Key, TotalPrice = y.Sum(a => a.TotalPrice) })
+                .OrderBy(b=>b.OrderDate.Year).ToList();
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public JsonResult IntrestPathResult()
+        {
+            var data1 = db.Orders.Where(x => x.IsComplete == true).ToList();
+
+            var data = data1.GroupBy(x => x.Event.MovieShowTime.Movie.MovieName)
+                            .Select(y => new { Movie = y.Key, Intrest = y.Sum(a => a.TotalChairsOrdered) })
+                            .OrderBy(d => d.Movie)
+                            .ToList();
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult graphTotalIncomSplitByMovieResult()
+        {
+            var data1 = db.CheckOut.Where(x=>x.ISOrderComplete).ToList();
+
+            var data = data1.GroupBy(x => x.Order.Event.MovieShowTime.Movie.MovieName)
+                            .Select(x => new { Movie = x.Key, Intrest = x.Sum(a => a.Order.TotalChairsOrdered), Income = x.Sum(b => b.TotalPrice) })
+                            .OrderBy(y => y.Movie)
+                            .ToList();
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
