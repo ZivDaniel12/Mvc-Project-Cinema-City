@@ -1,7 +1,7 @@
 ﻿
-<div id="dashboard_div" style="width: 620px; height: auto">
+<div id="dashboardTotalIncome_div" style="width:auto; height: auto">
 
-    <div id="curve_chart"></div>
+    <div id="curveTotalIncome_chart"></div>
 
 </div>
 
@@ -12,10 +12,12 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
 <script type="text/javascript">
-        google.load("visualization", "1", { packages: ["annotationchart"] });
-        google.load("visualization", "1", { packages: ["corechart"] });
+    google.load('visualization', '1.0', { 'packages': ['corechart', 'table', 'gauge', 'controls', 'annotationchart'] });
 
-        $('#curve_chart').ready(function () {
+        $('#curveTotalIncome_chart').ready(function () {
+
+            var chart = new google.visualization.AnnotationChart(document.getElementById('curveTotalIncome_chart'));
+
             google.setOnLoadCallback(function () {
                 $.ajax({
                     type: "POST",
@@ -23,36 +25,26 @@
                     data: '{}',
                     dataType: 'json',
                     success: function (data) {
-                        var dataTable = new google.visualization.DataTable();
-                        dataTable.addColumn('datetime', 'Date');
-                        dataTable.addColumn('number', 'Total Income');
+                        var dataTableTotalIncome = new google.visualization.DataTable();
+                        dataTableTotalIncome.addColumn('datetime', 'Date');
+                        dataTableTotalIncome.addColumn('number', 'Total Income');
                         for (var i = 0; i < data.length; i++) {
                             var name = new Date(DateConverter(data[i].OrderDate).toString());
                             var PRICE = data[i].TotalPrice;
-                            dataTable.addRow([name, PRICE]);
+                            dataTableTotalIncome.addRow([name, PRICE]);
                         }
                         var today = new Date();
                         var tomorrow = new Date(today);
                         tomorrow.setDate(today.getDate() + 1);
-                        dataTable.addRow([tomorrow, 0]);
-                        //var options = {
-                        // displayAnnotations:true
-                        //};
-                        var options = {
-                            title: '',
-                            curveType: 'function',
-                            legend: { position: 'bottom' }
+                        dataTableTotalIncome.addRow([tomorrow, 0]);
+                        var optionsTotalIncome = {
+                         displayAnnotations:true
                         };
-                        //var options = {
-                        //    title: '',
-                        //    hAxis: { Title: 'OrderDate' },
-                        //    vAxis: {minValue:0}
-                        //};
+
+                       
 
 
-                        var chart = new google.visualization.ComboChart(document.getElementById('curve_chart'));
-
-                        chart.draw(dataTable, options);
+                        chart.draw(dataTableTotalIncome, optionsTotalIncome);
                     },
                     error: function (xhr, ajaxOptions, thrownEror) {
                         alert("False");

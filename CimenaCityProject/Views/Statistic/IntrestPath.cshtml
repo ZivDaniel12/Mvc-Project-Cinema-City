@@ -6,19 +6,40 @@
 </div>
 
 
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
 
-    // Load the Visualization API and the controls package.
-    google.load('visualization', '1.0', { 'packages': ['controls'] });
-
     // Set a callback to run when the Google Visualization API is loaded.
-    google.setOnLoadCallback(drawDashboard);
+    google.setOnLoadCallback(drawDashboardIntrestPath);
 
     // Callback that creates and populates a data table,
     // instantiates a dashboard, a range slider and a pie chart,
     // passes in the data and draws it.
-    function drawDashboard() {
+    function drawDashboardIntrestPath() {
+
+        // Create a dashboard.
+        var dashboardIntrestPath = new google.visualization.Dashboard(
+            document.getElementById('dashboardIntrest_div'));
+
+        // Create a range slider, passing some options
+        var RangeSliderIntrestPath = new google.visualization.ControlWrapper({
+            'controlType': 'NumberRangeFilter',
+            'containerId': 'filterIntrest_div',
+            'options': {
+                'filterColumnLabel': 'Intrest'
+            }
+        });
+
+        // Create a pie chart, passing some options
+        var pieChartIntrestPath = new google.visualization.ChartWrapper({
+            'chartType': 'PieChart',
+            'containerId': 'chartIntrest_div',
+            'options': {
+                'pieSliceText': 'value',
+                'legend': 'right'
+            }
+        });
+
+
         $.ajax({
             type: "POST",
             url: '@Url.Action("IntrestPathResult")',
@@ -27,46 +48,25 @@
             success: function (data) {
 
                 // Create our data table.
-                var dataTable = new google.visualization.DataTable();
+                var dataTableIntrestPath = new google.visualization.DataTable();
 
-                dataTable.addColumn('string', 'Movie');
-                dataTable.addColumn('number', 'Intrest');
+                dataTableIntrestPath.addColumn('string', 'Movie');
+                dataTableIntrestPath.addColumn('number', 'Intrest');
                 for (var i = 0; i < data.length; i++) {
                     var Movie = data[i].Movie
                     var Intrest = data[i].Intrest;
-                    dataTable.addRow([Movie, Intrest]);
+                    dataTableIntrestPath.addRow([Movie, Intrest]);
                 }
 
-                // Create a dashboard.
-                var dashboard = new google.visualization.Dashboard(
-                    document.getElementById('dashboardIntrest_div'));
-
-                // Create a range slider, passing some options
-                var RangeSlider = new google.visualization.ControlWrapper({
-                    'controlType': 'NumberRangeFilter',
-                    'containerId': 'filterIntrest_div',
-                    'options': {
-                        'filterColumnLabel': 'Intrest'
-                    }
-                });
-
-                // Create a pie chart, passing some options
-                var pieChart = new google.visualization.ChartWrapper({
-                    'chartType': 'PieChart',
-                    'containerId': 'chartIntrest_div',
-                    'options': {
-                        'pieSliceText': 'value',
-                        'legend': 'right'
-                    }
-                });
+             
 
                 // Establish dependencies, declaring that 'filter' drives 'pieChart',
                 // so that the pie chart will only display entries that are let through
                 // given the chosen slider range.
-                dashboard.bind(RangeSlider, pieChart);
+                dashboardIntrestPath.bind(RangeSliderIntrestPath, pieChartIntrestPath);
 
                 // Draw the dashboard.
-                dashboard.draw(dataTable);
+                dashboardIntrestPath.draw(dataTableIntrestPath);
             },
             error: function (xhr, ajaxOptions, thrownEror) {
                 alert("False");

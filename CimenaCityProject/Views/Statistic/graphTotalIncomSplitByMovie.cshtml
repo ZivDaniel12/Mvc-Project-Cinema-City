@@ -1,8 +1,8 @@
-﻿<div id="dashboardSplitMovie_div" style=" margin-top: 1em">
-    <table class="columns">
+﻿<div id="dashboardSplitMovie_div" style="height:auto;width:auto" >
+    <table class="columnsSplitMovie">
         <tr>
             <td>
-                <div id="sliderSplitMovie_div" style="padding-left: 15px"></div>
+                <div id="sliderSplitMovie_div" ></div>
             </td>
             <td>
                 <div id="categoryPickerSplitMovie_div"></div>
@@ -10,23 +10,26 @@
         </tr>
         <tr>
             <td>
-                <div id="chartSplitMovie_div" style="padding-top: 15px"></div>
+                <div id="chartSplitMovie_div" ></div>
             </td>
             <td>
-                <div id="tableSplitMovie_div" style="padding-top: 30px"></div>
+                <div id="tableSplitMovie_div" ></div>
             </td>
         </tr>
     </table>
 </div>
 
 <script type="text/javascript">
-    google.load('visualization', '1.0', { 'packages': ['corechart', 'table', 'gauge', 'controls'] });
-    google.setOnLoadCallback(drawMainDashboard);
 
-    function drawMainDashboard() {
-        var dashboard = new google.visualization.Dashboard(
+
+    $('#dashboardSplitMovie_div').ready(
+    function () {
+
+        var dashboardSplitMovie = new google.visualization.Dashboard(
             document.getElementById('dashboardSplitMovie_div'));
-        var slider = new google.visualization.ControlWrapper({
+
+
+        var sliderSplitMovie = new google.visualization.ControlWrapper({
             'controlType': 'NumberRangeFilter',
             'containerId': 'sliderSplitMovie_div',
             'options': {
@@ -37,7 +40,7 @@
                 }
             }
         });
-        var categoryPicker = new google.visualization.ControlWrapper({
+        var categoryPickerSplitMovie = new google.visualization.ControlWrapper({
             'controlType': 'CategoryFilter',
             'containerId': 'categoryPickerSplitMovie_div',
             'options': {
@@ -50,24 +53,20 @@
                 }
             }
         });
-        var pie = new google.visualization.ChartWrapper({
+        var pieSplitMoviee = new google.visualization.ChartWrapper({
             'chartType': 'PieChart',
             'containerId': 'chartSplitMovie_div',
             'options': {
-                'width': 300,
-                'height': 300,
                 'legend': 'none',
-                'chartArea': { 'left': 15, 'top': 15, 'right': 0, 'bottom': 0 },
                 'pieSliceText': 'label'
             },
         });
-        var table = new google.visualization.ChartWrapper({
+        var tableSplitMovie = new google.visualization.ChartWrapper({
             'chartType': 'Table',
             'containerId': 'tableSplitMovie_div',
             'options': {
             }
         });
-
 
         $.ajax({
             type: "POST",
@@ -75,24 +74,23 @@
             data: '{}',
             dataType: 'json',
             success: function (data) {
-
                 // Create our data table.
-                var dataTable = new google.visualization.DataTable();
+                var dataTableSplitByMovie = new google.visualization.DataTable();
 
-                dataTable.addColumn('string', 'Movie');
-                dataTable.addColumn('number', 'Intrest');
-                dataTable.addColumn('number', 'Income');
+                dataTableSplitByMovie.addColumn('string', 'Movie');
+                dataTableSplitByMovie.addColumn('number', 'Intrest');
+                dataTableSplitByMovie.addColumn('number', 'Income');
 
                 for (var i = 0; i < data.length; i++) {
                     var Movie = data[i].Movie
                     var Intrest = data[i].Intrest;
                     var Income = data[i].Income;
 
-                    dataTable.addRow([Movie, Intrest, Income]);
+                    dataTableSplitByMovie.addRow([Movie, Intrest, Income]);
                 }
-        
-                dashboard.bind([slider, categoryPicker], [pie, table]);
-                dashboard.draw(dataTable);
+                dashboardSplitMovie.bind([sliderSplitMovie, categoryPickerSplitMovie], [pieSplitMoviee, tableSplitMovie]);
+                dashboardSplitMovie.draw(dataTableSplitByMovie);
+
             },
             error: function (xhr, ajaxOptions, thrownEror) {
                 alert("False");
@@ -100,17 +98,6 @@
 
         });
 
-        //    google.visualization.arrayToDataTable([
-        //  ['Name', 'Gender', 'Age', 'Donuts eaten'],
-        //  ['Michael', 'Male', 12, 5],
-        //  ['Elisa', 'Female', 20, 7],
-        //  ['Robert', 'Male', 7, 3],
-        //  ['John', 'Male', 54, 2],
-        //  ['Jessica', 'Female', 22, 6],
-        //  ['Aaron', 'Male', 3, 1],
-        //  ['Margareth', 'Female', 42, 8],
-        //  ['Miranda', 'Female', 33, 6]
-        //]);
-       
-    }
+
+    });
 </script>

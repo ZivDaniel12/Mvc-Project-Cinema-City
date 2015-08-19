@@ -182,6 +182,7 @@
     <Compile Include="Logic\ActionRole.cs" />
     <Compile Include="Logic\EcomLogic.cs" />
     <Compile Include="Logic\PayPalAPI.cs" />
+    <Compile Include="Logic\SelectChair.cs" />
     <Compile Include="Logic\ShoppingCartActions.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ChairsOrderd.cs" />

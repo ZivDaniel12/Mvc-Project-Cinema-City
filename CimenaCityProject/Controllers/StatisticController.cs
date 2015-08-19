@@ -42,7 +42,7 @@ namespace CimenaCityProject.Controllers
         public JsonResult TotalIncomeResult()
         {
 
-            var tempD = db.CheckOut.Where(x => x.ISOrderComplete && x.Order.OrderDate.Year >= DateTime.Now.Year).ToList();
+            var tempD = db.CheckOut.Where(x => x.ISOrderComplete ).ToList();
             var data = tempD.GroupBy(x => x.Order.OrderDate.Date).Select(y => new { OrderDate = y.Key, TotalPrice = y.Sum(a => a.TotalPrice) })
                 .OrderBy(b=>b.OrderDate.Year).ToList();
 

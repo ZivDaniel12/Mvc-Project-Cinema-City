@@ -13,29 +13,33 @@
 <div>
 
 
-    <div class="form-control" style="width: 550px; height: 389px; margin-left: 667px">
+    <div class="form-control" style="height: 304px; ">
+        <p style="text-align: center; font-size: large; font-weight: bold"> Total Income </p>
+        <hr />
+        @{
+            Html.RenderAction("TotalIncome");
+        }
+    </div>
+
+
+    <div class="form-control" style="height: auto; ">
+        <p style="text-align: center; font-size: large; font-weight: bold"> Total Income Order by Movie </p>
+        <hr />
+        @{
+            Html.RenderAction("graphTotalIncomSplitByMovie");
+        }
+    </div>
+
+
+    <div class="form-control" style ="height: 304px;">
         <p style="text-align:center;font-size:large;font-weight:bold"> The Intrest movies </p>
+        <hr />
         @{
             Html.RenderAction("IntrestPath");
         }
     </div>
 
 
-    <div class="form-control" style="width: 660px; height: 389px; position: relative; top: -389px; left: 0px">
-        <p style="text-align: center; font-size: large; font-weight: bold"> Total Income </p>
-        @{
-            Html.RenderAction("TotalIncome");
-        }
-    </div>
-
-    <div class="form-control" style="position: relative; top: -376px; left: 4px; height: 377px; width: 660px; ">
-        <p style="text-align: center; font-size: large; font-weight: bold"> Total Income Order by Movie </p>
-
-
-        @{
-            Html.RenderAction("graphTotalIncomSplitByMovie");
-        }
-    </div>
 
 </div>
 
