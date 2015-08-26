@@ -1,4 +1,5 @@
 ﻿@{
+
     Dictionary<string, decimal> list = (Dictionary<string, decimal>)TempData["Dictionary"];
 }
 @{
@@ -10,7 +11,10 @@
     <p style="text-align:center;font-size:large;font:bold">Genaral statistic  for the company </p>
     <br />
     <div >
-        <div>
+        @{
+            if (list.Count() != 0)
+            {
+                       <div>
 
             <table style="align-self:center">
                 <tr >
@@ -68,7 +72,16 @@
                 </tr>
             </table>
 
-        </div>
+        </div> 
+            }
+            else
+            {
+                   <div>
+ <p> Statistic show's up when first order will come</p>
+                 </div> 
+            }
+        }
+
     </div>
 
 

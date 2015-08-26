@@ -34,14 +34,19 @@ namespace CimenaCityProject.Admin
             }
             Dictionary<string, decimal> model = new Dictionary<string, decimal>();
 
-            model.Add("TotalIncome",db.CheckOut.Where(x=>x.ISOrderComplete)
-                .Select(x=>x.TotalPrice)
-                .Sum());
+            if (db.CheckOut.Count() != 0)
+            {
 
-            model.Add("TotalMovies",db.Movies.Count());
-            model.Add("TotalHomeCinemas",db.HomeCinemas.Count());
-            model.Add("TotalTheatres", db.Theaters.Count());
-            model.Add("TotalOrders",db.Orders.Where(x=>x.IsComplete == true).Count());
+                model.Add("TotalIncome", db.CheckOut.Where(x => x.ISOrderComplete)
+                    .Select(x => x.TotalPrice)
+                    .Sum());
+
+                model.Add("TotalMovies", db.Movies.Count());
+                model.Add("TotalHomeCinemas", db.HomeCinemas.Count());
+                model.Add("TotalTheatres", db.Theaters.Count());
+                model.Add("TotalOrders", db.Orders.Where(x => x.IsComplete == true).Count());
+
+            }
 
             TempData.Add("Dictionary", model);
             return PartialView("GeneralStatistic");
